@@ -18,6 +18,10 @@ app.get("/home", async(req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/home.html"));
 });
 
+app.get("/statistics", async(req, res) => {
+    res.sendFile(path.join(__dirname + "/public/html/statistics.html"));
+});
+
 
 app.listen(port, async () => {
     try {

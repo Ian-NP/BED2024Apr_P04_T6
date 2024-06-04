@@ -5,15 +5,9 @@ body{
   background-color: #119C62 !important;
 }
 
-.navbar {
-  background-color: #119C62 !important;
-  border-bottom: 1px solid #262E35;
-}
-
 .navbar-brand{
   font-weight: 700;
   font-size: 25px;
-  color: black !important;
 }
 
 .carousel-control-prev, .carousel-control-next{
@@ -28,7 +22,7 @@ body{
   position: relative;
   text-decoration: none;
   color: inherit;
-  color: black !important;
+  color: rgb(230, 230, 230);
   font-weight: 500;
 }
 
@@ -52,15 +46,59 @@ body{
 .nav-link:hover::before,
 .nav-link.active::before { /* Changed from .nav-link.active:hover::before */
   visibility: visible;
-  background-color: #262E35; /* Change this to your desired hover color */
+  background-color: rgb(200, 199, 199); /* Change this to your desired hover color */
   transform: scaleX(1);
+}
+
+#signUp_btn, #login_btn {
+  position: relative;
+  overflow: hidden;
+  transition: color 0.4s ease-out, background-color 0.4s ease-out;
+  border: 2px solid #262E35; /* Black solid border */
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  outline: none;
+  border-radius: 10px;
+  z-index: 1;
+  background-color: #119C62; /* Green background color */
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+  color: black; /* Text color */
+  font-weight: 500;
+}
+
+#signUp_btn::before, #login_btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background-color: rgba(0, 0, 0, 0.3); /* Initial background color */
+  border-radius: 50%;
+  z-index: -1;
+  transition: width 0.4s ease-out, height 0.4s ease-out, background-color 0.8s ease-out;
+  transform: translate(-50%, -50%);
+}
+
+#signUp_btn:hover::before, #login_btn:hover::before {
+  width: 300%;
+  height: 300%;
+  background-color: rgba(0, 0, 0, 0); /* Background color on hover */
+}
+
+#signUp_btn:hover, #login_btn:hover {
+  color: white; /* Text color on hover */
+  background-color: #262E35; /* Initial background color */
+  border-color: #000; /* Black solid border on hover */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .btn {
   position: relative;
   overflow: hidden;
   transition: color 0.4s ease-out, background-color 0.4s ease-out;
-  border: 2px solid black; /* Black solid border */
+  border: 2px solid rgba(0, 0, 0, 0.1); /* Black solid border */
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
@@ -102,4 +140,91 @@ body{
 
 .footer_btn{
   color: black;
+}
+
+
+
+/* Bootstrap carousel CSS Styling */
+
+/* GLOBAL STYLES
+-------------------------------------------------- */
+/* Padding below the footer and lighter body text */
+
+body {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+  color: rgb(var(--bs-tertiary-color-rgb));
+}
+
+
+/* CUSTOMIZE THE CAROUSEL
+-------------------------------------------------- */
+
+/* Carousel base class */
+.carousel {
+  margin-bottom: 4rem;
+}
+/* Since positioning the image, we need to help out the caption */
+.carousel-caption {
+  bottom: 3rem;
+  z-index: 10;
+}
+
+/* Declare heights because of positioning of img element */
+.carousel-item {
+  height: 32rem;
+}
+
+
+/* MARKETING CONTENT
+-------------------------------------------------- */
+
+/* Center align the text within the three columns below the carousel */
+.marketing .col-lg-4 {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+/* rtl:begin:ignore */
+.marketing .col-lg-4 p {
+  margin-right: .75rem;
+  margin-left: .75rem;
+}
+/* rtl:end:ignore */
+
+
+/* Featurettes
+------------------------- */
+
+.featurette-divider {
+  margin: 5rem 0; /* Space out the Bootstrap <hr> more */
+}
+
+/* Thin out the marketing headings */
+/* rtl:begin:remove */
+.featurette-heading {
+  letter-spacing: -.05rem;
+}
+
+/* rtl:end:remove */
+
+/* RESPONSIVE CSS
+-------------------------------------------------- */
+
+@media (min-width: 40em) {
+  /* Bump up size of carousel content */
+  .carousel-caption p {
+    margin-bottom: 1.25rem;
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+
+  .featurette-heading {
+    font-size: 50px;
+  }
+}
+
+@media (min-width: 62em) {
+  .featurette-heading {
+    margin-top: 7rem;
+  }
 }
