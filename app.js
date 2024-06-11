@@ -3,17 +3,21 @@ import bodyParser from "body-parser";
 import sql from "mssql";
 import dbConfig from "./dbConfig"
 import path from 'path';
+import multer from "multer";
 
 
 const app = express();
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 const staticMiddleware = express.static("./public"); // Path to the public folder
+  
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(staticMiddleware);
 
-// Should be in controller
+
+// Routes
 app.get("/home", async(req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/home.html"));
 });
@@ -23,13 +27,13 @@ app.get("/statistics", async(req, res) => {
 });
 
 
-app.listen(port, async () => {
+app.listen(PORT, async () => {
     try {
         // Await to connect to the database
         await sql.connect(dbConfig);
         console.log("Database connection established successfully");
-        console.log(`Your server is running on http://localhost:${port}/`)
-        console.log(`Check out the home page on http://localhost:${port}/home`)
+        console.log(`Your server is running on http://localhost:${PORT}/`)
+        console.log(`Check out the home page on http://localhost:${PORT}/home`)
     } catch(err) {
         console.error("Database connection error:", err);
         // Terminate the application with an error code (optional)

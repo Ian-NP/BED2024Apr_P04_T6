@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.122.0">
-    <title>Dashboard Template · Bootstrap v5.3</title>
+    <title>Statistics Page</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/dashboard/">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
@@ -94,6 +94,7 @@
     </style>
 
     <!-- Custom styles for this template -->
+    <link href="../styles/navbar.css" rel="stylesheet">
     <link href="../styles/statistics.css" rel="stylesheet">
   </head>
   <body>
@@ -183,25 +184,44 @@
   </symbol>
 </svg>
 
-<header class="navbar sticky-top bg-dark flex-md-nowrap p-0 shadow" data-bs-theme="dark">
-  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 text-white" href="#">Company name</a>
-
-  <ul class="navbar-nav flex-row d-md-none">
-    <li class="nav-item text-nowrap">
-      <button class="nav-link px-3 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSearch" aria-controls="navbarSearch" aria-expanded="false" aria-label="Toggle search">
-        <svg class="bi"><use xlink:href="#search"/></svg>
+<header data-bs-theme="dark">
+  <nav class="navbar navbar-expand-xl navbar-dark sticky-top bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">A+4BED</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
       </button>
-    </li>
-    <li class="nav-item text-nowrap">
-      <button class="nav-link px-3 text-white" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-        <svg class="bi"><use xlink:href="#list"/></svg>
-      </button>
-    </li>
-  </ul>
-
-  <div id="navbarSearch" class="navbar-search w-100 collapse">
-    <input class="form-control w-100 rounded-0 border-0" type="text" placeholder="Search" aria-label="Search">
-  </div>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav ms-auto mb-2 mb-md-0 me-4">
+          <li class="nav-item">
+            <a class="nav-link custom-navlink" href="/home">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link custom-navlink" href="#">Articles</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active custom-navlink" href="#">Statistics</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link custom-navlink" href="#">View Events</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link custom-navlink" href="#">View Kickstarters</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link custom-navlink" href="#">About Us</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link custom-navlink" href="#">Contact Us</a>
+          </li>
+        </ul>
+        <div class="d-flex">
+          <a class="btn btn-outline-primary me-2" href="#" id="signUp_btn">Sign up</a>
+          <a class="btn btn-outline-primary" href="#" id="login_btn">Login</a>
+        </div>
+      </div>
+    </div>
+  </nav>
 </header>
 
 <div class="container-fluid">
@@ -453,7 +473,7 @@
     </main>
   </div>
 </div>
-<script src="../bootstrap assets/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.js" integrity="sha384-eI7PSr3L1XLISH8JdDII5YN/njoSsxfbrkCTnJrzXt+ENP5MOVBxD+l6sEG4zoLp" crossorigin="anonymous"></script><script src="../scripts/statistics.js"></script></body>
+    <script src="../bootstrap assets/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.js" integrity="sha384-eI7PSr3L1XLISH8JdDII5YN/njoSsxfbrkCTnJrzXt+ENP5MOVBxD+l6sEG4zoLp" crossorigin="anonymous"></script><script src="../scripts/statistics.js"></script>
+  </body>
 </html>
