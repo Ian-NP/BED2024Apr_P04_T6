@@ -1,0 +1,149 @@
+body{
+    background-color: #7ebf9b; /* Maybe #6ed9b9 will be better */
+}
+
+/* here are the styles for my main title at the start  (Remember to change if h2 and 1 is needed to change) */
+h1, h2 {
+    margin: 0; 
+    padding: 0; 
+    line-height: 1.1; 
+    color: #333333;
+    
+}
+
+h2 {
+    font-size: 30px;
+    font-family: Gilroy, Verdana, sans-serif;
+    text-align: center;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: 600;
+}
+
+h1 {
+    font-size: 50px; 
+    font-weight: 700;
+    font-family: Fatfrank, Verdana, sans-serif;
+    margin-bottom: 20px;
+    padding: 5px;
+    text-align: center; 
+    color: #ffd600;
+    
+    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+    letter-spacing: 1px;
+    
+}
+
+#Innovation, #Creativity{
+    color: #c2729e;
+    font-weight: bolder;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+#headere{
+    height: 150px;
+}
+
+@media screen and (max-width: 803px) {
+    h2 {
+        
+        font-size: 25px;
+    
+    }
+
+    #headere{
+        height: 100px;
+    }
+}
+
+
+@media screen and (max-width: 671px) {
+    h2 {
+        
+        font-size: 20px;
+    
+    }
+    h1{
+        font-size: 39px;
+    }
+}
+
+
+@media screen and (max-width: 535px) {
+    h2 {
+        margin-top: 15px;
+        
+        
+        
+        line-height: 24px;
+        display: none;
+    }
+
+    h1{
+        font-size: 40px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    h1 {
+        
+        font-size: 30px;
+        padding: 0;
+    
+    }
+}
+
+/* Ends Here */
+
+#Search-Area {
+    width: 85vw; 
+    margin: 0 auto; 
+    border: 3px solid #F6A564;
+    border-radius: 10px;
+}
+
+#Search {
+    display: flex; 
+    align-items: center; 
+    background-color: rgba(100, 180, 246, 0.705);
+    border-top-left-radius: 6px; 
+    border-top-right-radius: 6px; 
+    padding: 8px; 
+    
+}
+
+#Search-Image {
+    display: flex;
+    align-items: center; 
+    margin-left: 3px; 
+    margin-right: 0px; 
+}
+
+#Search-Image img {
+    width: 30px; 
+    height: auto;
+    margin-top: 2px; 
+}
+
+#Search-Input {
+    flex: 1; 
+    border: none; 
+    outline: none;
+    font-size: 19px; 
+    color: #000000; 
+    background-color: transparent; 
+    padding-bottom: 5px;
+}
+
+
+#Search-By{
+    border-top: 3px solid #F6A564;
+    display: flex;
+    align-items: center;
+    padding: 8px ;
+    border-bottom-left-radius: 6px; 
+    border-bottom-right-radius: 6px; 
+    padding-left: 11px;
+    gap: 10px;
+    background-color: rgba(100, 180, 246, 0.705);
+}
