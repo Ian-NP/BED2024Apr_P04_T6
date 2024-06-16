@@ -40,8 +40,10 @@ const createArticleComment = async(req, res) =>{
 const updateArticleCommentContent = async(req, res) =>{
     const commentId =  req.body.commentId;
     const newContent = req.body.content;
+    const newScore = req.body.score;
+
     try{
-        const updatedArticleComment = await ArticleComments.updateArticleCommentContent(commentId, newContent);
+        const updatedArticleComment = await ArticleComments.updateArticleCommentContent(commentId, newContent, newScore);
         if (!updatedArticleComment){
             return res.status(404).send("Comment not found");
         }

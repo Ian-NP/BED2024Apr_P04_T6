@@ -297,10 +297,15 @@ async function postComment(content, score, timeStamp, userId, articleId, parentC
     }
 }
 
-async function updateComment(commentId, newContent){
+async function updateComment(commentId, newContent=null, newScore=null){
+    console.log(commentId);
+    console.log(newContent);
+    console.log(newScore);
+    
     const updateCommentData = {
         commentId: commentId,
-        content: newContent
+        content: newContent,
+        score: newScore
     };
 
     const articleId = getArticleId();
@@ -372,13 +377,17 @@ commentSectionContainer.addEventListener('click', async(event) => {
         let initialScore = parseInt(scoreElement.dataset.initialScore);
         if (initialScore === currentScore){
             currentScore = initialScore + 1;
-            scoreElement.textContent = currentScore;
             plusBtn.disabled = true;
         } else if(currentScore === initialScore - 1){
             currentScore = initialScore;
-            scoreElement.textContent = currentScore;
             plusBtn.closest('.comment-votes').querySelector('.minus-btn').disabled = false;
         }
+
+        // Update score here
+        const commentContainer = plusBtn.closest('.comment-container');
+        const commentId = commentContainer.getAttribute('data-commentid');
+        await updateComment(commentId, null, currentScore);
+        scoreElement.textContent = currentScore;
     }
 
     // Decrease Score Logic
@@ -393,13 +402,18 @@ commentSectionContainer.addEventListener('click', async(event) => {
         if(currentScore === initialScore + 1){
             console.log("activated");
             currentScore = initialScore;
-            scoreElement.textContent = currentScore;
             minusBtn.closest('.comment-votes').querySelector('.plus-btn').disabled = false;
         } else if (initialScore === currentScore){
             currentScore = initialScore - 1;
-            scoreElement.textContent = currentScore;
             minusBtn.disabled = true;
         } 
+        
+        // Update score here
+        const commentContainer = minusBtn.closest('.comment-container');
+        const commentId = commentContainer.getAttribute('data-commentid');
+        console.log(currentScore);
+        await updateComment(commentId, null, currentScore);
+        scoreElement.textContent = currentScore;
     }
 
     // Open textarea input for them to reply to comment
