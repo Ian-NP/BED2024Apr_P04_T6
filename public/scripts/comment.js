@@ -792,12 +792,13 @@ commentSectionContainer.addEventListener('click', async(event) => {
         }
     }
 
+    // Add a comment to the comment-section-container
     if (event.target.classList.contains("send-comment-btn")){
         const sendCommentBtn = event.target;
-        const commentContainerDiv = sendCommentBtn.parentElement.parentElement;
+        const commentSectionContainerDiv = sendCommentBtn.parentElement.parentElement;
 
         // Get the value of the comment input
-        const commentInput = commentContainerDiv.querySelector('.comment-input');
+        const commentInput = commentSectionContainerDiv.querySelector('.comment-input');
         const commentText = commentInput.value;
         commentInput.value = '';
 
@@ -927,8 +928,9 @@ commentSectionContainer.addEventListener('click', async(event) => {
                 const replyContainer = document.createElement('div');
                 replyContainer.classList.add("reply-container");
                 newCommentContainer.appendChild(replyContainer);
-
-                commentContainerDiv.appendChild(newCommentContainer);
+                
+                var childNodes = commentSectionContainerDiv.childNodes;
+                commentSectionContainerDiv.insertBefore(newCommentContainer, childNodes[2]);
             } else {
                 // If user data does not exist in sessionStorage, handle it accordingly
                 alert('User data not found. Please log in.');
