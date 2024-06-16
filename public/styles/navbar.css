@@ -4,6 +4,10 @@
   font-family: "poppins", Calibri, 'Gill Sans', sans-serif !important;
 }
 
+.active{
+  color: #119C62 !important;
+}
+
 .navbar-brand{
     font-weight: 700;
     font-size: 25px;
@@ -19,6 +23,10 @@
   
   .custom-navlink.active {
     font-weight: 600;
+  }
+
+  .custom-navlink:hover{
+    color: #119C62 !important;
   }
   
   .custom-navlink::before {
@@ -37,7 +45,7 @@
   .custom-navlink:hover::before,
   .custom-navlink.active::before { /* Changed from .nav-link.active:hover::before */
     visibility: visible;
-    background-color: rgb(200, 199, 199); /* Change this to your desired hover color */
+    background-color: #119C62; /* Change this to your desired hover color */
     transform: scaleX(1);
   }
   
