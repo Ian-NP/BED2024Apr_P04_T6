@@ -9,7 +9,7 @@ import eventCommentController from "./controllers/eventCommentsController"
 
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 const staticMiddleware = express.static("./public"); // Path to the public folder
   
 

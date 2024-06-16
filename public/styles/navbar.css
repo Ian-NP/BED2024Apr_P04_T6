@@ -32,10 +32,10 @@
   .custom-navlink::before {
     content: '';
     position: absolute;
-    width: 100%;
+    width: 80%;
     height: 2px;
     bottom: 0;
-    left: 0;
+    left: 10%;
     background-color: transparent;
     visibility: hidden;
     transform: scaleX(0);
