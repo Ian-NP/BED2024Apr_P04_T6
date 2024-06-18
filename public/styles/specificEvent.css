@@ -180,4 +180,12 @@ hr {
     display: inline-block;
     margin-bottom: 20px;
     margin-left: auto;
+    cursor: pointer;
+}
+
+#Signup:hover {
+    background-color: #FFD700; 
+    transform: translate(-6px, -6px); 
+    color: black;
+    box-shadow: 11px 11px 0 0 black; 
 }

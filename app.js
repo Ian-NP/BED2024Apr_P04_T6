@@ -34,6 +34,7 @@ app.get("/statistics", async(req, res) => {
 });
 
 app.get("/api/events", EventController.getAllEvents);
+app.get("/api/events/:eventId", EventController.getEventById);
 app.get("/api/article/comment/:commentId", articleCommentController.getArticleCommentById);
 app.get("/article/:articleId/comments", async (req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/comment.html"));

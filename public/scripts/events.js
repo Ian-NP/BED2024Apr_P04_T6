@@ -69,7 +69,7 @@ function createEventCard(event) {
     
     eventDiv.addEventListener('click', () => {
         const eventId = eventDiv.dataset.eventId;
-        console.log(`Event ID: ${eventId}`); // Later remember to replace with the open new page card thingy
+        window.open(`../html/specificEventDetails.html?eventId=${eventId}`, '_blank');
     });
 
     return eventDiv;
