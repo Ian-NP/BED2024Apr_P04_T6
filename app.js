@@ -6,6 +6,8 @@ import path from 'path';
 import multer from "multer";
 import articleCommentController from "./controllers/articleCommentsController"
 import eventCommentController from "./controllers/eventCommentsController"
+import EventController from "./controllers/eventController"
+
 
 
 const app = express();
@@ -19,6 +21,10 @@ app.use(staticMiddleware);
 
 
 // Routes
+app.get("/events", async(req, res) => {
+    res.sendFile(path.join(__dirname + "/public/html/events.html"));
+});
+
 app.get("/", async(req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/home.html"));
 });
@@ -27,7 +33,7 @@ app.get("/statistics", async(req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/statistics.html"));
 });
 
-
+app.get("/api/events", EventController.getAllEvents);
 app.get("/api/article/comment/:commentId", articleCommentController.getArticleCommentById);
 app.get("/article/:articleId/comments", async (req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/comment.html"));

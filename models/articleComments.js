@@ -28,7 +28,7 @@ class ArticleComments{
                         score,
                         userId,
                         articleId,
-                        0 AS level
+                        0 AS level 
                     FROM ArticleComments
                     WHERE parentCommentId IS NULL AND articleId = 1
 
