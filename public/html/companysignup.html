@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up as Company User</title>
+    <link href="../styles/usersignup.css" rel="stylesheet">
+    
+</head>
+<body>
+    <div class="container">
+        <b><h2>Company User Signup</h2></b>
+        <h5>Sign up for A+4BED today!</h5>
+        <form id="signup-form">
+            <input type="text" id="name" placeholder="Company Name" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <div class="checkbox-container">
+                <label>
+                    <input type="checkbox" id="terms" required> I agree to the Terms and Conditions
+                </label>
+            </div>
+            <button type="submit">Sign Up</button>
+        </form>
+    </div>
+    <script>
+        document.getElementById('signup-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var terms = document.getElementById('terms');
+            if (!terms.checked) {
+                alert('You must agree to the Terms and Conditions to sign up.');
+                return;
+            }
+            // Add sign-up logic here
+            alert('Sign-Up Successful!');
+        });
+    </script>
+</body>
+</html>
