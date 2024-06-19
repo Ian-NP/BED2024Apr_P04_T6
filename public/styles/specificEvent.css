@@ -173,7 +173,10 @@ hr {
     font-weight: 600;
     transition: box-shadow .2s, color .2s, background-color .2s, transform .2s;
     height: 52px;
+    
+    
     padding: 9px 15px;
+        
     text-decoration: none;
     align-self: flex-end;
     text-align: center;

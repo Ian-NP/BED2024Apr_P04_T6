@@ -1,14 +1,18 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const eventFreeCheckbox = document.getElementById('eventFree');
+    const eventFreeRadio = document.getElementById('eventFree');
+    const eventNotFreeRadio = document.getElementById('eventNotFree');
     const priceContainer = document.getElementById('priceContainer');
 
-    eventFreeCheckbox.addEventListener('change', () => {
-        if (eventFreeCheckbox.checked) {
-            priceContainer.style.display = 'none';
-        } else {
+    eventFreeRadio.addEventListener('change', togglePriceInput);
+    eventNotFreeRadio.addEventListener('change', togglePriceInput);
+
+    function togglePriceInput() {
+        if (eventNotFreeRadio.checked) {
             priceContainer.style.display = 'block';
+        } else {
+            priceContainer.style.display = 'none';
         }
-    });
+    }
 
     const previewButton = document.getElementById('previewButton');
     previewButton.addEventListener('click', () => {
@@ -22,12 +26,18 @@ document.addEventListener('DOMContentLoaded', () => {
             desc: formData.get('eventDesc'),
             overview: formData.get('eventOverview'),
             time: formData.get('eventTime'),
-            free: formData.get('eventFree'),
-            price: formData.get('eventFree') ? 'Free' : formData.get('eventPrice')
+            free: formData.get('eventCost') === 'free',
+            price: formData.get('eventCost') === 'free' ? 'Free' : formData.get('eventPrice')
         };
 
         const previewUrl = `../html/specificEventDetails.html?title=${encodeURIComponent(event.title)}&tag=${encodeURIComponent(event.tag)}&desc=${encodeURIComponent(event.desc)}&overview=${encodeURIComponent(event.overview)}&time=${encodeURIComponent(event.time)}&price=${encodeURIComponent(event.price)}`;
 
         window.open(previewUrl, '_blank');
     });
+});
+
+
+document.getElementById('myButton').addEventListener('click', function() {
+    document.getElementById('preview').style.display = 'none';
+    document.querySelector('.container.mt-5.pt-5').style.display = 'block';
 });
