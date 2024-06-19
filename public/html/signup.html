@@ -10,19 +10,34 @@
     <div class="container">
         <b><h2>Sign Up</h2></b>
         <h5>Sign up for A+4BED today!</h5>
-        <div class="button-container">
-            <div class="button-wrapper">
-                <p class="info-text">User Sign Up</p>
-                <button onclick="window.location.href='usersignup.html'">Sign Up as User</button>
-            </div>
-            <div class="button-wrapper">
-                <p class="or-text">OR</p>
-            </div>
-            <div class="button-wrapper">
-                <p class="info-text">Company Sign Up</p>
-                <button onclick="window.location.href='companysignup.html'">Sign Up as Company</button>
-            </div>
+        <label for="user-type">Select User Sign-In Type:</label>
+        <select id="user-type" onchange="toggleForm()">
+            <option value=""></option>
+            <option value="normal">Normal User</option>
+            <option value="company">Company User</option>
+        </select>
+
+        <!-- Normal User Form -->
+        <div id="normal-user-form" class="form-group">
+            <input type="text" id="first-name" placeholder="First Name" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="password" id="password" placeholder="Password" required>
         </div>
+
+        <!-- Company User Form -->
+        <div id="company-user-form" class="form-group">
+            <input type="text" id="company-name" placeholder="Company Name" required>
+            <input type="email" id="company-email" placeholder="Company Email" required>
+            <input type="password" id="company-password" placeholder="Password" required>
+        </div>
+        <div class="checkbox-container">
+            <label>
+                <input type="checkbox" id="terms" required> I agree to the Terms and Conditions
+            </label>
+        </div>
+
+        <button onclick="submitForm()">Sign Up</button>
     </div>
+    <script src="../scripts/signup.js"></script>
 </body>
 </html>
