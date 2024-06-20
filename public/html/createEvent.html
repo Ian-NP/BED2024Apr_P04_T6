@@ -55,7 +55,7 @@
         </nav>
     </header>
     <main>
-        <div class="container mt-5 pt-5" style="display: none;">
+        <div class="container mt-5 pt-5">
             <div class="form-container">
                 <h1>Create Event</h1>
                 <form id="createEventForm">
@@ -116,64 +116,59 @@
                 </form>
             </div>
         </div>
-        <div id = "preview">
-          <div id = "tp">
-        <h1 id = "Preview">Preview</h1>
-        <button class="close-button" id ="myButton">X</button>
-        </div>
-        <div id = "cont">
-          <div id = "Container">
-            <div id = "top">
-                <div id = "image">
-                    <img src="../images/image-removebg.png" alt="Event Image">
+        <div id="preview" style="display: none;">
+            <div id="tp">
+                <h1 id="Preview">Preview</h1>
+                <button class="close-button" id="myButton">X</button>
+            </div>
+            <div id="cont">
+                <div id="Container">
+                    <div id="top">
+                        <div id="image">
+                            <img src="../images/image-removebg.png" alt="Event Image" id="previewEventImage">
+                        </div>
+                        <div id="heading">
+                            <h1 id="eventName"><span id="cost"></span></h1>
+                            <h2 id="creatorName"></h2>
+                            <p id="tag"></p>
+                        </div>
+                    </div>
+                    <hr>
+                    <h1 id="details">Details</h1>
+                    <p id="content"></p>
+                    <div id="bottom">
+                        <div id="deadline">
+                            <h1 id="Deadline">Deadline</h1>
+                            <div id="lowest">
+                                <p id="eventDate"></p>
+                                <p id="timeLeft"></p>
+                            </div>
+                        </div>
+                        <button id="Signup">Sign Up</button>
+                    </div>
                 </div>
-                <div id = "heading">
-                    <h1 id = "eventName"><span id = "cost"></span></h1>
-                    <h2 id = "creatorName"></h2>
-                    <p id = "tag"></p>
+                <div class="Event">
+                    <div class="Event-Image">
+                        <img class="Event-Image" src="../images/image-removebg.png" alt="Event Image">
+                    </div>
+                    <div id="tags">
+                        <p class="Event-Tag">Tag</p>
+                    </div>
+                    <div class="Event-Details">
+                        <h3 class="Event-Name"><span class="Event-Cost">(Free)</span></h3>
+                        <p class="Event-Hoster"></p>
+                        <p class="Event-Details"></p>
+                    </div>
+                    <div class="Event-Date">
+                        <h2 class="Date"></h2>
+                        <h2 class="Time-Left"></h2>
+                    </div>
                 </div>
             </div>
-            <hr>
-            <h1 id = "details">Details</h1>
-            <p id = "content"></p>
-        <div id ="bottom">
-            
-            <div id = "deadline">
-                <h1 id = "Deadline">Deadline</h1>
-            <div id = "lowest">
-                <p id = "Date"></p>
-               
-                <p id = "timeLeft"></p>
-            </div>
-            </div>
-            <button id = "Signup">
-                Sign Up
-            </button>
-        </div>
-        
-        </div>
-        <div class="Event">
-        <div class="Event-Image">
-          <img class="Event-Image" src="../images/image-removebg.png" alt="Event Image">
-        </div>
-      <div id="tags">
-          <p class="Event-Tag">TAg</p>
-      </div>
-      <div class="Event-Details">
-          <h3 class="Event-Name">${event.eventName} <span class="Event-Cost">(Free)</span></h3>
-          <p class="Event-Hoster">${event.creatorName}</p>
-          <p class="Event-Details">${event.eventOverview || 'No overview available'}</p>
-      </div>
-      <div class="Event-Date">
-          <h2 class="Date">${formattedDate}</h2>
-          <h2 class="Time-Left">${timeLeft}</h2>
-      </div>
-        </div>  
-      </div>
         </div>
     </main>
     
     <script src="../bootstrap assets/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../scripts/createEvent.js"></script>
-  </body>
+</body>
 </html>

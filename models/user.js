@@ -53,7 +53,7 @@ class User {
         console.log('Received new user data:', newUserData);
   
         // Hash the user's password
-        const hashedPassword = await bcrypt.hash(newUserData.password, 10);
+        
   
         // Connect to the database
         const connection = await sql.connect(dbConfig);
