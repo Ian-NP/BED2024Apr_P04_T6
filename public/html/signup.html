@@ -8,38 +8,38 @@
 </head>
 <body>
     <div class="container">
-        <b><h2>Sign Up</h2></b>
+        <h2>Sign Up</h2>
         <h5>Sign up for A+4BED today!</h5>
-        <form>
-        <label for="user-type">Select User Sign-In Type:</label>
-        <select id="user-type" onchange="toggleForm()">
-            <option value=""></option>
-            <option value="N">Normal User</option>
-            <option value="C">Company User</option>
-        </select>
+        <form id="signup-form">
+            <label for="user-type">Select User Sign-In Type:</label>
+            <select id="user-type" onchange="toggleForm()">
+                <option value=""></option>
+                <option value="N">Normal User</option>
+                <option value="C">Company User</option>
+            </select>
 
-        <!-- Normal User Form -->
-        <div id="normal-user-form" class="form-group">
-            <input type="text" id="first-name" placeholder="First Name" required>
-            <input type="email" id="email" placeholder="Email" required>
-            <input type="password" id="password" placeholder="Password" required>
-        </div>
+            <!-- Normal User Form -->
+            <div id="normal-user-form" class="form-group">
+                <input type="text" id="first-name" placeholder="First Name" required>
+                <input type="email" id="email" placeholder="Email" required>
+                <input type="password" id="password" placeholder="Password" required>
+            </div>
 
-        <!-- Company User Form -->
-        <div id="company-user-form" class="form-group">
-            <input type="text" id="company-name" placeholder="Company Name" required>
-            <input type="email" id="company-email" placeholder="Company Email" required>
-            <input type="email" id="paypal-email" placeholder="PayPal Email" required>
-            <input type="password" id="company-password" placeholder="Password" required>
-        </div>
-        <div class="checkbox-container">
-            <label>
-                <input type="checkbox" id="terms" required> I agree to the Terms and Conditions
-            </label>
-        </div>
+            <!-- Company User Form -->
+            <div id="company-user-form" class="form-group">
+                <input type="text" id="company-name" placeholder="Company Name" required>
+                <input type="email" id="company-email" placeholder="Company Email" required>
+                <input type="email" id="paypal-email" placeholder="PayPal Email" required>
+                <input type="password" id="company-password" placeholder="Password" required>
+            </div>
+            <div class="checkbox-container">
+                <label>
+                    <input type="checkbox" id="terms" required> I agree to the Terms and Conditions
+                </label>
+            </div>
 
-        <button onclick="submitForm()">Sign Up</button>
-    </form>
+            <button type="button" onclick="submitForm()">Sign Up</button>
+        </form>
     </div>
     <script src="../scripts/signup.js"></script>
 </body>

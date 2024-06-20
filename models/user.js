@@ -1,7 +1,7 @@
 const sql = require("mssql");
 const bcrypt = require("bcrypt");
 const dbConfig = require("../dbConfig");
-console.log("before user class");
+
 class User {
     constructor(userId, email, name, password, userType) {
       this.userId = userId;
@@ -10,10 +10,10 @@ class User {
       this.password = password;
       this.userType = userType;
     }
-    
+  
     static async getAllUsers() {
       const connection = await sql.connect(dbConfig);
-      console.log("test from get all users")
+  
       const sqlQuery = `SELECT * FROM [Users]`; // Replace with your actual table name
   
       const request = connection.request();
@@ -28,7 +28,6 @@ class User {
   
     static async getUserByUserId(userId) {
       const connection = await sql.connect(dbConfig);
-      console.log("test from getusersbyid")
   
       const sqlQuery = `SELECT * FROM [Users] WHERE userId = @userId`; // Parameterized query
   
@@ -51,44 +50,40 @@ class User {
 
     static async createUser(newUserData) {
       try {
-          console.log('Received new user data:', newUserData);
-          // Hash the user's password
-          const hashedPassword = await bcrypt.hash(newUserData.password, 10);
-    
-          // Connect to the database
-          const connection = await sql.connect(dbConfig);
-          console.log("after connection in createuser")
-    
-          // Insert user data into the database
-          const query = `
-              INSERT INTO [Users] (email, name, password, userType, paypalEmail)
-              VALUES (@email, @name, @password, @userType, @paypalEmail); SELECT SCOPE_IDENTITY() AS userId;
-          `;
-          console.log('Executing SQL query:', query); // Log the SQL query
-          const request = connection.request();
-          request.input('email', sql.VarChar, newUserData.email);
-          request.input('name', sql.VarChar, newUserData.name);
-          request.input('password', sql.VarChar, hashedPassword);
-          request.input('userType', sql.Char, newUserData.userType)
-          if (newUserData.userType === 'C') {
-            request.input('paypalEmail', sql.VarChar, newUserData.paypalEmail);
-          } else {
-            request.input('paypalEmail', sql.VarChar, null); // Set PayPal email to null for non-company users
-          }
-          console.log("before request query in create user")
-          const result = await request.query(query);
-          
-    
-          // Close the database connection
-          await connection.close();
-    
-          return { success: true, message: 'User signed up successfully' };
+        console.log('Received new user data:', newUserData);
+  
+        // Hash the user's password
+        const hashedPassword = await bcrypt.hash(newUserData.password, 10);
+  
+        // Connect to the database
+        const connection = await sql.connect(dbConfig);
+  
+        // Insert user data into the database
+        const query = `
+          INSERT INTO [Users] (email, name, password, userType, paypalEmail)
+          VALUES (@Email, @Name, @Password, @UserType, @PaypalEmail);
+          SELECT SCOPE_IDENTITY() AS userId;
+        `;
+        console.log('Executing SQL query:', query); // Log the SQL query
+  
+        const request = connection.request();
+        request.input('Email', sql.VarChar, newUserData.email);
+        request.input('Name', sql.VarChar, newUserData.firstName); // Adjusted to use firstName
+        request.input('Password', sql.VarChar, hashedPassword);
+        request.input('UserType', sql.Char, newUserData.userType);
+        request.input('PaypalEmail', sql.VarChar, newUserData.userType === 'C' ? newUserData.paypalEmail : null);
+  
+        const result = await request.query(query);
+  
+        // Close the database connection
+        await sql.close();
+  
+        return { success: true, message: 'User signed up successfully', userId: result.recordset[0].userId };
       } catch (error) {
-          console.error('Error signing up user:', error);
-          return { success: false, message: 'Error signing up user' };
+        console.error('Error signing up user:', error);
+        return { success: false, message: 'Error signing up user' };
       }
     }
-  
 
       static async updateUser(userId, newUserData) {
         const connection = await sql.connect(dbConfig);
