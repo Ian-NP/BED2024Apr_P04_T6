@@ -25,7 +25,21 @@ const getUserByUserId = async (req, res) => {
 };
 
 const createUser = async (req, res) => {
-    const newUser = req.body;
+  // try {
+  //     const { email, name, password, userType } = req.body;
+      
+  //     // Create a new user object
+  //     const newUser = new User(email, name, password, userType);
+
+  //     // Call the createUser method of the User model
+  //     const createdUser = await User.createUser(newUser);
+
+  //     res.status(201).json({ message: 'User created successfully', user: createdUser });
+  // } catch (error) {
+  //     console.error('Error creating user:', error);
+  //     res.status(500).json({ message: 'Error creating user' });
+  // }
+  const newUser = req.body;
     try {
       const createdUser = await User.createUser(newUser);
       res.status(201).json(createdUser);
@@ -33,7 +47,7 @@ const createUser = async (req, res) => {
       console.error(error);
       res.status(500).send("Error creating user");
     }
-  };
+};
 
   const updateUser = async (req, res) => {
     const userId = parseInt(req.params.userId);
@@ -65,6 +79,7 @@ const createUser = async (req, res) => {
       res.status(500).send("Error deleting user");
     }
   };
+  
 
 //   const login = async (req, res) => {
 //     const { email, password } = req.body;

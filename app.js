@@ -31,6 +31,7 @@ app.post("/users", userController.createUser);
 app.put("/users/:userId", userController.updateUser);
 app.delete("/users/:userId", userController.deleteUser);
 
+
 app.get("/events", async(req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/events.html"));
 });
@@ -38,6 +39,8 @@ app.get("/events", async(req, res) => {
 app.get("/signup", async(req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/signup.html"));
 });
+
+app.post("/signup", userController.createUser);
 
 app.get("/login", async(req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/login.html"));
