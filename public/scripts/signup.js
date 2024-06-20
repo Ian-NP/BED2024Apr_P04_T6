@@ -1,5 +1,19 @@
 console.log('Script loaded');
 
+document.addEventListener('DOMContentLoaded', (event) => {
+    document.getElementById('signup-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        // Check if the form is valid
+        if (this.checkValidity()) {
+            submitForm();
+        } else {
+            // If form is not valid, show validation errors
+            this.reportValidity();
+        }
+    });
+});
+
 function toggleForm() {
     var userType = document.getElementById('user-type').value;
     var normalUserForm = document.getElementById('normal-user-form');
