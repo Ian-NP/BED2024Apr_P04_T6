@@ -11,7 +11,7 @@ const getAllAdminUsers = async (req, res) => {
 };
 
 const getAdminById = async (req, res) => {
-  const adminId = parseInt(req.params.id);
+  const adminId = parseInt(req.params.adminId);
   try {
     const admin = await Admin.getAdminById(adminId);
     if (!admin) {
@@ -36,7 +36,7 @@ const createAdminUser = async (req, res) => {
   };
 
   const updateAdminUser = async (req, res) => {
-    const adminId = parseInt(req.params.id);
+    const adminId = parseInt(req.params.adminId);
     const newAdminData = req.body;
   
     try {
@@ -52,7 +52,7 @@ const createAdminUser = async (req, res) => {
   };
   
   const deleteAdminUser = async (req, res) => {
-    const adminId = parseInt(req.params.id);
+    const adminId = parseInt(req.params.adminId);
   
     try {
       const success = await Admin.deleteAdminUser(adminId);

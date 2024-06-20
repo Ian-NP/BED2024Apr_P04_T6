@@ -2,7 +2,7 @@ const User = require("../models/user");
 
 const getAllUsers = async (req, res) => {
   try {
-    const users = await Book.getAllUsers();
+    const users = await User.getAllUsers();
     res.json(users);
   } catch (error) {
     console.error(error);
@@ -11,7 +11,7 @@ const getAllUsers = async (req, res) => {
 };
 
 const getUserByUserId = async (req, res) => {
-  const userId = parseInt(req.params.id);
+  const userId = parseInt(req.params.userId);
   try {
     const user = await User.getUserByUserId(userId);
     if (!user) {
@@ -36,7 +36,7 @@ const createUser = async (req, res) => {
   };
 
   const updateUser = async (req, res) => {
-    const userId = parseInt(req.params.id);
+    const userId = parseInt(req.params.userId);
     const newUserData = req.body;
   
     try {
@@ -52,10 +52,10 @@ const createUser = async (req, res) => {
   };
   
   const deleteUser = async (req, res) => {
-    const userId = parseInt(req.params.id);
+    const userId = parseInt(req.params.userId);
   
     try {
-      const success = await Book.deleteUser(userId);
+      const success = await User.deleteUser(userId);
       if (!success) {
         return res.status(404).send("User not found");
       }
@@ -66,10 +66,29 @@ const createUser = async (req, res) => {
     }
   };
 
+//   const login = async (req, res) => {
+//     const { email, password } = req.body;
+
+//     try {
+//         const user = await User.getUserByEmail(email);
+//         if (!user) return res.status(400).json({ message: "Invalid email or password" });
+
+//         const isMatch = await user.validatePassword(password);
+//         if (!isMatch) return res.status(400).json({ message: "Invalid email or password" });
+
+//         const token = jwt.sign({ id: user.userId, userType: user.userType }, 'your_jwt_secret', { expiresIn: '1h' });
+//         res.json({ token, userType: user.userType });
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).send("Server error");
+//     }
+// };
+
 module.exports = {
   getAllUsers,
   getUserByUserId,
   createUser,
   updateUser,
   deleteUser,
+  //login,
 };

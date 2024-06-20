@@ -13,7 +13,7 @@ class User {
     static async getAllUsers() {
       const connection = await sql.connect(dbConfig);
   
-      const sqlQuery = `SELECT * FROM Users`; // Replace with your actual table name
+      const sqlQuery = `SELECT * FROM [Users]`; // Replace with your actual table name
   
       const request = connection.request();
       const result = await request.query(sqlQuery);
@@ -28,7 +28,7 @@ class User {
     static async getUserByUserId(userId) {
       const connection = await sql.connect(dbConfig);
   
-      const sqlQuery = `SELECT * FROM User WHERE userId = @userId`; // Parameterized query
+      const sqlQuery = `SELECT * FROM [Users] WHERE userId = @userId`; // Parameterized query
   
       const request = connection.request();
       request.input("userId", userId);
@@ -50,7 +50,7 @@ class User {
     static async createUser(newUserData) {
         const connection = await sql.connect(dbConfig);
     
-        const sqlQuery = `INSERT INTO User (email, name, password) VALUES (@email, @name, @password); SELECT SCOPE_IDENTITY() AS userId;`; // Retrieve ID of inserted record
+        const sqlQuery = `INSERT INTO [Users] (email, name, password) VALUES (@email, @name, @password); SELECT SCOPE_IDENTITY() AS userId;`; // Retrieve ID of inserted record
     
         const request = connection.request();
         request.input("email", newUserData.email);
@@ -69,7 +69,7 @@ class User {
       static async updateUser(userId, newUserData) {
         const connection = await sql.connect(dbConfig);
     
-        const sqlQuery = `UPDATE User SET email = @email, name = @name WHERE userId = @userId`; // Parameterized query
+        const sqlQuery = `UPDATE [Users] SET email = @email, name = @name WHERE userId = @userId`; // Parameterized query
     
         const request = connection.request();
         request.input("userId", userId);
@@ -80,13 +80,13 @@ class User {
     
         connection.close();
     
-        return this.getBookByUserId(userId); // returning the updated user data
+        return this.getUserByUserId(userId); // returning the updated user data
       }
     
       static async deleteUser(userId) {
         const connection = await sql.connect(dbConfig);
     
-        const sqlQuery = `DELETE FROM User WHERE userId = @userId`; // Parameterized query
+        const sqlQuery = `DELETE FROM [Users] WHERE userId = @userId`; // Parameterized query
     
         const request = connection.request();
         request.input("userId", userId);
@@ -96,6 +96,22 @@ class User {
     
         return result.rowsAffected > 0; // Indicate success based on affected rows
       }
+
+    //   static async getUserByEmail(email) {
+    //     const connection = await sql.connect(dbConfig);
+    //     const sqlQuery = `SELECT * FROM Users WHERE email = @Email`;
+    //     const request = connection.request();
+    //     request.input("Email", sql.NVarChar, email);
+    //     const result = await request.query(sqlQuery);
+    //     connection.close();
+    //     if (result.recordset.length === 0) return null;
+    //     const row = result.recordset[0];
+    //     return new User(row.userId, row.email, row.name, row.password, row.userType);
+    // }
+
+    // async validatePassword(password) {
+    //     return await bcrypt.compare(password, this.password);
+    // }
     
   }
   

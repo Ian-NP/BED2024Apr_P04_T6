@@ -7,6 +7,10 @@ import multer from "multer";
 import articleCommentController from "./controllers/articleCommentsController"
 import eventCommentController from "./controllers/eventCommentsController"
 import EventController from "./controllers/eventController"
+// import userController from "./controllers/userController"
+import adminController from "./controllers/adminController"
+
+const userController = require('./controllers/userController')
 
 
 
@@ -21,8 +25,34 @@ app.use(staticMiddleware);
 
 
 // Routes
+app.get("/users", userController.getAllUsers);
+app.get("/users/:userId", userController.getUserByUserId);
+app.post("/users", userController.createUser);
+app.put("/users/:userId", userController.updateUser);
+app.delete("/users/:userId", userController.deleteUser);
+
 app.get("/events", async(req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/events.html"));
+});
+
+app.get("/signup", async(req, res) => {
+    res.sendFile(path.join(__dirname + "/public/html/signup.html"));
+});
+
+app.get("/login", async(req, res) => {
+    res.sendFile(path.join(__dirname + "/public/html/login.html"));
+});
+
+app.get("/userlogin", async(req, res) => {
+    res.sendFile(path.join(__dirname + "/public/html/userlogin.html"));
+});
+
+app.get("/companylogin", async(req, res) => {
+    res.sendFile(path.join(__dirname + "/public/html/companylogin.html"));
+});
+
+app.get("/adminlogin", async(req, res) => {
+    res.sendFile(path.join(__dirname + "/public/html/adminlogin.html"));
 });
 
 app.get("/", async(req, res) => {
@@ -48,6 +78,14 @@ app.get("/api/event/:eventId", eventCommentController.getAllCommentsFromEventId)
 app.post("/api/event/:eventId", eventCommentController.createEventComment);
 app.put("/api/event/:eventId", eventCommentController.updateEventCommentContent);
 app.delete("/api/event/:eventId", eventCommentController.deleteEventComment);
+
+
+
+app.get("/admin", adminController.getAllAdminUsers);
+app.get("/admin/:adminId", adminController.getAdminById);
+app.post("/admin", adminController.createAdminUser);
+app.put("/admin/:adminId", adminController.updateAdminUser);
+app.delete("/admin/:adminId", adminController.deleteAdminUser);
 
 app.listen(PORT, async () => {
     try {
