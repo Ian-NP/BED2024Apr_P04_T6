@@ -1,7 +1,7 @@
 const sql = require("mssql");
 const bcrypt = require("bcrypt");
 const dbConfig = require("../dbConfig");
-
+console.log("before user class");
 class User {
     constructor(userId, email, name, password, userType) {
       this.userId = userId;
@@ -10,10 +10,10 @@ class User {
       this.password = password;
       this.userType = userType;
     }
-  
+    
     static async getAllUsers() {
       const connection = await sql.connect(dbConfig);
-  
+      console.log("test from get all users")
       const sqlQuery = `SELECT * FROM [Users]`; // Replace with your actual table name
   
       const request = connection.request();
@@ -28,6 +28,7 @@ class User {
   
     static async getUserByUserId(userId) {
       const connection = await sql.connect(dbConfig);
+      console.log("test from getusersbyid")
   
       const sqlQuery = `SELECT * FROM [Users] WHERE userId = @userId`; // Parameterized query
   
@@ -56,6 +57,7 @@ class User {
     
           // Connect to the database
           const connection = await sql.connect(dbConfig);
+          console.log("after connection in createuser")
     
           // Insert user data into the database
           const query = `
@@ -73,6 +75,9 @@ class User {
           } else {
             request.input('paypalEmail', sql.VarChar, null); // Set PayPal email to null for non-company users
           }
+          console.log("before request query in create user")
+          const result = await request.query(query);
+          
     
           // Close the database connection
           await connection.close();

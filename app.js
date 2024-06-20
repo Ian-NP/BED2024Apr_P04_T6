@@ -7,10 +7,10 @@ import multer from "multer";
 import articleCommentController from "./controllers/articleCommentsController"
 import eventCommentController from "./controllers/eventCommentsController"
 import EventController from "./controllers/eventController"
-// import userController from "./controllers/userController"
+import userController from "./controllers/userController"
 import adminController from "./controllers/adminController"
 
-const userController = require('./controllers/userController')
+//const userController = require('./controllers/userController')
 
 
 
