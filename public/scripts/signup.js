@@ -1,15 +1,16 @@
 console.log('Script loaded');
 
-document.addEventListener('DOMContentLoaded', (event) => {
-    document.getElementById('signup-form').addEventListener('submit', function(event) {
+document.addEventListener('DOMContentLoaded', function() {
+    const signupForm = document.getElementById('signup-form');
+    signupForm.addEventListener('submit', function(event) {
         event.preventDefault(); // Prevent default form submission
 
         // Check if the form is valid
-        if (this.checkValidity()) {
+        if (signupForm.checkValidity()) {
             submitForm();
         } else {
             // If form is not valid, show validation errors
-            this.reportValidity();
+            signupForm.reportValidity();
         }
     });
 });
@@ -83,6 +84,14 @@ async function submitForm() {
     // Check if terms and conditions are checked
     if (!terms.checked) {
         isValid = false;
+    }
+
+    if (isValid) {
+        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+        if (!emailPattern.test(email) || (userType === 'C' && !emailPattern.test(paypalEmail))) {
+            isValid = false;
+            alert('Please enter a valid email address.');
+        }
     }
 
     // Submit the form if all fields are valid

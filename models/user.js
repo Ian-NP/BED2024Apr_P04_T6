@@ -69,7 +69,7 @@ class User {
         const request = connection.request();
         request.input('Email', sql.VarChar, newUserData.email);
         request.input('Name', sql.VarChar, newUserData.firstName); // Adjusted to use firstName
-        request.input('Password', sql.VarChar, hashedPassword);
+        request.input('Password', sql.VarChar, newUserData.password);
         request.input('UserType', sql.Char, newUserData.userType);
         request.input('PaypalEmail', sql.VarChar, newUserData.userType === 'C' ? newUserData.paypalEmail : null);
   

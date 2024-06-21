@@ -9,7 +9,7 @@ import eventCommentController from "./controllers/eventCommentsController"
 import EventController from "./controllers/eventController"
 import userController from "./controllers/userController"
 import adminController from "./controllers/adminController"
-
+const validateUser = require("./middleware/validateUser");
 //const userController = require('./controllers/userController')
 
 
@@ -27,8 +27,8 @@ app.use(staticMiddleware);
 // Routes
 app.get("/users", userController.getAllUsers);
 app.get("/users/:userId", userController.getUserByUserId);
-app.post("/users", userController.createUser);
-app.put("/users/:userId", userController.updateUser);
+app.post("/users", validateUser, userController.createUser);
+app.put("/users/:userId", validateUser, userController.updateUser);
 app.delete("/users/:userId", userController.deleteUser);
 
 
