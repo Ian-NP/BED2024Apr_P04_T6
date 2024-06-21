@@ -1,4 +1,8 @@
 const User = require("../models/user");
+//const bcrypt = require('bcrypt');
+const sql = require('mssql');
+const jwt = require('jsonwebtoken');
+const dbConfig = require('../dbConfig');
 
 const getAllUsers = async (req, res) => {
   try {
@@ -79,7 +83,57 @@ const createUser = async (req, res) => {
       res.status(500).send("Error deleting user");
     }
   };
-  
+
+  const generateToken = (userId, userType) => {
+    const payload = { userId, userType };
+    return jwt.sign(payload, 'your_jwt_secret', { expiresIn: '1h' });
+};
+
+const loginUser = async (req, res) => {
+    const { email, password } = req.body;
+    console.log('Received login request:', { email, password }); // Debug log
+
+    try {
+        const connection = await sql.connect(dbConfig);
+        const sqlQuery = `
+            SELECT * FROM Users
+            WHERE email = @Email
+        `;
+        const request = connection.request();
+        request.input('Email', sql.VarChar, email);
+        const result = await request.query(sqlQuery);
+
+        console.log('Query result:', result); // Debug log
+
+        if (result.recordset.length === 0) {
+            console.log('Email not found'); // Debug log
+            return res.status(401).json({ success: false, message: 'Email not found' });
+        }
+
+        const user = result.recordset[0];
+        console.log('User found:', user); // Debug log
+
+        // Directly compare passwords
+        if (password !== user.password) {
+            console.log('Incorrect password'); // Debug log
+            return res.status(401).json({ success: false, message: 'Incorrect password' });
+        }
+
+        // Generate token upon successful login
+        const token = generateToken(user.userId, user.userType);
+
+        // Authenticated successfully
+        console.log('Login successful'); // Debug log
+        return res.status(200).json({ success: true, message: 'Login successful', token });
+    } catch (error) {
+        console.error('Error logging in user:', error);
+        return res.status(500).json({ success: false, message: 'Internal server error' });
+    } finally {
+        sql.close(); // Ensure to close the SQL connection
+    }
+};
+
+
 
 //   const login = async (req, res) => {
 //     const { email, password } = req.body;
@@ -105,5 +159,5 @@ module.exports = {
   createUser,
   updateUser,
   deleteUser,
-  //login,
+  loginUser,
 };

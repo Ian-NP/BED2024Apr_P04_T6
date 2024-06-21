@@ -11,7 +11,7 @@ import userController from "./controllers/userController"
 import adminController from "./controllers/adminController"
 const validateUser = require("./middleware/validateUser");
 //const userController = require('./controllers/userController')
-
+//const bcrypt = require('bcrypt');
 
 
 const app = express();
@@ -30,6 +30,48 @@ app.get("/users/:userId", userController.getUserByUserId);
 app.post("/users", validateUser, userController.createUser);
 app.put("/users/:userId", validateUser, userController.updateUser);
 app.delete("/users/:userId", userController.deleteUser);
+
+
+
+app.post('/userlogin', userController.loginUser);
+// app.post('/userlogin', validateLoginInput, async (req, res) => {
+//     const { email, password } = req.body;
+//     console.log('Received login request:', { email, password });
+
+//     try {
+//         // Connect to the database
+//         const connection = await sql.connect(dbConfig);
+
+//         // Check if user exists
+//         const query = 'SELECT * FROM [Users] WHERE email = @email';
+//         const request = connection.request();
+//         request.input('email', sql.VarChar, email);
+//         request.input('password', sql.VarChar, password);
+//         const result = await request.query(query);
+
+//         if (result.recordset.length === 0) {
+//             return res.status(401).json({ success: false, message: 'Invalid email or password.' });
+//         }
+
+//         const user = result.recordset[0];
+
+//         // Compare the provided password with the stored hashed password
+//         const passwordMatch = await bcrypt.compare(password, user.password);
+//         if (!passwordMatch) {
+//             return res.status(401).json({ success: false, message: 'Invalid email or password.' });
+//         }
+
+//         // Close the database connection
+//         await connection.close();
+
+//         // If credentials are valid, send success response with redirect URL
+//         res.json({ success: true, message: 'Login successful.', redirectUrl: '/' });
+
+//     } catch (error) {
+//         console.error('Error during login:', error);
+//         res.status(500).json({ success: false, message: 'Internal server error.' });
+//     }
+// });
 
 
 app.get("/events", async(req, res) => {
