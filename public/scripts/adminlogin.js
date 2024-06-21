@@ -23,7 +23,7 @@ document.getElementById('login-form').addEventListener('submit', async function(
             if (result.success) {
                 alert('Login Successful!');
                 localStorage.setItem('token', result.token); // Store token securely
-                window.location.href = '/'; // Redirect user to the home page
+                window.location.href = '/adminhomepage'; // Redirect user to the home page
             } else {
                 alert(result.message); // Display error message from server
             }

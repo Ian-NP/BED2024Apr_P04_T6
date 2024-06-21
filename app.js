@@ -102,6 +102,10 @@ app.get("/adminlogin", async(req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/adminlogin.html"));
 });
 
+app.get("/adminhomepage", async(req, res) => {
+    res.sendFile(path.join(__dirname + "/public/html/adminhome.html"));
+});
+
 app.get("/", async(req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/home.html"));
 });
