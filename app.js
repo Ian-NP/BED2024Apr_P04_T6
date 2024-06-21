@@ -34,6 +34,8 @@ app.delete("/users/:userId", userController.deleteUser);
 
 
 app.post('/userlogin', userController.loginUser);
+app.post('/companylogin', userController.loginUser);
+app.post('/adminlogin', adminController.loginUser);
 // app.post('/userlogin', validateLoginInput, async (req, res) => {
 //     const { email, password } = req.body;
 //     console.log('Received login request:', { email, password });
