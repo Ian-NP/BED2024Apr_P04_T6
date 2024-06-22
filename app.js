@@ -75,6 +75,8 @@ app.post('/adminlogin', adminController.loginUser);
 //     }
 // });
 
+app.post('/createadmin', adminController.createAdminUser);
+
 
 app.get("/events", async(req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/events.html"));
@@ -104,6 +106,22 @@ app.get("/adminlogin", async(req, res) => {
 
 app.get("/adminhomepage", async(req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/adminhome.html"));
+});
+
+app.get("/createadmin", async(req, res) => {
+    res.sendFile(path.join(__dirname + "/public/html/createadmin.html"));
+});
+
+app.get("/viewaccounts", async(req, res) => {
+    res.sendFile(path.join(__dirname + "/public/html/viewaccounts.html"));
+});
+
+app.get("/manageevents", async(req, res) => {
+    res.sendFile(path.join(__dirname + "/public/html/manageevents.html"));
+});
+
+app.get("/manageblogs", async(req, res) => {
+    res.sendFile(path.join(__dirname + "/public/html/manageblogs.html"));
 });
 
 app.get("/", async(req, res) => {
