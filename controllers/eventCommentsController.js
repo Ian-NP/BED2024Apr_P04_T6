@@ -12,6 +12,18 @@ const getAllCommentsFromEventId = async(req, res) =>{
     }
 }
 
+const getEventCommentById = async(req, res) =>{
+    const commentId = parseInt(req.params.commentId);
+
+    try{
+        const eventComment = await EventComments.getEventCommentById(commentId);
+        return res.status(200).json(eventComment);
+    } catch(err){
+        console.error(`Error getting comments for commentId: ${commentId}`, err);
+        res.status(500).send("Error retrieving comment for commentId");
+    }
+}
+
 const createEventComment = async(req, res) =>{
     const newCommentData = req.body;
 
@@ -57,6 +69,7 @@ const deleteEventComment = async(req, res) =>{
 
 module.exports = {
     getAllCommentsFromEventId,
+    getEventCommentById,
     createEventComment,
     updateEventCommentContent,
     deleteEventComment
