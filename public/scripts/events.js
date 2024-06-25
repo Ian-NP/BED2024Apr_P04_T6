@@ -1,4 +1,6 @@
-window.onload = function() {
+console.log('Events script loaded.');
+
+
     var buttons = document.querySelectorAll("#Tag-Buttons button");
     for (var i = 0; i < buttons.length; i++) {
         buttons[i].addEventListener('click', function() {
@@ -9,11 +11,9 @@ window.onload = function() {
 
     const searchInput = document.getElementById("Search-Input");
     searchInput.addEventListener('input', filterEvents);
-};
 
-document.addEventListener('DOMContentLoaded', () => {
     fetchEvents();
-});
+
 
 let allEvents = [];
 
@@ -48,15 +48,18 @@ function createEventCard(event) {
     const timeLeft = calculateTimeLeft(eventTime);
     const formattedDate = formatDate(eventTime);
 
+    const eventImageSrc = event.eventImage ? `data:image/png;base64,${event.eventImage}` : '../images/image-removebg.png';
+    const eventCost = event.cost ? `$${event.cost.toFixed(2)}` : 'Free';
+
     eventDiv.innerHTML = `
         <div class="Event-Image">
-            <img class="Event-Image" src="../images/image-removebg.png" alt="Event Image">
+            <img class="Event-Image" src="${eventImageSrc}" alt="Event Image">
         </div>
         <div id="tag">
             <p class="Event-Tag">${event.eventCategory}</p>
         </div>
         <div class="Event-Details">
-            <h3 class="Event-Name">${event.eventName} <span class="Event-Cost">(Free)</span></h3>
+            <h3 class="Event-Name">${event.eventName} <span class="Event-Cost">(${eventCost})</span></h3>
             <p class="Event-Hoster">${event.creatorName}</p>
             <p class="Event-Details">${event.eventOverview || 'No overview available'}</p>
         </div>
@@ -66,7 +69,6 @@ function createEventCard(event) {
         </div>
     `;
 
-    
     eventDiv.addEventListener('click', () => {
         const eventId = eventDiv.dataset.eventId;
         window.open(`../html/specificEventDetails.html?eventId=${eventId}`, '_blank');

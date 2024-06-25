@@ -3,7 +3,7 @@ import dbConfig from "../dbConfig";
 const EventAttendanceModel = require('./eventAttendanceModel'); 
 
 class EventModel {
-    constructor(eventId, eventName, eventDesc, eventOverview, eventCategory, eventReports, eventTime, creatorId, creatorName) {
+    constructor(eventId, eventName, eventDesc, eventOverview, eventCategory, eventReports, eventTime, creatorId, creatorName, cost, eventImage) {
         this.eventId = eventId;
         this.eventName = eventName;
         this.eventDesc = eventDesc;
@@ -13,6 +13,8 @@ class EventModel {
         this.eventTime = eventTime;
         this.creatorId = creatorId;
         this.creatorName = creatorName;
+        this.cost = cost;
+        this.eventImage = eventImage;
     }
 
     static async getAllEvents() {
@@ -30,7 +32,9 @@ class EventModel {
                     e.eventReports, 
                     e.eventTime, 
                     e.creatorId, 
-                    u.name AS creatorName 
+                    u.name AS creatorName,
+                    e.cost,
+                    e.eventImage
                 FROM Events e
                 JOIN Users u ON e.creatorId = u.userId
             `;
@@ -47,7 +51,9 @@ class EventModel {
                     record.eventReports,
                     record.eventTime,
                     record.creatorId,
-                    record.creatorName
+                    record.creatorName,
+                    record.cost,
+                    record.eventImage
                 )
             );
             
@@ -81,7 +87,9 @@ class EventModel {
                     e.eventReports, 
                     e.eventTime, 
                     e.creatorId, 
-                    u.name AS creatorName 
+                    u.name AS creatorName,
+                    e.cost,
+                    e.eventImage
                 FROM Events e
                 JOIN Users u ON e.creatorId = u.userId
                 WHERE e.eventId = @eventId
@@ -99,7 +107,9 @@ class EventModel {
                 result.recordset[0].eventReports,
                 result.recordset[0].eventTime,
                 result.recordset[0].creatorId,
-                result.recordset[0].creatorName
+                result.recordset[0].creatorName,
+                result.recordset[0].cost,
+                result.recordset[0].eventImage
             ) : null;
 
             if (event) {
@@ -136,7 +146,9 @@ class EventModel {
                     e.eventReports, 
                     e.eventTime, 
                     e.creatorId, 
-                    u.name AS creatorName 
+                    u.name AS creatorName,
+                    e.cost,
+                    e.eventImage
                 FROM Events e
                 JOIN Users u ON e.creatorId = u.userId
                 WHERE e.creatorId = @creatorId
@@ -155,7 +167,9 @@ class EventModel {
                     record.eventReports,
                     record.eventTime,
                     record.creatorId,
-                    record.creatorName
+                    record.creatorName,
+                    record.cost,
+                    record.eventImage
                 )
             );
 
@@ -184,19 +198,21 @@ class EventModel {
         try {
             connection = await sql.connect(dbConfig);
             const sqlQuery = `
-                INSERT INTO Events (eventName, eventDesc, eventCategory, eventReports, eventTime, creatorId, eventOverview)
-                VALUES (@eventName, @eventDesc, @eventCategory, @eventReports, @eventTime, @creatorId, @eventOverview);
+                INSERT INTO Events (eventDesc, eventCategory, eventReports, eventTime, creatorId, eventOverview, cost, eventImage)
+                VALUES (@eventName, @eventDesc, @eventCategory, @eventReports, @eventTime, @creatorId, @eventOverview, @cost, @eventImage);
                 SELECT SCOPE_IDENTITY() AS newEventId;
             `;
 
             const request = connection.request();
-            request.input("eventName", sql.NVarChar(255), newEventData.eventName);
+            
             request.input("eventDesc", sql.NVarChar(sql.MAX), newEventData.eventDesc);
             request.input("eventCategory", sql.NVarChar(50), newEventData.eventCategory);
             request.input("eventReports", sql.Int, newEventData.eventReports);
             request.input("eventTime", sql.DateTime2, newEventData.eventTime);
             request.input("creatorId", sql.Int, newEventData.creatorId);
             request.input("eventOverview", sql.NVarChar(sql.MAX), newEventData.eventOverview);
+            request.input("cost", sql.Decimal(10, 2), newEventData.cost);
+            request.input("eventImage", sql.VarBinary(sql.MAX), newEventData.eventImage);
 
             const result = await request.query(sqlQuery);
             const newEventId = result.recordset[0].newEventId;
@@ -210,7 +226,9 @@ class EventModel {
                 newEventData.eventReports,
                 newEventData.eventTime,
                 newEventData.creatorId,
-                newEventData.creatorName
+                newEventData.creatorName,
+                newEventData.cost,
+                newEventData.eventImage
             );
 
             return createdEvent;
@@ -244,7 +262,9 @@ class EventModel {
                     eventReports = @eventReports,
                     eventTime = @eventTime,
                     creatorId = @creatorId,
-                    eventOverview = @eventOverview
+                    eventOverview = @eventOverview,
+                    cost = @cost,
+                    eventImage = @eventImage
                 WHERE eventId = @eventId;
                 SELECT 
                     e.eventId, 
@@ -255,7 +275,9 @@ class EventModel {
                     e.eventReports, 
                     e.eventTime, 
                     e.creatorId, 
-                    u.name AS creatorName 
+                    u.name AS creatorName,
+                    e.cost,
+                    e.eventImage
                 FROM Events e
                 JOIN Users u ON e.creatorId = u.userId
                 WHERE e.eventId = @eventId;
@@ -270,6 +292,8 @@ class EventModel {
             request.input("eventTime", sql.DateTime2, updatedEventData.eventTime);
             request.input("creatorId", sql.Int, updatedEventData.creatorId);
             request.input("eventOverview", sql.NVarChar(sql.MAX), updatedEventData.eventOverview);
+            request.input("cost", sql.Decimal(10, 2), updatedEventData.cost);
+            request.input("eventImage", sql.VarBinary(sql.MAX), updatedEventData.eventImage);
 
             const result = await request.query(sqlQuery);
             const record = result.recordset[0];
@@ -283,7 +307,9 @@ class EventModel {
                 record.eventReports,
                 record.eventTime,
                 record.creatorId,
-                record.creatorName
+                record.creatorName,
+                record.cost,
+                record.eventImage
             );
 
             return { event: updatedEvent, attendees: attendees };

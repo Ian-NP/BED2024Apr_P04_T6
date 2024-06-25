@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express from "express";
 import bodyParser from "body-parser";
 import sql from "mssql";
@@ -12,6 +15,7 @@ import adminController from "./controllers/adminController"
 const validateUser = require("./middleware/validateUser");
 //const userController = require('./controllers/userController')
 //const bcrypt = require('bcrypt');
+import authenticateToken from "./middleware/auth";
 
 
 const app = express();
@@ -78,9 +82,13 @@ app.post('/adminlogin', adminController.loginUser);
 app.post('/createadmin', adminController.createAdminUser);
 
 
-app.get("/events", async(req, res) => {
-    res.sendFile(path.join(__dirname + "/public/html/events.html"));
+// Serve protected.html for /events route
+app.get('/events', (req, res) => {
+    res.sendFile(path.join(__dirname + '/public/html/protected.html'));
 });
+
+// Handle content fetching based on token
+app.get('/events-content', authenticateToken, EventController.serveEventsContent);
 
 app.get("/signup", async(req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/signup.html"));
@@ -134,6 +142,7 @@ app.get("/statistics", async(req, res) => {
 
 app.get("/api/events", EventController.getAllEvents);
 app.get("/api/events/:eventId", EventController.getEventById);
+app.post('/api/events', authenticateToken, EventController.createEvent);
 app.get("/api/article/comment/:commentId", articleCommentController.getArticleCommentById);
 app.get("/article/:articleId/comments", async (req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/comment.html"));
