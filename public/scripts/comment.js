@@ -7,6 +7,13 @@ class User {
     }
 }
 
+class Page{
+    constructor(page, pageId){
+        this.page = page;
+        this.pageId = pageId;
+    }
+}
+
 const user = new User(1, "Optimus Prime", "https://avatarfiles.alphacoders.com/341/341848.png");
 sessionStorage.setItem("User", JSON.stringify(user));
 
@@ -37,19 +44,32 @@ const commentPostedTime = (timeInMileSec) => {
     }
 };
 
-function getArticleId(){
+function getCommentPage(){
     const pathname = window.location.pathname; // e.g., /article/1
     const pathSegments = pathname.split('/'); // Splits the pathname into an array: ["", "article", "1"]
-    const articleId = pathSegments[2];
-    console.log(articleId);
-    return articleId;
+    let page;
+    if (pathSegments[1] == "article"){
+        const articleId = pathSegments[2];
+        page = new Page(pathSegments[1], articleId);
+    } else{
+        const eventId = pathSegments[2];
+        page = new Page(pathSegments[1], eventId);
+    }
+    return page
 }
 
+const page = getCommentPage();
+
 async function fetchComments() {
-    const articleId = getArticleId();
-    const response = await fetch(`/api/article/${articleId}/comments`);
-    const comments = await response.json();
-    displayComments(comments);
+    if (page.page === "article"){
+        const response = await fetch(`/api/article/${page.pageId}/comments`);
+        const comments = await response.json();
+        displayComments(comments);
+    } else{
+        const response = await fetch(`/api/event/${page.pageId}/comments`);
+        const comments = await response.json();
+        displayComments(comments);
+    }
 }
 
 fetchComments();
@@ -267,18 +287,33 @@ async function getCommentById(commentId){
     return comment;
 }
 
-async function postComment(content, score, timeStamp, userId, articleId, parentCommentId) {
-    const newCommentData = {
-        content: content,
-        score: score, // Assuming a new comment starts with a score of 0
-        timeStamp: timeStamp,
-        userId: userId,
-        articleId: articleId,
-        parentCommentId: parentCommentId
-    };
+async function postComment(content, score, timeStamp, userId, parentCommentId) {
+    let newCommentData;
+
+    if (page.page === "article"){
+        const articleId = page.pageId;
+        newCommentData = {
+            content: content,
+            score: score, // Assuming a new comment starts with a score of 0
+            timeStamp: timeStamp,
+            userId: userId,
+            articleId: articleId,
+            parentCommentId: parentCommentId
+        };
+    } else{
+        const eventId = page.pageId;
+        newCommentData = {
+            content: content,
+            score: score, // Assuming a new comment starts with a score of 0
+            timeStamp: timeStamp,
+            userId: userId,
+            eventId: eventId,
+            parentCommentId: parentCommentId
+        };
+    }
     try {
         // Send the POST request to the backend
-        const response = await fetch(`/api/article/${articleId}/comments`, {
+        const response = await fetch(`/api/${page.page}/${page.pageId}/comments`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -308,11 +343,9 @@ async function updateComment(commentId, newContent=null, newScore=null){
         score: newScore
     };
 
-    const articleId = getArticleId();
-
     try {
         // Send the POST request to the backend
-        const response = await fetch(`/api/article/${articleId}/comments`, {
+        const response = await fetch(`/api/${page.page}/${page.pageId}/comments`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -336,11 +369,9 @@ async function deleteComment(commentId) {
         commentId: commentId
     };
 
-    const articleId = getArticleId();
-
     try {
         // Send the DELETE request to the backend
-        const response = await fetch(`/api/article/${articleId}/comments`, {
+        const response = await fetch(`/api/${page.page}/${page.pageId}/comments`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
@@ -640,9 +671,7 @@ commentSectionContainer.addEventListener('click', async(event) => {
                 // Get the current date and time
                 const currentDate = new Date();
                 const formattedDate = commentPostedTime(Date.now() - currentDate.getTime());
-                
-                // Get articleId
-                const articleId = getArticleId();
+            
 
                 // Creation of comment in the DB is at line 
 
@@ -753,7 +782,7 @@ commentSectionContainer.addEventListener('click', async(event) => {
                 const parentCommentId = parentContainer.getAttribute('data-commentid');
 
                 // COMPLETE SYCNING CREATION OF COMMENT WITH DATABASE
-                const createdCommentData = await postComment(commentText, 0, currentDate.toISOString(), userId, articleId, parentCommentId);
+                const createdCommentData = await postComment(commentText, 0, currentDate.toISOString(), userId, parentCommentId);
                 newCommentContainer.setAttribute('data-commentid', createdCommentData.commentId);
 
                 if (parentContainer) {
@@ -816,10 +845,8 @@ commentSectionContainer.addEventListener('click', async(event) => {
                 const currentDate = new Date();
                 const formattedDate = commentPostedTime(Date.now() - currentDate.getTime());
 
-                const articleId = getArticleId();
-
                 // COMPLETE SYCNING CREATION OF COMMENT WITH DATABASE
-                const createdCommentData = await postComment(commentText, 0, currentDate.toISOString(), userId, articleId, null);
+                const createdCommentData = await postComment(commentText, 0, currentDate.toISOString(), userId, null);
 
                 // Create a new comment container
                 const newCommentContainer = document.createElement('div');

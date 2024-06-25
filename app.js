@@ -152,10 +152,14 @@ app.post("/api/article/:articleId/comments", articleCommentController.createArti
 app.put("/api/article/:articleId/comments", articleCommentController.updateArticleCommentContent);
 app.delete("/api/article/:articleId/comments", articleCommentController.deleteArticleComment);
 
-app.get("/api/event/:eventId", eventCommentController.getAllCommentsFromEventId);
-app.post("/api/event/:eventId", eventCommentController.createEventComment);
-app.put("/api/event/:eventId", eventCommentController.updateEventCommentContent);
-app.delete("/api/event/:eventId", eventCommentController.deleteEventComment);
+app.get("/api/event/comment/:commentId", eventCommentController.getEventCommentById);
+app.get("/event/:eventId/comments", async (req, res) => {
+    res.sendFile(path.join(__dirname + "/public/html/comment.html"));
+});
+app.get("/api/event/:eventId/comments", eventCommentController.getAllCommentsFromEventId);
+app.post("/api/event/:eventId/comments", eventCommentController.createEventComment);
+app.put("/api/event/:eventId/comments", eventCommentController.updateEventCommentContent);
+app.delete("/api/event/:eventId/comments", eventCommentController.deleteEventComment);
 
 
 
