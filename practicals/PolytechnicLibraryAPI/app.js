@@ -3,17 +3,19 @@ import bodyParser from "body-parser";
 import sql from "mssql";
 import dbConfig from "./dbConfig"
 import path from 'path';
+import userController from "./controllers/usersController"
+import bookController from "./controllers/booksController"
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 const staticMiddleware = express.static("./public");
 
 app.use(bodyParser.json({ limit: '400mb' }));
 app.use(bodyParser.urlencoded({ limit: '400mb', extended: true }));
 app.use(staticMiddleware);
 
-app.get("/users", )
-
+app.get("/users", userController.getAllUsers);
+app.post("/users/register", userController.registerUser);
 
 app.listen(PORT, async () => {
     try {
