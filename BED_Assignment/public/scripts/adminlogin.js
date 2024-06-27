@@ -18,7 +18,7 @@ document.getElementById('login-form').addEventListener('submit', async function(
 
         if (response.ok) {
             const result = await response.json();
-            console.log('Login response:', result); // Check if this logs in the browser console
+            console.log('Login response:', result); // To log response; to ease debugging
 
             if (result.success) {
                 alert('Login Successful!');

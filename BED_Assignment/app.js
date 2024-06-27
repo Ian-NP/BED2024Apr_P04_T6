@@ -30,6 +30,7 @@ app.use(staticMiddleware);
 
 
 // Routes
+//Routes for users
 app.get("/users", userController.getAllUsers);
 app.get("/users/:userId", userController.getUserByUserId);
 app.post("/users", validateUser, userController.createUser);
@@ -37,48 +38,11 @@ app.put("/users/:userId", validateUser, userController.updateUser);
 app.delete("/users/:userId", userController.deleteUser);
 
 
-
+//Routes for user login to login user
 app.post('/userlogin', userController.loginUser);
 app.post('/companylogin', userController.loginUser);
 app.post('/adminlogin', adminController.loginUser);
-// app.post('/userlogin', validateLoginInput, async (req, res) => {
-//     const { email, password } = req.body;
-//     console.log('Received login request:', { email, password });
 
-//     try {
-//         // Connect to the database
-//         const connection = await sql.connect(dbConfig);
-
-//         // Check if user exists
-//         const query = 'SELECT * FROM [Users] WHERE email = @email';
-//         const request = connection.request();
-//         request.input('email', sql.VarChar, email);
-//         request.input('password', sql.VarChar, password);
-//         const result = await request.query(query);
-
-//         if (result.recordset.length === 0) {
-//             return res.status(401).json({ success: false, message: 'Invalid email or password.' });
-//         }
-
-//         const user = result.recordset[0];
-
-//         // Compare the provided password with the stored hashed password
-//         const passwordMatch = await bcrypt.compare(password, user.password);
-//         if (!passwordMatch) {
-//             return res.status(401).json({ success: false, message: 'Invalid email or password.' });
-//         }
-
-//         // Close the database connection
-//         await connection.close();
-
-//         // If credentials are valid, send success response with redirect URL
-//         res.json({ success: true, message: 'Login successful.', redirectUrl: '/' });
-
-//     } catch (error) {
-//         console.error('Error during login:', error);
-//         res.status(500).json({ success: false, message: 'Internal server error.' });
-//     }
-// });
 
 app.post('/createadmin', adminController.createAdminUser);
 app.post('/create-event', EventController.createEvent);
@@ -95,8 +59,11 @@ app.get("/signup", async(req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/signup.html"));
 });
 app.get('/myEvents', async(req, res) => {res.sendFile(path.join(__dirname + "/public/html/myEvents.html"))});
+
+//Route for user sign up
 app.post("/signup", userController.createUser);
 
+//Route for user login
 app.get("/login", async(req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/login.html"));
 });
@@ -113,14 +80,17 @@ app.get("/adminlogin", async(req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/adminlogin.html"));
 });
 
+//Route for admin homepage
 app.get("/adminhomepage", async(req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/adminhome.html"));
 });
 
+//Route for creating admin account
 app.get("/createadmin", async(req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/createadmin.html"));
 });
 
+//Route for admin to view all accounts
 app.get("/viewaccounts", async(req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/viewaccounts.html"));
 });
@@ -163,8 +133,7 @@ app.post("/api/event/:eventId/comments", eventCommentController.createEventComme
 app.put("/api/event/:eventId/comments", eventCommentController.updateEventCommentContent);
 app.delete("/api/event/:eventId/comments", eventCommentController.deleteEventComment);
 
-
-
+//Routes for admin accounts
 app.get("/admin", adminController.getAllAdminUsers);
 app.get("/admin/:adminId", adminController.getAdminById);
 app.post("/admin", adminController.createAdminUser);
