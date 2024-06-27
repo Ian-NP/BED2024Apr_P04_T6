@@ -110,6 +110,11 @@ const signUserUp = async (req, res) => {
 
 }
 
+const getEventsByUserId = async (req, res) => {
+
+
+}
+
 
 module.exports = {
     getAllEvents,

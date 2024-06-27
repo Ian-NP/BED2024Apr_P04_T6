@@ -86,7 +86,7 @@ app.post('/create-event', EventController.createEvent);
 app.get('/events', (req, res) => {
     res.sendFile(path.join(__dirname + '/public/html/protected.html'));
 });
-
+app.get('/api/events/userEvents', authenticateToken, EventController.getEventsByUserId);
 // Handle content fetching based on token
 app.get('/events-content', authenticateToken, EventController.serveEventsContent);
 app.post('/api/:eventId/signup', authenticateToken, EventController.signUserUp);
