@@ -111,15 +111,52 @@ const signUserUp = async (req, res) => {
 }
 
 const getEventsByUserId = async (req, res) => {
+    console.log(req.user);
+    if (!req.user) {
+        return res.status(200);
+    }
 
+    const userId = req.user.userId;
+
+    console.log(userId);
+    try {
+        const events = await EventModel.getEventsByUserId(userId);
+        console.log(events);
+        res.status(200).json(events);
+    } catch (error) {
+        console.error('Error getting events by user ID:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 
 }
 
+const updateEventAttendance = async (req, res) => {
+    const eventId = parseInt(req.params.eventId);
+    if (!req.user) {
+        return res.status(200);
+    }
 
+    const userId = req.user.userId;
+
+    
+    try {
+        const result = await eventAttendanceModel.removeUserFromEvent(eventId, userId);
+        if (!result) {
+            return res.status(404).json({ error: 'Event not found' });
+        }
+        res.status(200).json({ message: 'Event attendance updated successfully' });
+    } catch (error) {
+        console.error('Error updating event attendance:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+}
 module.exports = {
     getAllEvents,
     getEventById,
     serveEventsContent,
     createEvent,
-    signUserUp
+    signUserUp,
+    getEventsByUserId,
+    updateEventAttendance
 }

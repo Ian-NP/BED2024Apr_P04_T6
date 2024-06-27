@@ -168,13 +168,13 @@ hr {
     font-size: 25px;
     font-weight: 600;
     transition: box-shadow .2s, color .2s, background-color .2s, transform .2s;
-    height: 52px;
+    height: 60px;
     padding: 9px 15px;
     text-decoration: none;
     align-self: flex-end;
     text-align: center;
     display: inline-block;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     margin-left: auto;
     cursor: pointer;
 }
@@ -185,3 +185,5 @@ hr {
     color: black;
     box-shadow: 11px 11px 0 0 black; 
 }
+
+

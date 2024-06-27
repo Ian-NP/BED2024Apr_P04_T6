@@ -365,6 +365,67 @@ class EventModel {
             }
         }
     }
+
+    static async getEventsByUserId(userId) {
+        let connection;
+
+        try {
+            connection = await sql.connect(dbConfig);
+            const sqlQuery = `
+                SELECT 
+                    e.eventId, 
+                    e.eventName, 
+                    e.eventDesc, 
+                    e.eventOverview, 
+                    e.eventCategory, 
+                    e.eventReports, 
+                    e.eventTime, 
+                    e.creatorId, 
+                    c.name AS creatorName,
+                    e.cost,
+                    e.eventImage
+                FROM Events e
+                JOIN EventAttendance ea ON e.eventId = ea.eventId
+                JOIN Users c ON e.creatorId = c.userId
+                WHERE ea.userId = @userId
+            `;
+            const request = connection.request();
+            request.input("userId", sql.Int, userId);
+            const result = await request.query(sqlQuery);
+
+            const events = result.recordset.map(record => {
+                const eventImageBase64 = record.eventImage ? record.eventImage.toString('base64') : null;
+                const event = new EventModel(
+                    record.eventId,
+                    record.eventName,
+                    record.eventDesc,
+                    record.eventOverview,
+                    record.eventCategory,
+                    record.eventReports,
+                    record.eventTime,
+                    record.creatorId,
+                    record.creatorName,
+                    record.cost,
+                    eventImageBase64
+                );
+
+                return event;
+            });
+
+            return events;
+        } catch (error) {
+            console.error('Error fetching events by user ID:', error);
+            throw error;
+        } finally {
+            if (connection) {
+                try {
+                    await connection.close();
+                } catch (closeError) {
+                    console.error('Error closing the connection:', closeError);
+                }
+            }
+        }
+    }
 }
 
 module.exports = EventModel;

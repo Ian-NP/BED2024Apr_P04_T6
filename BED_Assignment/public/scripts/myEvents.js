@@ -1,3 +1,5 @@
+
+
 document.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('token'); // Assuming the token is stored in local storage
     if (token) {
@@ -23,12 +25,14 @@ async function fetchEventsDetails(token) {
         }
 
         const events = await response.json();
+        console.log(events);
         events.forEach(event => populateEventDetails(event));
     } catch (error) {
         console.error('Error fetching event details:', error);
     }
 }
 function populateEventDetails(event) {
+    console.log(event);
     const container = document.createElement('div');
     container.className = 'eventContainer'; // Use className instead of id to handle multiple events
 
@@ -60,7 +64,7 @@ function populateEventDetails(event) {
                     <p class="timeLeft">${calculateTimeLeft(new Date(event.eventTime))}</p>
                 </div>
             </div>
-            <button class="Signup" onclick="signUpEvent('${event.id}')">Sign Up</button>
+            <button class="Signup" onclick="leaveEvent('${event.eventId}')">Leave</button>
         </div>
     `;
 
@@ -70,8 +74,30 @@ function populateEventDetails(event) {
     document.querySelector('main').appendChild(container);
 }
 
+function leaveEvent(eventId) {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        console.error('Token not found');
+        return;
+    }
 
+    fetch(`/api/${eventId}/leave`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to leave event');
+            }
 
+            window.location.reload();
+        })
+        .catch(error => console.error('Error leaving event:', error));
+
+}
 function calculateTimeLeft(eventTime) {
     const now = new Date().toLocaleString('en-US', { timeZone: 'Asia/Singapore' });
     const currentTime = new Date(now);

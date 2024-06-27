@@ -1,10 +1,31 @@
+
+
 document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
-    const eventId = urlParams.get('eventId');
+    const eventId = parseInt(urlParams.get('eventId'), 10);
     if (eventId) {
-        fetchEventDetails(eventId);
+        // Delay fetching event details by 1 second
+        setTimeout(() => {
+            fetchEventDetails(eventId);
+        }, 500);
+    }
+    
+    const token = localStorage.getItem('token');
+    if (token && !isTokenExpired(token)) {
+        checkUserEvents(token, eventId);
     }
 });
+
+function isTokenExpired(token) {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const expiry = payload.exp;
+    const now = Math.floor(Date.now() / 1000);
+    return now >= expiry;
+}
+
+function redirectToLogin() {
+    window.location.href = '/login';
+}
 
 async function fetchEventDetails(eventId) {
     try {
@@ -24,7 +45,6 @@ function populateEventDetails(event) {
     const contentElement = document.getElementById('content');
     const dateElement = document.getElementById('Date');
     const timeLeftElement = document.getElementById('timeLeft');
-    
     const IMG = document.getElementById('gmm');
 
     if (eventNameElement && costElement && creatorNameElement && tagElement && contentElement && dateElement && timeLeftElement && IMG) {
@@ -40,7 +60,6 @@ function populateEventDetails(event) {
             timeZone: 'Asia/Singapore'
         });
         timeLeftElement.innerText = calculateTimeLeft(new Date(event.eventTime));
-        console.log(event.eventImage);
         IMG.src = event.eventImage ? `data:image/png;base64,${event.eventImage}` : '../images/image-removebg.png';
     } else {
         console.error('One or more elements are not found in the DOM');
@@ -65,35 +84,59 @@ function calculateTimeLeft(eventTime) {
     return `${days}d ${hours}h ${minutes}m left`;
 }
 
-
-
-    const signUpButton = document.getElementById('Signup');
-
-    signUpButton.addEventListener('click', async function(event) {
-        const token = localStorage.getItem('token');
-      
-        const urlParams = new URLSearchParams(window.location.search);
-        const eventId = urlParams.get('eventId');
-        try {
-            const response = await fetch(`/api/${eventId}/signup`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                
-            });
-    
-            if (!response.ok) {
-                // If the response status is not ok (e.g., 4xx or 5xx), throw an error
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Sign up failed');
+async function checkUserEvents(token, eventId) {
+    try {
+        console.log(eventId);
+        const response = await fetch('/api/events/userEvents', {
+            headers: {
+                'Authorization': `Bearer ${token}`
             }
-    
-            alert('Sign up successful!');
-        } catch (error) {
-            console.error('Error signing up:', error);
-            alert(`Error signing up: ${error.message}`);
+        });
+        const userEvents = await response.json();
+        console.log(userEvents);
+        for (let event of userEvents) {
+           
+            if (event.eventId === eventId) {
+                console.log("h");
+                const signUpButton = document.getElementById('Signup');
+                signUpButton.classList.add('disabled');
+                signUpButton.innerText = 'Already Signed up';
+                break;
+            }
         }
-    });
-    
+    } catch (error) {
+        console.error('Error fetching user events:', error);
+    }
+}
+
+const signUpButton = document.getElementById('Signup');
+signUpButton.addEventListener('click', async function(event) {
+    const token = localStorage.getItem('token');
+
+    if (!token || isTokenExpired(token)) {
+        redirectToLogin();
+        return;
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const eventId = parseInt(urlParams.get('eventId'), 10);
+    try {
+        const response = await fetch(`/api/${eventId}/signup`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Sign up failed');
+        }
+
+        alert('Sign up successful!');
+    } catch (error) {
+        console.error('Error signing up:', error);
+        alert(`Error signing up: ${error.message}`);
+    }
+});

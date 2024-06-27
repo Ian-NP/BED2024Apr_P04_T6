@@ -98,6 +98,7 @@ class EventAttendanceModel {
             }
         }
     }
-}
+
+};
 
 module.exports = EventAttendanceModel;
