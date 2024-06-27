@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.text())
         .then(html => {
-            console.log('Content fetched:', html);
+            
             const contentDiv = document.getElementById('contentss');
             contentDiv.innerHTML = html;
             executeScripts(contentDiv);

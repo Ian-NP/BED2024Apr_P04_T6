@@ -84,8 +84,8 @@ const createUser = async (req, res) => {
     }
   };
 
-  const generateToken = (userId, userType) => {
-    const payload = { userId, userType };
+  const generateToken = (userId, userType, userName) => {
+    const payload = { userId, userType, userName };
     return jwt.sign(payload, 'your_jwt_secret', { expiresIn: '1h' });
 };
 
@@ -120,7 +120,8 @@ const loginUser = async (req, res) => {
         }
 
         // Generate token upon successful login
-        const token = generateToken(user.userId, user.userType);
+       
+        const token = generateToken(user.userId, user.userType, user.name);
 
         // Authenticated successfully
         console.log('Login successful'); // Debug log

@@ -79,7 +79,7 @@ body{
 #image img{
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
 }
 #heading{
     padding-left: 15px;
@@ -273,7 +273,7 @@ hr {
 .Event-Image img{
     width: 100%;
     height: 100%;
-    object-fit:contain;
+    object-fit:cover;
     
 }
 

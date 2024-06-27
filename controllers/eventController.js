@@ -1,12 +1,10 @@
 
-const multer = require('multer');
+
 const path = require('path');
 const EventModel = require('../models/eventModel');
-
+const eventAttendanceModel = require('../models/eventAttendanceModel');
  
-// Set up multer for file uploads
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+
 
 const serveEventsContent = (req, res) => {
 
@@ -51,46 +49,72 @@ const getEventById = async (req, res) => {
         res.status(500).send("Error retrieving event");
     }
 };
+const createEvent = async (req, res) => {
+    try {
+        console.log('Request body:', req.body);
 
-const createEvent = [
-    upload.single('eventImage'), // Handle file upload
-    async (req, res) => {
-        try {
-            const { eventName, eventDesc, eventCategory, eventReports, eventTime, eventOverview, cost } = req.body;
-            const eventImage = req.file ? req.file.buffer : null;
+        const eventTime = new Date(req.body.eventTime);
+        console.log('Received eventTime:', req.body.eventTime);
+        console.log('Parsed eventTime:', eventTime);
 
-            if (!req.user) {
-                return res.status(401).json({ message: 'Unauthorized' });
-            }
-
-            const creatorName = req.user.name;
-            const creatorId = req.user.id; // Assuming the token includes an 'id' field
-
-            const newEvent = {
-                eventName,
-                eventDesc,
-                eventCategory,
-                eventReports: parseInt(eventReports, 10),
-                eventTime: new Date(eventTime),
-                creatorId,
-                eventOverview,
-                cost: parseFloat(cost),
-                eventImage
-            };
-
-            const createdEvent = await EventModel.createEvent(newEvent);
-            return res.status(201).json(createdEvent);
-        } catch (error) {
-            console.error('Error creating event:', error);
-            return res.status(500).json({ message: 'Error creating event' });
+        if (isNaN(eventTime)) {
+            return res.status(400).json({ error: 'Invalid date format' });
         }
+
+        const cost = parseFloat(req.body.cost);
+        if (isNaN(cost)) {
+            return res.status(400).json({ error: 'Invalid cost format' });
+        }
+
+        // Decode the base64 string to get the binary data
+        const eventImageBuffer = Buffer.from(req.body.eventImage.split(',')[1], 'base64');
+
+        const newEventData = {
+            eventName: req.body.eventName,
+            eventDesc: req.body.eventDesc,
+            eventOverview: req.body.eventOverview,
+            eventCategory: req.body.eventCategory,
+            eventReports: req.body.eventReports || 0,
+            eventTime: eventTime,
+            creatorId: req.body.creatorId,
+            cost: cost,
+            eventImage: eventImageBuffer // Use the buffer for the image data
+        };
+
+        const createdEvent = await EventModel.createEvent(newEventData);
+        res.status(201).json(createdEvent);
+    } catch (error) {
+        console.error('Error creating event:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
-];
+};
+const signUserUp = async (req, res) => {
+    if(!req.user) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const eventId = parseInt(req.params.eventId);
+    const userId = req.user.userId;
+
+    try {
+        const result = await eventAttendanceModel.addUserToEvent(eventId, userId);
+        if (!result) {
+            return res.status(404).json({ error: 'Event not found' });
+        }
+        res.status(200).json({ message: 'User signed up successfully' });
+    } catch (error) {
+        console.error('Error signing user up:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+
+}
 
 
 module.exports = {
     getAllEvents,
     getEventById,
     serveEventsContent,
-    createEvent
+    createEvent,
+    signUserUp
 }

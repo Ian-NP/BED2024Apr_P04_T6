@@ -41,8 +41,10 @@ class EventModel {
             const request = connection.request(); 
             const result = await request.query(sqlQuery);
 
-            const events = result.recordset.map(record => 
-                new EventModel(
+            const events = result.recordset.map(record => {
+                // Convert binary image data to base64 string
+                const eventImageBase64 = record.eventImage ? record.eventImage.toString('base64') : null;
+                return new EventModel(
                     record.eventId,
                     record.eventName,
                     record.eventDesc,
@@ -53,9 +55,9 @@ class EventModel {
                     record.creatorId,
                     record.creatorName,
                     record.cost,
-                    record.eventImage
-                )
-            );
+                    eventImageBase64
+                );
+            });
             
             return events;
         } catch (error) {
@@ -98,18 +100,21 @@ class EventModel {
             request.input("eventId", sql.Int, eventId);
             const result = await request.query(sqlQuery);
 
-            const event = result.recordset[0] ? new EventModel(
-                result.recordset[0].eventId,
-                result.recordset[0].eventName,
-                result.recordset[0].eventDesc,
-                result.recordset[0].eventOverview,
-                result.recordset[0].eventCategory,
-                result.recordset[0].eventReports,
-                result.recordset[0].eventTime,
-                result.recordset[0].creatorId,
-                result.recordset[0].creatorName,
-                result.recordset[0].cost,
-                result.recordset[0].eventImage
+            const record = result.recordset[0];
+          
+            const event = record ? new EventModel(
+                record.eventId,
+                record.eventName,
+                record.eventDesc,
+                record.eventOverview,
+                record.eventCategory,
+                record.eventReports,
+                record.eventTime,
+                record.creatorId,
+                record.creatorName,
+                record.cost,
+                
+                record.eventImage ? record.eventImage.toString('base64') : null
             ) : null;
 
             if (event) {
@@ -157,8 +162,9 @@ class EventModel {
             request.input("creatorId", sql.Int, creatorId);
             const result = await request.query(sqlQuery);
 
-            const events = result.recordset.map(record => 
-                new EventModel(
+            const events = result.recordset.map(record => {
+                const eventImageBase64 = record.eventImage ? record.eventImage.toString('base64') : null;
+                const event = new EventModel(
                     record.eventId,
                     record.eventName,
                     record.eventDesc,
@@ -169,13 +175,16 @@ class EventModel {
                     record.creatorId,
                     record.creatorName,
                     record.cost,
-                    record.eventImage
-                )
-            );
+                    eventImageBase64
+                );
+                
+               
+            });
 
-            for (const event of events) {
+            for (const event in events){
                 event.attendees = await EventAttendanceModel.getAttendeesByEventId(event.eventId);
             }
+            return events;
 
             return events;
         } catch (error) {
@@ -198,13 +207,13 @@ class EventModel {
         try {
             connection = await sql.connect(dbConfig);
             const sqlQuery = `
-                INSERT INTO Events (eventDesc, eventCategory, eventReports, eventTime, creatorId, eventOverview, cost, eventImage)
+                INSERT INTO Events (eventName, eventDesc, eventCategory, eventReports, eventTime, creatorId, eventOverview, cost, eventImage)
                 VALUES (@eventName, @eventDesc, @eventCategory, @eventReports, @eventTime, @creatorId, @eventOverview, @cost, @eventImage);
                 SELECT SCOPE_IDENTITY() AS newEventId;
             `;
 
             const request = connection.request();
-            
+            request.input("eventName", sql.NVarChar(255), newEventData.eventName);
             request.input("eventDesc", sql.NVarChar(sql.MAX), newEventData.eventDesc);
             request.input("eventCategory", sql.NVarChar(50), newEventData.eventCategory);
             request.input("eventReports", sql.Int, newEventData.eventReports);
@@ -212,7 +221,7 @@ class EventModel {
             request.input("creatorId", sql.Int, newEventData.creatorId);
             request.input("eventOverview", sql.NVarChar(sql.MAX), newEventData.eventOverview);
             request.input("cost", sql.Decimal(10, 2), newEventData.cost);
-            request.input("eventImage", sql.VarBinary(sql.MAX), newEventData.eventImage);
+            request.input("eventImage", sql.VarBinary(sql.MAX), Buffer.from(newEventData.eventImage.split(',')[1], 'base64'));
 
             const result = await request.query(sqlQuery);
             const newEventId = result.recordset[0].newEventId;
@@ -293,7 +302,7 @@ class EventModel {
             request.input("creatorId", sql.Int, updatedEventData.creatorId);
             request.input("eventOverview", sql.NVarChar(sql.MAX), updatedEventData.eventOverview);
             request.input("cost", sql.Decimal(10, 2), updatedEventData.cost);
-            request.input("eventImage", sql.VarBinary(sql.MAX), updatedEventData.eventImage);
+            request.input("eventImage", sql.VarBinary(sql.MAX), Buffer.from(updatedEventData.eventImage.split(',')[1], 'base64'));
 
             const result = await request.query(sqlQuery);
             const record = result.recordset[0];

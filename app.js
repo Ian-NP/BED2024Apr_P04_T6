@@ -23,8 +23,8 @@ const PORT = process.env.PORT || 3001;
 const staticMiddleware = express.static("./public"); // Path to the public folder
   
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json({ limit: '400mb' }));
+app.use(bodyParser.urlencoded({ limit: '400mb', extended: true }));
 app.use(staticMiddleware);
 
 
@@ -80,7 +80,7 @@ app.post('/adminlogin', adminController.loginUser);
 // });
 
 app.post('/createadmin', adminController.createAdminUser);
-
+app.post('/create-event', EventController.createEvent);
 
 // Serve protected.html for /events route
 app.get('/events', (req, res) => {
@@ -89,7 +89,7 @@ app.get('/events', (req, res) => {
 
 // Handle content fetching based on token
 app.get('/events-content', authenticateToken, EventController.serveEventsContent);
-
+app.post('/api/:eventId/signup', authenticateToken, EventController.signUserUp);
 app.get("/signup", async(req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/signup.html"));
 });

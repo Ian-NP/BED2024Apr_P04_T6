@@ -4,6 +4,7 @@
     const priceContainer = document.getElementById('priceContainer');
     const previewButton = document.getElementById('previewButton');
     const createEventForm = document.getElementById('createEventForm');
+    
 
     eventFreeRadio.addEventListener('change', togglePriceInput);
     eventNotFreeRadio.addEventListener('change', togglePriceInput);
@@ -34,20 +35,21 @@
         const eventOverview = document.getElementById('eventOverview').value;
         const eventTimeInput = document.getElementById('eventTime').value;
         let eventTime = null;
-
+    
         // Get creator name from token
         const token = localStorage.getItem('token');
         let creatorName = 'Creator Name'; // Default value
+        let hosterName = 'Hoster Name'; // Default value
         if (token) {
             try {
                 const decodedToken = jwt_decode(token); // Use jwt_decode directly
-                creatorName = decodedToken.name || creatorName; // Use the name from the token if available
+                creatorName = decodedToken.userName || creatorName; // Use the userName from the token if available
+                hosterName = decodedToken.userName || hosterName; // Use the same userName for hoster
             } catch (error) {
                 console.error('Failed to decode token:', error);
             }
         }
     
-
         // Check if eventTime is not empty
         if (eventTimeInput) {
             eventTime = new Date(eventTimeInput);
@@ -56,10 +58,10 @@
                 return;
             }
         }
-
+    
         const eventCost = document.querySelector('input[name="eventCost"]:checked').value;
         const eventPrice = document.getElementById('eventPrice').value;
-
+    
         // Main preview elements
         const previewEventImage = document.getElementById('previewEventImage');
         const eventName = document.getElementById('eventName');
@@ -68,7 +70,7 @@
         const content = document.getElementById('content');
         const eventDate = document.getElementById('eventDate');
         const timeLeft = document.getElementById('timeLeft');
-
+    
         // Event card elements
         const eventCardImage = document.querySelector('.Event-Image img');
         const eventCardTag = document.querySelector('.Event-Tag');
@@ -77,7 +79,7 @@
         const eventCardDetails = document.querySelector('p.Event-Details');
         const eventCardDate = document.querySelector('.Event-Date .Date');
         const eventCardTimeLeft = document.querySelector('.Event-Date .Time-Left');
-
+    
         if (eventImage) {
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -86,11 +88,11 @@
             };
             reader.readAsDataURL(eventImage);
         }
-
+    
         const formattedEventName = eventTitle + (eventCost === 'free' ? ' (Free)' : ` ($${eventPrice})`);
         const formattedEventDate = eventTime ? formatDate(eventTime) : 'No date provided';
         const formattedTimeLeft = eventTime ? calculateTimeLeft(eventTime) : 'No date provided';
-
+    
         // Main preview
         eventName.textContent = formattedEventName;
         tag.textContent = eventTag;
@@ -98,15 +100,44 @@
         creatorNameElem.textContent = creatorName;
         eventDate.textContent = formattedEventDate;
         timeLeft.textContent = formattedTimeLeft;
-
+    
         // Event card
         eventCardTag.textContent = eventTag;
         eventCardName.textContent = formattedEventName;
-        eventCardHoster.textContent = creatorName;
+        eventCardHoster.textContent = hosterName;
         eventCardDetails.textContent = eventOverview || 'No overview available';
         eventCardDate.textContent = formattedEventDate;
         eventCardTimeLeft.textContent = formattedTimeLeft;
     }
+    
+    function formatDate(date) {
+        return date.toLocaleDateString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            timeZone: 'Asia/Singapore'
+        });
+    }
+    
+    function calculateTimeLeft(eventTime) {
+        const now = new Date().toLocaleString('en-US', { timeZone: 'Asia/Singapore' });
+        const currentTime = new Date(now);
+        const eventDateTime = new Date(eventTime).toLocaleString('en-US', { timeZone: 'Asia/Singapore' });
+        const eventTimeInSG = new Date(eventDateTime);
+        const diff = eventTimeInSG - currentTime;
+    
+        if (diff <= 0) {
+            return 'Event has started';
+        }
+    
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60)) / (1000 * 60));
+    
+        return `${days}d ${hours}h ${minutes}m left`;
+    }
+    
 
     function calculateTimeLeft(eventTime) {
         const now = new Date();
@@ -141,40 +172,73 @@
         document.querySelector('.container.mt-5.pt-5').style.display = 'block';
     });
 
-    createEventForm.addEventListener('submit', async function(event) {
-        event.preventDefault(); // Prevent default form submission
-
-        const formData = new FormData(createEventForm);
-
-        // Get the date input value and format it
-        const eventTimeInput = document.getElementById('eventTime').value;
-        if (eventTimeInput) {
-            const eventTime = new Date(eventTimeInput).toISOString(); // Convert to ISO string format
-            console.log('Formatted Event Time:', eventTime); // Debug: log the formatted event time
-            formData.set('eventTime', eventTime); // Update the eventTime in the FormData object
+   
+    document.getElementById('createButton').addEventListener('click', async function(event) {
+        event.preventDefault();
+    
+        const eventImageFile = document.getElementById('eventImage').files[0];
+        const eventTitle = document.getElementById('eventTitle').value;
+        const eventDesc = document.getElementById('eventDesc').value;
+        const eventOverview = document.getElementById('eventOverview').value;
+        const eventCategory = document.getElementById('eventTag').value;
+        const eventTime = document.getElementById('eventTime').value;
+        let eventCost = document.querySelector('input[name="eventCost"]:checked').value;
+    
+        if (eventCost.toLowerCase() === 'free') {
+            eventCost = 0;
         } else {
-            formData.delete('eventTime'); // Remove the eventTime if it's not set
+            eventCost = parseFloat(eventCost);
         }
-
-        try {
-            const response = await fetch('/api/events', {
-                method: 'POST',
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('token') // or any other method of getting the token
-                },
-                body: formData
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                alert('Event created successfully');
-                // Optionally redirect or update the UI
-            } else {
-                const error = await response.json();
-                alert('Error creating event: ' + error.message);
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('User not authenticated');
+            return;
+        }
+    
+        const decodedToken = jwt_decode(token);
+        const creatorId = decodedToken.userId;
+    
+        const reader = new FileReader();
+        reader.onloadend = async function() {
+            const eventImageBase64 = reader.result;
+    
+            const eventData = {
+                eventName: eventTitle,
+                eventDesc: eventDesc,
+                eventOverview: eventOverview,
+                eventCategory: eventCategory,
+                eventTime: eventTime,
+                cost: eventCost,
+                creatorId: creatorId,
+                eventImage: eventImageBase64
+            };
+    
+            try {
+                const response = await fetch('/create-event', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(eventData)
+                });
+    
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+    
+                const responseData = await response.json();
+                console.log('Event created successfully:', responseData);
+            } catch (error) {
+                console.error('Error creating event:', error);
             }
-        } catch (error) {
-            console.error('Error creating event:', error);
-            alert('Error creating event: ' + error.message);
+        };
+    
+        if (eventImageFile) {
+            reader.readAsDataURL(eventImageFile);
+        } else {
+            // Handle the case where there is no image file
+            alert('Please select an image file.');
         }
     });
+    
