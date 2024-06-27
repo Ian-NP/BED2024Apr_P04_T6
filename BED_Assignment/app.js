@@ -115,6 +115,9 @@ app.get("/api/events", EventController.getAllEvents);
 app.get("/api/events/:eventId", EventController.getEventById);
 app.post('/api/events', authenticateToken, EventController.createEvent);
 app.patch('/api/:eventId/leave', authenticateToken, EventController.updateEventAttendance);
+
+
+app.get("/api/users/:userId", userController.getUserByUserId);
 app.get("/api/article/comment/:commentId", articleCommentController.getArticleCommentById);
 app.get("/article/:articleId/comments", async (req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/comment.html"));

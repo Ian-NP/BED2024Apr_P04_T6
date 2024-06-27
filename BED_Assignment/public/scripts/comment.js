@@ -14,8 +14,13 @@ class Page{
     }
 }
 
-const user = new User(1, "Optimus Prime", "https://avatarfiles.alphacoders.com/341/341848.png");
-sessionStorage.setItem("User", JSON.stringify(user));
+// const user = new User(1, "Optimus Prime", "../images/default-profile-user.svg");
+// sessionStorage.setItem("User", JSON.stringify(user));
+const token = localStorage.getItem('token');
+const userDetails = jwt_decode(token);
+const currentUser = new User(userDetails.userId, userDetails.userName, "/images/profile-user.svg");
+console.log(userDetails.userId);
+
 
 // Function for converting the timeStamp ISO date to date text for comment
 const commentPostedTime = (timeInMileSec) => {
@@ -52,9 +57,20 @@ function getCommentPage(){
         const articleId = pathSegments[2];
         page = new Page(pathSegments[1], articleId);
     } else{
-        const eventId = pathSegments[2];
-        page = new Page(pathSegments[1], eventId);
-    }
+        // Get the current URL of the page
+        const currentUrl = window.location.href;
+        // Splitting the URL into different components
+        const urlParts = currentUrl.split('?');
+        const baseUrl = urlParts[0]; // Base URL without query parameters
+        const queryString = urlParts[1];
+
+        // Extracting the query parameter
+        const params = new URLSearchParams(queryString);
+        const eventId = params.get('eventId');
+            page = new Page("event", eventId);
+            console.log(eventId);
+        }
+
     return page
 }
 
@@ -64,6 +80,8 @@ async function fetchComments() {
     if (page.page === "article"){
         const response = await fetch(`/api/article/${page.pageId}/comments`);
         const comments = await response.json();
+        console.log(comments.length);
+        console.log(comments);
         displayComments(comments);
     } else{
         const response = await fetch(`/api/event/${page.pageId}/comments`);
@@ -72,22 +90,25 @@ async function fetchComments() {
     }
 }
 
-fetchComments();
-
 async function createCommentContainer(comment){
     // Get the value of the comment input
     const commentText = comment.content;
+    console.log(comment.commentId);
 
-    // const user = await fetch(`api/user/${comment.userId}`);
+    const responseUser = (await fetch(`/users/${comment.userId}`));
+    const userComment = await responseUser.json();
     // Uncomment the top line and delete bottom line once the user api is done
-    const user = JSON.parse(sessionStorage.getItem('User'));
+    // const user = JSON.parse(sessionStorage.getItem('User'));
 
     // Get user data from sessionStorage
-    if (user) {
+    if (userComment) {
         // Get user data from sessionStorage
-        const userId = parseInt(user.userId);
-        const username = user.username;
-        const profilePic = user.profilePic;
+        const userId = parseInt(userComment.userId);
+        const username = userComment.name;
+        let profilePic = userComment.profilePic;
+        if (profilePic === undefined){
+            profilePic = "/images/profile-user.svg"
+        }
 
         // Get the current date and time
         const dateOfComment = comment.timeStamp // output Eg.: "2024-06-14T19:14:23.200Z"
@@ -174,7 +195,7 @@ async function createCommentContainer(comment){
         replyBtn.appendChild(replyText);
         commentBtns.appendChild(replyBtn);
 
-        if (userId === comment.userId){
+        if (userId === currentUser.userId){
             const editBtn = document.createElement('button');
             editBtn.classList.add('edit-btn');
             const editIcon = document.createElement('i');
@@ -224,7 +245,7 @@ const displayComments = (comments) =>{
     // Logic for displayingComments
     comments.forEach(async(comment) => {
         if (comment.level === 0) {
-            console.log("Parent Comment:", comment);
+            // console.log("Parent Comment:", comment);
             // Display parent comment logic here
             const newCommentContainer = await createCommentContainer(comment);
 
@@ -235,7 +256,7 @@ const displayComments = (comments) =>{
 
             commentSectionContainerDiv.appendChild(newCommentContainer);
         } else if (comment.level === 1) {
-            console.log("Child Comment Level 1:", comment);
+            // console.log("Child Comment Level 1:", comment);
             // Display child comment level 1 logic here
             const newCommentContainer = await createCommentContainer(comment);
 
@@ -244,6 +265,8 @@ const displayComments = (comments) =>{
             replyContainer.classList.add("reply-container");
             newCommentContainer.appendChild(replyContainer);
 
+            // Sleep the thread due to the main comment section having yet to fully append to the main container
+            await new Promise(r => setTimeout(r, 45));
             const commentContainerDivs = commentSectionContainerDiv.querySelectorAll('.comment-container');
             commentContainerDivs.forEach(commentContainerDiv => {
                 if (parseInt(commentContainerDiv.getAttribute('data-commentid')) === comment.parentCommentId){
@@ -252,20 +275,24 @@ const displayComments = (comments) =>{
                 }
             });
         } else if(comment.level === 2) {
-            console.log("Comment Level = 2:", comment);
+            // console.log("Comment Level = 2:", comment);
 
             // Display deeper level comments if necessary
             const newCommentContainer = await createCommentContainer(comment);
-            const commentContainerDivs = commentSectionContainerDiv.querySelectorAll('.comment-container');
+            await new Promise(r => setTimeout(r, 45));
+            const commentContainerDivs = commentSectionContainerDiv.querySelectorAll('.comment-container[data-commentlevel="1"]');
             console.log(commentContainerDivs);
+
             commentContainerDivs.forEach(commentContainerDiv => {
+                console.log(parseInt(commentContainerDiv.getAttribute('data-commentid')));
                 if (parseInt(commentContainerDiv.getAttribute('data-commentid')) === comment.parentCommentId){
                     const replyContainer = commentContainerDiv.querySelector('.reply-container');
                     replyContainer.appendChild(newCommentContainer);
+                    console.log("Appended");
                 }
             });
         } else{
-            console.log("Comment Level > 2:", comment);
+            // console.log("Comment Level > 2:", comment);
 
             // Display deeper level comments if necessary
             const newCommentContainer = await createCommentContainer(comment);
@@ -280,6 +307,8 @@ const displayComments = (comments) =>{
         }
     });
 }
+
+fetchComments();
 
 async function getCommentById(commentId){
     const response = await fetch(`/api/article/comment/${commentId}`);
@@ -498,6 +527,7 @@ commentSectionContainer.addEventListener('click', async(event) => {
             // Insert the new add-comment div after the current comment
             const currentComment = replyButton.closest('.comment');
             currentComment.parentNode.insertBefore(newAddCommentDiv, currentComment.nextSibling);
+            newAddCommentDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
     }
 
@@ -661,12 +691,11 @@ commentSectionContainer.addEventListener('click', async(event) => {
         // Check if comment text is not empty
         if (commentText.trim() !== '') {
             // Get user data from sessionStorage
-            if (sessionStorage.getItem('User')) {
+            if (token) {
                 // Get user data from sessionStorage
-                const user = JSON.parse(sessionStorage.getItem('User'));
-                const userId = parseInt(user.userId);
-                const username = user.username;
-                const profilePic = user.profilePic;
+                const userId = parseInt(currentUser.userId);
+                const username = currentUser.username;
+                const profilePic = currentUser.profilePic;
 
                 // Get the current date and time
                 const currentDate = new Date();
@@ -834,12 +863,11 @@ commentSectionContainer.addEventListener('click', async(event) => {
         // Check if comment text is not empty
         if (commentText.trim() !== '') {
             // Get user data from sessionStorage
-            if (sessionStorage.getItem('User')) {
+            if (token) {
                 // Get user data from sessionStorage
-                const user = JSON.parse(sessionStorage.getItem('User'));
-                const userId = parseInt(user.userId);
-                const username = user.username;
-                const profilePic = user.profilePic;
+                const userId = parseInt(currentUser.userId);
+                const username = currentUser.username;
+                const profilePic = currentUser.profilePic;
 
                 // Get the current date and time
                 const currentDate = new Date();
