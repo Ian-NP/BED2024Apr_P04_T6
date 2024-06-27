@@ -1,4 +1,4 @@
-#Container{
+.eventContainer {
     grid-column-gap: 16px;
     grid-row-gap: 16px;
     background-color: whitesmoke;
@@ -15,15 +15,15 @@
     box-shadow: 6px 6px #000;
 }
 
-body{
+body {
     background-color: #7ebf9b; /* Maybe #6ed9b9 will be better */
 }
-#top{
-    display: flex;
 
+.top {
+    display: flex;
 }
 
-#image{
+.image {
     border: 3px solid #000;
     border-radius: 8px;
     width: 220px;
@@ -35,19 +35,20 @@ body{
     left: 35px;
     right: auto;
     overflow: hidden;
-  
 }
-#image img{
+
+.image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
-#heading{
+
+.heading {
     padding-left: 15px;
     position: relative;
 }
 
-#eventName{
+.eventName {
     margin: 0;
     font-family: Gilroy, Verdana, sans-serif;
     font-size: 25px;
@@ -57,7 +58,7 @@ body{
     line-height: 28px;
 }
 
-#creatorName{
+.creatorName {
     font-family: DM Sans, Verdana, sans-serif;
     font-weight: 500;
     box-sizing: border-box;
@@ -67,7 +68,7 @@ body{
     line-height: 28px;
 }
 
-#tag{
+.tag {
     grid-column-gap: 16px;
     grid-row-gap: 16px;
     border: 2px solid #000;
@@ -98,17 +99,16 @@ hr {
     border-bottom: 4px dashed #000;
     margin-top: 30px;
     margin-bottom: 30px;
-    
 }
 
-#details{
+.details {
     margin-bottom: 15px;
     font-family: Gilroy, Verdana, sans-serif;
     font-size: 40px;
     font-weight: 900;
 }
 
-#content{
+.content {
     margin-bottom: 0;
     font-family: Gilroy, Verdana, sans-serif;
     font-size: 18px;
@@ -118,7 +118,7 @@ hr {
     margin-bottom: 20px;
 }
 
-#Deadline{
+.Deadline {
     margin-bottom: 0px;
     margin-top: 60px;
     font-family: Gilroy, Verdana, sans-serif;
@@ -126,17 +126,14 @@ hr {
     font-weight: 900;
 }
 
-#lowest{
+.lowest {
     position: relative;
     display: flex;
     align-items: end;
-  
     gap: 10px;
 }
 
-
-#Date{
-    
+.Date {
     font-family: DM Sans, Verdana, sans-serif;
     font-size: 20px;
     font-weight: 400;
@@ -144,7 +141,7 @@ hr {
     display: inline-block;
 }
 
-#timeLeft{
+.timeLeft {
     font-size: 20px;
     line-height: 28px;
     color: #e84855;
@@ -155,14 +152,13 @@ hr {
     display: inline-block;
 }
 
-#bottom{
+.bottom {
     display: flex;
-   
 }
 
-#Signup{
+.Signup {
     z-index: 100;
-    background-color:red;
+    background-color: red;
     box-shadow: 4px 4px 0 0 black;
     color: #fff;
     border: 3px solid #000;
@@ -173,10 +169,7 @@ hr {
     font-weight: 600;
     transition: box-shadow .2s, color .2s, background-color .2s, transform .2s;
     height: 52px;
-    
-    
     padding: 9px 15px;
-        
     text-decoration: none;
     align-self: flex-end;
     text-align: center;
@@ -186,18 +179,9 @@ hr {
     cursor: pointer;
 }
 
-#Signup:hover {
+.Signup:hover {
     background-color: #FFD700; 
     transform: translate(-6px, -6px); 
     color: black;
     box-shadow: 11px 11px 0 0 black; 
 }
-
-#Signup.disabled {
-    color: grey;
-    pointer-events: none;
-    cursor: default;
-    background: #f5f5f5; /* Optional: to indicate it's not clickable */
-    width: 300px;
-}
-

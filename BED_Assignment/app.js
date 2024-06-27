@@ -10,6 +10,7 @@ import multer from "multer";
 import articleCommentController from "./controllers/articleCommentsController"
 import eventCommentController from "./controllers/eventCommentsController"
 import EventController from "./controllers/eventController"
+
 import userController from "./controllers/userController"
 import adminController from "./controllers/adminController"
 const validateUser = require("./middleware/validateUser");
@@ -93,7 +94,7 @@ app.post('/api/:eventId/signup', authenticateToken, EventController.signUserUp);
 app.get("/signup", async(req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/signup.html"));
 });
-
+app.get('/myEvents', async(req, res) => {res.sendFile(path.join(__dirname + "/public/html/myEvents.html"))});
 app.post("/signup", userController.createUser);
 
 app.get("/login", async(req, res) => {
@@ -143,6 +144,7 @@ app.get("/statistics", async(req, res) => {
 app.get("/api/events", EventController.getAllEvents);
 app.get("/api/events/:eventId", EventController.getEventById);
 app.post('/api/events', authenticateToken, EventController.createEvent);
+app.patch('/api/:eventId/leave', authenticateToken, EventController.updateEventAttendance);
 app.get("/api/article/comment/:commentId", articleCommentController.getArticleCommentById);
 app.get("/article/:articleId/comments", async (req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/comment.html"));
