@@ -8,18 +8,17 @@ const authenticateToken = (req, res, next) => {
 
     if (!token) {
         console.log('No token provided'); // Debug log
-       
-        return res.status(401).json({ message: 'Access denied. No token provided.' });
-    }
-
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded;
-        console.log('Token decoded:', decoded); // Debug log
-        next();
-    } catch (error) {
-        console.log('Invalid token:', error); // Debug log
-        res.status(400).json({ message: 'Invalid token.' });
+        next(); // Continue to the next middleware/controller
+    } else {
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            req.user = decoded;
+            console.log('Token decoded:', decoded); // Debug log
+            next(); // Continue to the next middleware/controller
+        } catch (error) {
+            console.log('Invalid token:', error); // Debug log
+            next(); // Continue to the next middleware/controller
+        }
     }
 };
 
