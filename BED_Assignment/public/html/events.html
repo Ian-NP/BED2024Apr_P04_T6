@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.122.0">
+    <title>This is for you to add the navbar into your pages</title>
+    <link href="../bootstrap assets/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/styles/navbar.css" rel="stylesheet">
+    <link href="../styles/events.css" rel="stylesheet">
+  </head>
+  <body>
+    <header id = "headere" data-bs-theme="dark">
+        <nav class="navbar navbar-expand-xl navbar-dark fixed-top bg-dark">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="#">A+4BED</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+              <ul class="navbar-nav ms-auto mb-2 mb-md-0 me-4">
+                <li class="nav-item">
+                  <a class="nav-link inactive custom-navlink" href="/home">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link inactive custom-navlink" href="#">My Events</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link inactive custom-navlink" href="#">Articles</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link inactive custom-navlink" href="/statistics">Statistics</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active custom-navlink" href="/events">View Events</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link inactive  custom-navlink" href="#">View Kickstarters</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link inactive  custom-navlink" href="#">About Us</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link inactive  custom-navlink" href="#">Contact Us</a>
+                </li>
+              </ul>
+              <div class="d-flex">
+                <a class="btn btn-outline-primary me-2" href="#" id="signUp_btn">Sign up</a>
+                <a class="btn btn-outline-primary" href="#" id="login_btn">Login</a>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </header>
+      <main>    
+    
+        <div id = "Main-Heading">
+            <h2>Unlock Your <span id = "Creativity">CREATIVITY</span>, Inspire <span id = "Innovation">INNOVATION</span></h2>
+            <h1>OPPORTUNITIES</h1>
+        </div>
+    
+        <div id = "Search-Area">
+            
+            <div id = "Search">
+                <div id = "Search-Image">
+                <img src="../images/image-removebg.png" alt="Search Icon">
+                </div>
+                <input type="text" id = "Search-Input" placeholder="Search for events">
+                
+            </div>
+            <div id = "Tags">
+              <h3>Pick your zone(s)</h3>
+              <div id = "Tag-Buttons">
+                <button type="button">Hackathons</button>
+                <button type="button">Conferences</button>
+                <button type="button">Talks</button>
+                <button type="button">Workshops</button>
+                <button type="button">Seminars</button>
+                <button type="button">Bootcamps</button>
+                <button type="button">Networking Events</button>
+                <button type="button">Webinars</button>
+              </div>
+             
+            </div>
+            
+        </div>
+    
+        <div id = "Events-Container">
+          
+            
+           
+        </div>
+    </main>
+    <script src="../scripts/events.js" defer></script>
+  </body>
+  
+
+
+</html>
