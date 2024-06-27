@@ -16,6 +16,7 @@ app.use(staticMiddleware);
 
 app.get("/users", userController.getAllUsers);
 app.post("/users/register", userController.registerUser);
+app.get("/books", bookController.getAllBooks);
 
 app.listen(PORT, async () => {
     try {
