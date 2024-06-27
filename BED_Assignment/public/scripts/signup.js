@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+// To toggle form based on what user selects normal user or company user
 function toggleForm() {
     var userType = document.getElementById('user-type').value;
     var normalUserForm = document.getElementById('normal-user-form');
@@ -81,11 +82,11 @@ async function submitForm() {
         }
     }
 
-    // Check if terms and conditions are checked
+    // Checking if terms and conditions are checked
     if (!terms.checked) {
         isValid = false;
     }
-
+    //Checking if email entered is a valid email
     if (isValid) {
         const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
         if (!emailPattern.test(email) || (userType === 'C' && !emailPattern.test(paypalEmail))) {

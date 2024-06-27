@@ -13,7 +13,7 @@ async function fetchAccounts() {
         const responseUsers = await fetch('/users');
         const normalUsers = await responseUsers.json();
 
-        // Merge both arrays into one array of users with a unified structure
+        // Merge both arrays into one array of users
         const mergedUsers = adminUsers.map(user => ({ id: user.adminId, name: user.name, email: user.adminEmail }))
                                     .concat(normalUsers.map(user => ({ id: user.userId, name: user.name, email: user.email })));
 
