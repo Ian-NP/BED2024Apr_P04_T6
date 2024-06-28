@@ -25,14 +25,13 @@ class Article {
                     userId, 
                     content, 
                     publicationDate
-                FROM Articles
+                FROM Articles 
             `;
             const request = connection.request();
             const result = await request.query(sqlQuery);
     
-            const articles = result.recordset.map(record => {
-                // Convert binary photo data to base64 string
-                const photoBase64 = record.photo ? record.photo.toString('base64') : null;
+            const article = result.recordset.map(record => {
+                const photoBase64 = record.photo ? record.photo.toString('base64') : null; //convert photo
                 return new Article(
                     record.articleId,
                     photoBase64,
@@ -43,7 +42,7 @@ class Article {
                 );
             });
             
-            return articles;
+            return article;
         } catch (error) {
             console.error('Error getting articles:', error);
             throw new Error("Error getting articles");
@@ -77,31 +76,43 @@ class Article {
     }
 
     static async createArticle(newArticle) {
-        const connection = await sql.connect(dbConfig);
-        const sqlQuery = `
-            INSERT INTO Articles (photo, title, userId, content, publicationDate) 
-            VALUES (@photo, @title, @userId, @content, @publicationDate);
-            SELECT SCOPE_IDENTITY() AS articleId;
-        `;
-        const request = connection.request();
-        const binaryPhoto = Buffer.from(newArticle.photo, 'base64');
-        request.input("photo", sql.VarBinary, binaryPhoto);
-        request.input("title", sql.NVarChar, newArticle.title);
-        request.input("userId", sql.Int, newArticle.userId);
-        request.input("content", sql.NVarChar, newArticle.content);
-        request.input("publicationDate", sql.DateTime2, newArticle.publicationDate);
-
+        let connection;
+    
         try {
+            connection = await sql.connect(dbConfig);
+            const sqlQuery = `
+                INSERT INTO Articles (photo, title, userId, content, publicationDate) 
+                VALUES (@photo, @title, @userId, @content, @publicationDate);
+                SELECT SCOPE_IDENTITY() AS articleId;
+            `;
+            
+            const request = connection.request();
+            request.input("photo", sql.VarBinary, newArticle.photo);
+            request.input("title", sql.NVarChar, newArticle.title);
+            request.input("userId", sql.Int, newArticle.userId);
+            request.input("content", sql.NVarChar, newArticle.content);
+            request.input("publicationDate", sql.DateTime2, newArticle.publicationDate);
+    
             const result = await request.query(sqlQuery);
             const insertedArticleId = result.recordset[0].articleId;
-            return this.getArticleById(insertedArticleId);
+    
+            // Retrieve the newly inserted article by its ID
+            const createdArticle = await this.getArticleById(insertedArticleId);
+            return createdArticle;
         } catch (error) {
-            console.error('SQL Error:', error);
+            console.error('Error creating article:', error);
             throw error;
         } finally {
-            connection.close();
+            if (connection) {
+                try {
+                    await connection.close();
+                } catch (closeError) {
+                    console.error('Error closing the connection:', closeError);
+                }
+            }
         }
     }
+    
 
     static async getArticleById(articleId) {
         let connection;
@@ -114,8 +125,7 @@ class Article {
     
             if (result.recordset.length > 0) {
                 const record = result.recordset[0];
-                // Convert binary photo data to base64 string
-                const photoBase64 = record.photo ? record.photo.toString('base64') : null;
+                const photoBase64 = record.photo ? record.photo.toString('base64') : null; // Convert photo to base64
                 return new Article(
                     record.articleId,
                     photoBase64,
@@ -139,7 +149,7 @@ class Article {
                 }
             }
         }
-    }
+    }    
     
 
     static async updateArticle(articleId, updatedArticle) {

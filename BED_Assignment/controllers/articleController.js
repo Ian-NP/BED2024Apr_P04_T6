@@ -15,19 +15,29 @@ const serveArticlesContent = (req, res) => {
     }
 };
 
+// const getAllArticles = async (req, res) => {
+//     try {
+//         const articles = await ArticleModel.getAllArticles();
+
+//         // Convert photo field to base64 if it exists
+//         articles.forEach(article => {
+//             article.photo = article.photo ? Buffer.from(article.photo).toString('base64') : null;
+//         });
+
+//         res.json(articles);
+//     } catch (error) {
+//         console.error('Error fetching articles:', error);
+//         res.status(500).json({ error: "Failed to fetch articles" });
+//     }
+// };
 const getAllArticles = async (req, res) => {
     try {
-        const articles = await ArticleModel.getAllArticles();
-
-        // Convert photo field to base64 if it exists
-        articles.forEach(article => {
-            article.photo = article.photo ? Buffer.from(article.photo).toString('base64') : null;
-        });
-
-        res.json(articles);
-    } catch (error) {
-        console.error('Error fetching articles:', error);
-        res.status(500).json({ error: "Failed to fetch articles" });
+        const article = await ArticleModel.getAllArticles();
+        console.log(article);
+        return res.status(200).json(article);
+    } catch (err) {
+        console.error('Error retrieving Article: ', err);
+        res.status(500).send("Error retrieving Article");
     }
 };
 
@@ -46,22 +56,26 @@ const getArticleByTitle = async (req, res) => {
 };
 
 const createArticle = async (req, res) => {
-    const { title, userId, content, publicationDate } = req.body;
-    const photo = req.body.photo;
-
-    if (!title || !userId || !content || !photo || !publicationDate) {
-        return res.status(400).json({ error: "All fields are required" });
-    }
-
     try {
-        const newArticle = new ArticleModel(null, photo, title, userId, content, publicationDate);
-        const createdArticle = await ArticleModel.createArticle(newArticle);
+        console.log('Request body:', req.body);
+        const publicationDate = new Date(req.body.publicationDate);
+        const photo2 = Buffer.from(req.body.photo.split(',')[1], 'base64');
+        const newArticleData = {
+            title: req.body.title,
+            userId: req.body.userId,
+            content: req.body.content,
+            publicationDate: publicationDate,
+            photo: photo2 
+        };
+
+        const createdArticle = await ArticleModel.createArticle(newArticleData);
         res.status(201).json(createdArticle);
     } catch (error) {
         console.error('Error creating article:', error);
-        res.status(500).json({ error: "Failed to create article", details: error.message });
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
 
 const updateArticle = async (req, res) => {
     const articleId = parseInt(req.params.articleId);
@@ -136,11 +150,10 @@ const getArticleById = async (req, res) => {
             return res.status(404).json({ error: "Article not found" });
         }
 
-        // Example: Convert photo field to base64 if it exists
-        if (article.photo) {
-            article.photo = Buffer.from(article.photo).toString('base64');
-        }
-
+        
+        // if (article.photo) {
+        //     article.photo = Buffer.from(article.photo).toString('base64'); //converting photo
+        // }
         res.status(200).json(article);
     } catch (error) {
         console.error('Error fetching article by ID:', error);

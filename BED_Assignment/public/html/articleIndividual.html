@@ -81,12 +81,10 @@
             try {
                 const response = await fetch(`/api/article/${articleId}`);
                 if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
+                    throw new Error(`HTTP Error! Status: ${response.status}`);
                 }
                 const article = await response.json();
                 console.log('Fetched Article:', article);
-
-                // Assuming you have elements with IDs 'article-title', 'article-content', and 'article-photo'
                 document.getElementById('article-title').textContent = article.title;
                 document.getElementById('article-content').textContent = article.content;
                 document.getElementById('article-photo').src = `data:image/jpeg;base64,${article.photo}`;

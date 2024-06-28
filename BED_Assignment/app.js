@@ -161,7 +161,8 @@ app.get('/articleIndividual', async (req, res) => {
 });
 
 app.get("/api/article", articleController.getAllArticles);
-app.post("/api/article", articleController.createArticle);
+app.post("/create-blog", articleController.createArticle);
+app.post("/api/article", authenticateToken, articleController.createArticle);
 app.get("/api/article/:articleId", articleController.getArticleById);
 app.get("/api/article/:title", articleController.getArticleByTitle);
 app.put("/api/article/:articleId", articleController.updateArticle);
