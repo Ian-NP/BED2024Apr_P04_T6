@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <img src="data:image/jpeg;base64,${article.photo}" class="card-img-top" alt="...">
                     <div class="card-body">
                         <h5 class="card-title">${article.title}</h5>
-                        <p class="card-text">${article.content.substring(0, 100)}...</p>
+                        <p class="card-text">${article.content.substring(0, 10)}...</p>
                         <a href="/articleIndividual?articleId=${article.articleId}" class="btn btn-primary">Read More</a>
                     </div>
                 </div>
