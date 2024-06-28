@@ -7,15 +7,18 @@ import sql from "mssql";
 import dbConfig from "./dbConfig"
 import path from 'path';
 import multer from "multer";
+
+// Importing Controllers
 import articleCommentController from "./controllers/articleCommentsController"
 import eventCommentController from "./controllers/eventCommentsController"
 import EventController from "./controllers/eventController"
-
 import userController from "./controllers/userController"
 import adminController from "./controllers/adminController"
+
+// Importing middleware
 const validateUser = require("./middleware/validateUser");
-//const userController = require('./controllers/userController')
-//const bcrypt = require('bcrypt');
+// import validateUser from './middleware/validateUser';
+import validateComment from './middleware/validateComment'
 import authenticateToken from "./middleware/auth";
 
 
@@ -123,8 +126,8 @@ app.get("/article/:articleId/comments", async (req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/comment.html"));
 });
 app.get("/api/article/:articleId/comments", articleCommentController.getAllCommentsFromArticleId);
-app.post("/api/article/:articleId/comments", articleCommentController.createArticleComment);
-app.put("/api/article/:articleId/comments", articleCommentController.updateArticleCommentContent);
+app.post("/api/article/:articleId/comments", validateComment, articleCommentController.createArticleComment);
+app.put("/api/article/:articleId/comments", validateComment, articleCommentController.updateArticleCommentContent);
 app.delete("/api/article/:articleId/comments", articleCommentController.deleteArticleComment);
 
 app.get("/api/event/comment/:commentId", eventCommentController.getEventCommentById);
@@ -132,8 +135,8 @@ app.get("/event/:eventId/comments", async (req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/comment.html"));
 });
 app.get("/api/event/:eventId/comments", eventCommentController.getAllCommentsFromEventId);
-app.post("/api/event/:eventId/comments", eventCommentController.createEventComment);
-app.put("/api/event/:eventId/comments", eventCommentController.updateEventCommentContent);
+app.post("/api/event/:eventId/comments", validateComment, eventCommentController.createEventComment);
+app.put("/api/event/:eventId/comments", validateComment, eventCommentController.updateEventCommentContent);
 app.delete("/api/event/:eventId/comments", eventCommentController.deleteEventComment);
 
 //Routes for admin accounts

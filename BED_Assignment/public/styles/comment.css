@@ -155,8 +155,17 @@
         gap: 5px;
     }
 
+    .plus-btn, .minus-btn{
+        font-size: small;
+    }
+
+    .comment-score{
+        font-size:medium;
+    }
+
     .comment-votes{
         gap: 5px;
+        padding: 5px 10px;
     }
 
     .add-comment{
@@ -210,8 +219,13 @@
     resize: none;
 }
 
+.comment-input:focus{
+    outline: none;
+    border: 2px solid #119C62;
+}
+
 .edit-comment-btn, .send-comment-btn, .send-reply-btn, .cancel-btn{
-    background-color: #119C62;
+    background-color: transparent;
     padding: 10px 15px;
     border-radius: 10px;
     font-weight: bold;
@@ -219,6 +233,12 @@
     cursor: pointer;
     order: 3;
     text-align: center;
+    transition: all 0.2s ease-in-out;
+    border:2px solid #6b6c76;
+}
+
+.edit-comment-btn:hover, .send-comment-btn:hover, .send-reply-btn:hover{
+    background-color: #119C62;
 }
 
 .send-comment-btn{
@@ -226,6 +246,11 @@
 }
 
 .cancel-btn{
+    border:2px solid #6b6c76;
+    background-color: #c9c9c9;
+}
+
+.cancel-btn:hover{
     background-color: rgb(216, 10, 10);
 }
 

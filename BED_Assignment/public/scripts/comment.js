@@ -266,7 +266,7 @@ const displayComments = (comments) =>{
             newCommentContainer.appendChild(replyContainer);
 
             // Sleep the thread due to the main comment section having yet to fully append to the main container
-            await new Promise(r => setTimeout(r, 45));
+            await new Promise(r => setTimeout(r, 80));
             const commentContainerDivs = commentSectionContainerDiv.querySelectorAll('.comment-container');
             commentContainerDivs.forEach(commentContainerDiv => {
                 if (parseInt(commentContainerDiv.getAttribute('data-commentid')) === comment.parentCommentId){
@@ -279,7 +279,7 @@ const displayComments = (comments) =>{
 
             // Display deeper level comments if necessary
             const newCommentContainer = await createCommentContainer(comment);
-            await new Promise(r => setTimeout(r, 45));
+            await new Promise(r => setTimeout(r, 80));
             const commentContainerDivs = commentSectionContainerDiv.querySelectorAll('.comment-container[data-commentlevel="1"]');
             console.log(commentContainerDivs);
 
@@ -365,6 +365,11 @@ async function updateComment(commentId, newContent=null, newScore=null){
     console.log(commentId);
     console.log(newContent);
     console.log(newScore);
+
+    if (newContent && newScore){
+        console.log("Both newContent and newScore is null");
+        return;
+    }
     
     const updateCommentData = {
         commentId: commentId,
@@ -643,8 +648,9 @@ commentSectionContainer.addEventListener('click', async(event) => {
 
         const textarea = commentBody.querySelector('.comment-input');
         const textAreaContent = textarea.value;
+        console.log(textAreaContent.trim().length);
         
-        if (textAreaContent.trim() !== '') {
+        if (textAreaContent.trim() !== '' && textAreaContent.trim().length < 1000) {
             // Remove the textarea
             textarea.remove();
             const editBtnsDiv = commentBody.querySelector('.edit-btns-div');
@@ -667,8 +673,11 @@ commentSectionContainer.addEventListener('click', async(event) => {
             const commentContainer = commentBody.parentElement.parentElement;
             const commentId = commentContainer.getAttribute("data-commentid");
             await updateComment(commentId, textAreaContent);
-        } else{
-            alert('Please enter a comment before you finish editing.')
+        } else if (textAreaContent.trim().length > 1000){
+            alert('Comment exceeded 1000 character count limit. Please try again after shortening it.');
+        }
+        else{
+            alert('Please enter a comment before you finish editing.');
         }
     }
 
@@ -689,7 +698,7 @@ commentSectionContainer.addEventListener('click', async(event) => {
         const commentText = commentInput.value;
 
         // Check if comment text is not empty
-        if (commentText.trim() !== '') {
+        if (commentText.trim() !== '' && commentText.trim().length < 1000) {
             // Get user data from sessionStorage
             if (token) {
                 // Get user data from sessionStorage
@@ -844,6 +853,8 @@ commentSectionContainer.addEventListener('click', async(event) => {
                 // If user data does not exist in sessionStorage, handle it accordingly
                 alert('User data not found. Please log in.');
             }
+        } else if(commentText.trim().length > 1000){
+            alert('Comment exceeded 1000 character count limit. Please try again after shortening it.');
         } else {
             // If comment text is empty, display an error message or handle it accordingly
             alert('Please enter a comment before replying.');
@@ -861,7 +872,7 @@ commentSectionContainer.addEventListener('click', async(event) => {
         commentInput.value = '';
 
         // Check if comment text is not empty
-        if (commentText.trim() !== '') {
+        if (commentText.trim() !== '' && commentText.trim().length < 1000) {
             // Get user data from sessionStorage
             if (token) {
                 // Get user data from sessionStorage
@@ -990,9 +1001,12 @@ commentSectionContainer.addEventListener('click', async(event) => {
                 // If user data does not exist in sessionStorage, handle it accordingly
                 alert('User data not found. Please log in.');
             }
-        } else {
+        } else if(commentText.trim().length > 1000){
+            alert('Comment exceeded 1000 character count limit. Please try again after shortening it.');
+        }
+        else {
             // If comment text is empty, display an error message or handle it accordingly
-            alert('Please enter a comment before sending a comment.');
+            alert('Please enter something before sending a comment.');
         }
     }
 });
