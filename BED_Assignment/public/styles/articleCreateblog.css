@@ -1,0 +1,8 @@
+#drop-area {
+    text-align: center;
+    cursor: pointer;
+}
+#drop-area p {
+    margin: 0;
+    padding: 10px;
+}

@@ -21,6 +21,7 @@ const validateUser = require("./middleware/validateUser");
 import validateComment from './middleware/validateComment'
 import authenticateToken from "./middleware/auth";
 
+import articleController from "./controllers/articleController"; 
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -145,6 +146,27 @@ app.get("/admin/:adminId", adminController.getAdminById);
 app.post("/admin", adminController.createAdminUser);
 app.put("/admin/:adminId", adminController.updateAdminUser);
 app.delete("/admin/:adminId", adminController.deleteAdminUser);
+
+// Routes for articles
+app.get('/article', async (req, res) => {
+    res.sendFile(path.join(__dirname, "/public/html/article.html"));
+});
+
+app.get('/articleCreateBlog', async (req, res) => {
+    res.sendFile(path.join(__dirname, "/public/html/articleCreateBlog.html"));
+});
+
+app.get('/articleIndividual', async (req, res) => {
+    res.sendFile(path.join(__dirname, "/public/html/articleIndividual.html"));
+});
+
+app.get("/api/article", articleController.getAllArticles);
+app.post("/api/article", articleController.createArticle);
+app.get("/api/article/:articleId", articleController.getArticleById);
+app.get("/api/article/:title", articleController.getArticleByTitle);
+app.put("/api/article/:articleId", articleController.updateArticle);
+app.delete("/api/article/:articleId", articleController.deleteArticle);
+
 
 app.listen(PORT, async () => {
     try {

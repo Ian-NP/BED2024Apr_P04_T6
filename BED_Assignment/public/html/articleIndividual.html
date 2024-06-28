@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Your Name">
+    <title>Article</title>
+    <link href="/bootstrap assets/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/styles/navbar.css" rel="stylesheet">
+    <link href="/styles/article.css" rel="stylesheet">
+</head>
+<body>
+    <header data-bs-theme="dark">
+        <nav class="navbar navbar-expand-xl navbar-dark fixed-top bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">A+4BED</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav ms-auto mb-2 mb-md-0 me-4">
+                        <li class="nav-item">
+                            <a class="nav-link active custom-navlink" href="/home">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link inactive custom-navlink" href="#">My Events</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link inactive custom-navlink" href="#">Articles</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link inactive custom-navlink" href="/statistics">Statistics</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link inactive custom-navlink" href="#">View Events</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link inactive custom-navlink" href="#">View Kickstarters</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link inactive custom-navlink" href="#">About Us</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link inactive custom-navlink" href="#">Contact Us</a>
+                        </li>
+                    </ul>
+                    <div class="d-flex">
+                        <a class="btn btn-outline-primary me-2" href="#" id="signUp_btn">Sign up</a>
+                        <a class="btn btn-outline-primary" href="#" id="login_btn">Login</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <nav class="navbar navbar-expand-lg mt-5 pt-3">
+            <div class="container-fluid">
+                <form class="d-flex me-auto">
+                    <input class="form-control me-2 custom-search-bar" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+                <a class="btn btn-custom me-2" href="/articleFavourites">Favourites</a>
+                <a class="btn btn-custom me-2" href="/articleCreateBlog">Create Blog</a>
+                <a class="btn btn-custom me-2" href="/articleMyBlogs">My Blogs</a>
+                <a class="btn btn-custom" href="/article">View Articles</a>                
+            </div>
+        </nav>
+    </header>
+    <main class="container mt-5 pt-5">
+        <h1 id="article-title" class="mb-4">Article Title</h1>
+        <img id="article-photo" class="img-fluid" src="#" alt="Article Image">
+        <p id="article-content">Article content will be displayed here.</p>
+    </main>
+    <script src="/bootstrap assets/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+         document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const articleId = urlParams.get('articleId');
+
+        if (articleId) {
+            try {
+                const response = await fetch(`/api/article/${articleId}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const article = await response.json();
+                console.log('Fetched Article:', article);
+
+                // Assuming you have elements with IDs 'article-title', 'article-content', and 'article-photo'
+                document.getElementById('article-title').textContent = article.title;
+                document.getElementById('article-content').textContent = article.content;
+                document.getElementById('article-photo').src = `data:image/jpeg;base64,${article.photo}`;
+            } catch (error) {
+                console.error('Error fetching article:', error);
+            }
+        } else {
+            console.error('Article ID not found in URL');
+        }
+    } catch (error) {
+        console.error('Error retrieving URL parameters:', error);
+    }
+});
+
+    </script>
+    <!-- <script src="/scripts/article.js"></script> -->
+</body>
+</html>
