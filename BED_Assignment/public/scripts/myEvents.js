@@ -99,11 +99,11 @@ function leaveEvent(eventId) {
 
 }
 function calculateTimeLeft(eventTime) {
-    const now = new Date().toLocaleString('en-US', { timeZone: 'Asia/Singapore' });
-    const currentTime = new Date(now);
-    const eventDateTime = new Date(eventTime).toLocaleString('en-US', { timeZone: 'Asia/Singapore' });
-    const eventTimeInSG = new Date(eventDateTime);
-    const diff = eventTimeInSG - currentTime;
+    // Assuming eventTime is already a Date object
+    const now = new Date();
+    const eventTimeInSG = new Date(eventTime);
+
+    const diff = eventTimeInSG - now;
 
     if (diff <= 0) {
         return 'Event has started';
@@ -111,7 +111,7 @@ function calculateTimeLeft(eventTime) {
 
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60)) / (1000 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
 
     return `${days}d ${hours}h ${minutes}m left`;
 }
