@@ -40,8 +40,10 @@ const createEventComment = async(req, res) =>{
 const updateEventCommentContent = async(req, res) =>{
     const commentId =  req.body.commentId;
     const newContent = req.body.content;
+    const newScore = req.body.score;
+
     try{
-        const updatedEventComment = await EventComments.updateEventCommentContent(commentId, newContent);
+        const updatedEventComment = await EventComments.updateEventCommentContent(commentId, newContent, newScore);
         if (!updatedEventComment){
             return res.status(404).send("Comment not found");
         }

@@ -183,31 +183,53 @@ class EventComments{
         }
     }
 
-    static async updateEventCommentContent(id, newContent){
+    static async updateEventCommentContent(id, newContent, newScore) {
         let connection;
-
-        try{
+    
+        try {
+            // Ensure at least one of newContent or newScore is provided
+            if (newContent===null && newScore===null) {
+                throw new Error('At least one of newContent or newScore must be provided.');
+            }
+    
             // Establish a connection to the database
             connection = await sql.connect(dbConfig);
-
-            // Define the SQL query with parameterized placeholders
-            const sqlQuery = `
-                UPDATE EventComments 
-                SET 
-                    content = @newContent
-                WHERE 
-                    commentId = @id;
-            `;
-
+    
+            // Initialize an array to store the SET clauses
+            const setClauses = [];
+    
+            // Check if newContent is provided in the newCommentData
+            if (!(newContent===null)) {
+                setClauses.push(`content = @newContent`);
+            }
+    
+            // Check if newScore is provided in the newCommentData
+            if (!(newScore===null)) {
+                setClauses.push(`score = @newScore`);
+            }
+    
+            // Construct the SET part of the SQL query
+            const setClause = setClauses.join(', ');
+    
+            // Construct the complete SQL query
+            const sqlQuery = `UPDATE EventComments SET ${setClause} WHERE commentId = @id`;
+    
             // Create a request object and input the parameters
             const request = connection.request();
             request.input("id", sql.Int, id); // Ensure correct SQL data type for id
-            request.input("newContent", newContent); // Use SQL data types
-
+    
+            // Add input parameters based on provided data
+            if (!(newContent===null)) {
+                request.input("newContent", sql.NVarChar(sql.MAX), newContent);
+            }
+            if (!(newScore===null)) {
+                request.input("newScore", sql.Int, newScore);
+            }
+    
             // Execute the query
             await request.query(sqlQuery);
-
-            // Return the updated book data
+    
+            // Return the updated comment data
             return await this.getEventCommentById(id);
         } catch (error) {
             console.error('Error updating comment:', error);
@@ -222,7 +244,7 @@ class EventComments{
                 }
             }
         }
-    }
+    }    
 
     static async deleteEventComment(id) {
         let connection;

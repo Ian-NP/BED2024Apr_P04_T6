@@ -18,7 +18,7 @@
 .comment-container{
     display: flex;
     flex-direction: column;
-    width: 90%;
+    width: 100%;
     gap: 15px;
 }
 
@@ -170,7 +170,6 @@
 
     .add-comment{
         flex-wrap: wrap;
-        justify-content: space-between !important;
     }
 
     .add-comment > .comment-input{
@@ -193,19 +192,26 @@
 /* Styling of add-comment class and its child elements */
 .add-comment{
     background-color: white;
-    padding: 1rem 1.5rem;
+    padding: 1.5rem 2rem;
     border-radius: 10px;
     display: flex;
-    justify-content: center;
+    flex-wrap: wrap;
+    justify-content: end;
     width: 100%;
     gap: 20px;
 }
 
-.add-comment > .profile-pic{
+.add-comment > .textareaInput{
+    display: flex;
+    width: 100%;
+    flex-wrap: nowrap;
+}
+
+.textareaInput > .profile-pic{
     display: block;
     min-height: 36px;
     min-width: 36px;
-    margin: 0;
+    margin-right: 10px;
 }
 
 .comment-input{
@@ -235,6 +241,8 @@
     text-align: center;
     transition: all 0.2s ease-in-out;
     border:2px solid #6b6c76;
+    text-decoration: none !important;
+    color: black !important;
 }
 
 .edit-comment-btn:hover, .send-comment-btn:hover, .send-reply-btn:hover{
@@ -256,7 +264,6 @@
 
 .reply-btns-div{
     display:flex;
-    flex-direction: column;
     order: 3;
     align-content: center;
     gap: 10px;
@@ -265,6 +272,7 @@
 .edit-btns-div{
     display:flex;
     flex-direction: row;
+    justify-content: flex-end;
     gap: 10px;
 }
 
@@ -290,4 +298,9 @@
 
 .reply-container > .comment-container{
     width: 100%;
+}
+
+.add-comment, .comment{
+    border: 2px solid grey !important;
+    border-radius: 10px;
 }

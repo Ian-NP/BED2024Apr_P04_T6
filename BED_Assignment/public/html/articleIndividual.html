@@ -9,6 +9,7 @@
     <link href="/bootstrap assets/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="/styles/navbar.css" rel="stylesheet">
     <link href="/styles/article.css" rel="stylesheet">
+    <link href="/styles/comment.css" rel="stylesheet">
 </head>
 <body>
     <header data-bs-theme="dark">
@@ -69,6 +70,15 @@
         <h1 id="article-title" class="mb-4">Article Title</h1>
         <img id="article-photo" class="img-fluid" src="#" alt="Article Image">
         <p id="article-content">Article content will be displayed here.</p>
+        <div id="comment-section-container" class="comment-section-container">
+            <div class="add-comment">
+                <div class="textareaInput">
+                    <div class="profile-pic"></div>
+                    <textarea class="comment-input" placeholder="Add a comment"></textarea>
+                </div>
+                <a id="send-comment-btn" class="send-comment-btn">Send</a>
+            </div>
+        </div>
     </main>
     <script src="/bootstrap assets/dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -101,5 +111,8 @@
 
     </script>
     <!-- <script src="/scripts/article.js"></script> -->
+    <script src="https://kit.fontawesome.com/229dff7a33.js" crossorigin="anonymous"></script>
+    <script src="/scripts/comment.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
 </body>
 </html>

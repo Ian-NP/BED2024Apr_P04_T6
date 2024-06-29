@@ -50,26 +50,27 @@ const commentPostedTime = (timeInMileSec) => {
 };
 
 function getCommentPage(){
-    const pathname = window.location.pathname; // e.g., /article/1
-    const pathSegments = pathname.split('/'); // Splits the pathname into an array: ["", "article", "1"]
-    let page;
-    if (pathSegments[1] == "article"){
-        const articleId = pathSegments[2];
-        page = new Page(pathSegments[1], articleId);
-    } else{
-        // Get the current URL of the page
-        const currentUrl = window.location.href;
-        // Splitting the URL into different components
-        const urlParts = currentUrl.split('?');
-        const baseUrl = urlParts[0]; // Base URL without query parameters
-        const queryString = urlParts[1];
+    // Get the current URL of the page
+    const currentUrl = window.location.href;
 
-        // Extracting the query parameter
-        const params = new URLSearchParams(queryString);
+    // Splitting the URL into different components
+    const urlParts = currentUrl.split('?');
+    const baseUrl = urlParts[0]; // Base URL without query parameters
+    const queryString = urlParts[1];
+
+    // Extracting the query parameter
+    const params = new URLSearchParams(queryString);
+
+    let page;
+    if (currentUrl.includes("article")){
+        const articleId = params.get('articleId');
+        console.log(articleId);
+        page = new Page("article", articleId);
+    } else{
         const eventId = params.get('eventId');
-            page = new Page("event", eventId);
-            console.log(eventId);
-        }
+        page = new Page("event", eventId);
+        console.log(eventId);
+    }
 
     return page
 }
@@ -430,7 +431,7 @@ const commentSectionContainer = document.querySelector('.comment-section-contain
 
 // Attach click event listener to the comment section container
 commentSectionContainer.addEventListener('click', async(event) => {
-    console.log(event.target.classList);
+    console.log(event.target.classList); 
 
     // Increase score logic
     if (event.target.classList.contains('fa-plus')){
@@ -485,7 +486,6 @@ commentSectionContainer.addEventListener('click', async(event) => {
     if (event.target.classList.contains('reply-btn')){
         const replyButton = event.target;
         
-        // Check if add-comment div already exists
         // Get the parent comment container
         const commentContainer = replyButton.closest('.comment-container');
 
@@ -500,21 +500,29 @@ commentSectionContainer.addEventListener('click', async(event) => {
             const newAddCommentDiv = document.createElement('div');
             newAddCommentDiv.classList.add('add-comment');
 
+            // Create textarea input wrapper
+            const textareaInputDiv = document.createElement('div');
+            textareaInputDiv.classList.add('textareaInput');
+
             // Create profile pic div
             const profilePicDiv = document.createElement('div');
             profilePicDiv.classList.add('profile-pic');
-            newAddCommentDiv.appendChild(profilePicDiv);
+            textareaInputDiv.appendChild(profilePicDiv);
 
             // Create textarea for comment input
             const textarea = document.createElement('textarea');
             textarea.classList.add('comment-input');
             textarea.placeholder = 'Add a comment';
-            newAddCommentDiv.appendChild(textarea);
+            textareaInputDiv.appendChild(textarea);
 
+            // Append textarea input wrapper to add-comment div
+            newAddCommentDiv.appendChild(textareaInputDiv);
+
+            // Create reply buttons div
             const replyBtnsDiv = document.createElement('div');
             replyBtnsDiv.classList.add('reply-btns-div');
 
-            // Create reply button container
+            // Create reply button
             const replyBtnContainer = document.createElement('a');
             replyBtnContainer.classList.add('send-reply-btn');
             replyBtnContainer.textContent = 'Reply';
@@ -527,6 +535,7 @@ commentSectionContainer.addEventListener('click', async(event) => {
             cancelBtn.textContent = 'Cancel';
             replyBtnsDiv.appendChild(cancelBtn);
 
+            // Append reply buttons div to add-comment div
             newAddCommentDiv.appendChild(replyBtnsDiv);
 
             // Insert the new add-comment div after the current comment
@@ -618,9 +627,11 @@ commentSectionContainer.addEventListener('click', async(event) => {
         const cancelEditBtn = event.target;
         const editBtnsDiv = cancelEditBtn.parentElement;
         const commentBody = editBtnsDiv.parentElement;
+        const commentContainer = commentBody.parentElement.parentElement;
+        const commentId = commentContainer.getAttribute("data-commentid");
         
         const textarea = commentBody.querySelector('.comment-input');
-        const textAreaContent = textarea.value;
+        const textAreaContent = await getCommentById(commentId);
 
         // Remove the textarea
         textarea.remove();
@@ -632,7 +643,7 @@ commentSectionContainer.addEventListener('click', async(event) => {
 
         const commentTextContent = document.createElement('p');
         commentTextContent.classList.add('comment-text-content');
-        commentTextContent.textContent = textAreaContent;
+        commentTextContent.textContent = textAreaContent.content;
 
         // Append the text content to the comment content div
         commentContent.appendChild(commentTextContent);
