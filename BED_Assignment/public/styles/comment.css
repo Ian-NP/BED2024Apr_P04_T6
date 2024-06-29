@@ -131,7 +131,7 @@
 @media (min-width: 47em){
 
     .comment-section-container > .add-comment, .comment-container{
-        max-width: 720px;
+        max-width: 1000px;
     }
 
     .comment{
