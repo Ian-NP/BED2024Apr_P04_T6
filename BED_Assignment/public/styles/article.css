@@ -41,3 +41,15 @@
 .custom-search-bar {
     width: 600px; /* Adjust width as needed */
 }
+
+.btn-read-more {
+    color: #fff;
+    background-color: #119C62;
+    border-color: #119C62;
+}
+
+.btn-read-more:hover {
+    color: #fff;
+    background-color: #0e8654;
+    border-color: #0e8654;
+}

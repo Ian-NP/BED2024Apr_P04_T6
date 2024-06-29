@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <div class="card-body">
                         <h5 class="card-title">${article.title}</h5>
                         <p class="card-text">${article.content.substring(0, 10)}...</p>
-                        <a href="/articleIndividual?articleId=${article.articleId}" class="btn btn-primary">Read More</a>
+                        <a href="/articleIndividual?articleId=${article.articleId}" class="btn btn-primary btn-read-more">Read More</a>
                     </div>
                 </div>
             `;
