@@ -1,6 +1,7 @@
 import User from "../models/users";
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
+require('dotenv').config();
 
 const createUser = async (req, res) => {
     const newUser = req.body;
@@ -31,10 +32,10 @@ const loginUser = async (req, res) => {
 
         // Generate JWT token
         const payload = {
-            id: user.id,
+            id: user.user_id,
             role: user.role,
         };
-        const token = jwt.sign(payload, "your_secret_key", { expiresIn: "3600s" }); // Expires in 1 hour
+        const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, { expiresIn: "3600s" }); // Expires in 1 hour
 
         return res.status(200).json({ token });
     } catch (err) {
@@ -52,19 +53,24 @@ const registerUser = async (req, res) => {
         // Check for existing username
         const existingUser = await User.getUserByUsername(username);
         if (existingUser) {
-            return res.status(400).json({ message: "Username already exists" });
+            return res.status(400).json({ message: "Username already exists. Please try again with a different username." });
         }
 
         // Hash password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
-        console.log(username);
-        console.log(hashedPassword);
-        console.log(role);
+        
         // Create user in database
         const result = await User.createUser(username, hashedPassword, role);
 
-        return res.status(201).json(result);
+        // Generate JWT token
+        const payload = {
+            id: result.user_id,
+            role: result.role,
+        };
+        const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, { expiresIn: "3600s" }); // Expires in 1 hour
+
+        return res.status(200).json({ token });
     } catch (err) {
         console.error(err);
         return res.status(500).json({ message: "Internal server error" });

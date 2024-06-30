@@ -83,7 +83,7 @@ class User {
             const result = await request.query(sqlQuery);
             connection.close();
 
-            return result.recordset.length > 0 ? new User(result.recordset[0].id, result.recordset[0].username, result.recordset[0].passwordHash, result.recordset[0].role) : null;
+            return result.recordset.length > 0 ? new User(result.recordset[0].user_id, result.recordset[0].username, result.recordset[0].passwordHash, result.recordset[0].role) : null;
         } catch (error) {
             throw new Error("Error fetching user by username: " + error.message);
         }

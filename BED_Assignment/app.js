@@ -140,7 +140,7 @@ app.get("/statistics", async(req, res) => {
 
 
 
-app.get("/api/users/:userId", userController.getUserByUserId);
+
 app.get("/api/article/comment/:commentId", articleCommentController.getArticleCommentById);
 app.get("/article/:articleId/comments", async (req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/comment.html"));
