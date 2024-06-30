@@ -7,17 +7,21 @@ import sql from "mssql";
 import dbConfig from "./dbConfig"
 import path from 'path';
 import multer from "multer";
+
+// Importing Controllers
 import articleCommentController from "./controllers/articleCommentsController"
 import eventCommentController from "./controllers/eventCommentsController"
 import EventController from "./controllers/eventController"
-
 import userController from "./controllers/userController"
 import adminController from "./controllers/adminController"
+
+// Importing middleware
 const validateUser = require("./middleware/validateUser");
-//const userController = require('./controllers/userController')
-//const bcrypt = require('bcrypt');
+// import validateUser from './middleware/validateUser';
+import validateComment from './middleware/validateComment'
 import authenticateToken from "./middleware/auth";
 
+import articleController from "./controllers/articleController"; 
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -115,13 +119,16 @@ app.get("/api/events", EventController.getAllEvents);
 app.get("/api/events/:eventId", EventController.getEventById);
 app.post('/api/events', authenticateToken, EventController.createEvent);
 app.patch('/api/:eventId/leave', authenticateToken, EventController.updateEventAttendance);
+
+
+app.get("/api/users/:userId", userController.getUserByUserId);
 app.get("/api/article/comment/:commentId", articleCommentController.getArticleCommentById);
 app.get("/article/:articleId/comments", async (req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/comment.html"));
 });
 app.get("/api/article/:articleId/comments", articleCommentController.getAllCommentsFromArticleId);
-app.post("/api/article/:articleId/comments", articleCommentController.createArticleComment);
-app.put("/api/article/:articleId/comments", articleCommentController.updateArticleCommentContent);
+app.post("/api/article/:articleId/comments", validateComment, articleCommentController.createArticleComment);
+app.put("/api/article/:articleId/comments", validateComment, articleCommentController.updateArticleCommentContent);
 app.delete("/api/article/:articleId/comments", articleCommentController.deleteArticleComment);
 
 app.get("/api/event/comment/:commentId", eventCommentController.getEventCommentById);
@@ -129,8 +136,8 @@ app.get("/event/:eventId/comments", async (req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/comment.html"));
 });
 app.get("/api/event/:eventId/comments", eventCommentController.getAllCommentsFromEventId);
-app.post("/api/event/:eventId/comments", eventCommentController.createEventComment);
-app.put("/api/event/:eventId/comments", eventCommentController.updateEventCommentContent);
+app.post("/api/event/:eventId/comments", validateComment, eventCommentController.createEventComment);
+app.put("/api/event/:eventId/comments", validateComment, eventCommentController.updateEventCommentContent);
 app.delete("/api/event/:eventId/comments", eventCommentController.deleteEventComment);
 
 //Routes for admin accounts
@@ -139,6 +146,28 @@ app.get("/admin/:adminId", adminController.getAdminById);
 app.post("/admin", adminController.createAdminUser);
 app.put("/admin/:adminId", adminController.updateAdminUser);
 app.delete("/admin/:adminId", adminController.deleteAdminUser);
+
+// Routes for articles
+app.get('/article', async (req, res) => {
+    res.sendFile(path.join(__dirname, "/public/html/article.html"));
+});
+
+app.get('/articleCreateBlog', async (req, res) => {
+    res.sendFile(path.join(__dirname, "/public/html/articleCreateBlog.html"));
+});
+
+app.get('/articleIndividual', async (req, res) => {
+    res.sendFile(path.join(__dirname, "/public/html/articleIndividual.html"));
+});
+
+app.get("/api/article", articleController.getAllArticles);
+app.post("/create-blog", articleController.createArticle);
+app.post("/api/article", authenticateToken, articleController.createArticle);
+app.get("/api/article/:articleId", articleController.getArticleById);
+app.get("/api/article/:title", articleController.getArticleByTitle);
+app.put("/api/article/:articleId", articleController.updateArticle);
+app.delete("/api/article/:articleId", articleController.deleteArticle);
+
 
 app.listen(PORT, async () => {
     try {

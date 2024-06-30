@@ -221,7 +221,7 @@ class EventModel {
             request.input("creatorId", sql.Int, newEventData.creatorId);
             request.input("eventOverview", sql.NVarChar(sql.MAX), newEventData.eventOverview);
             request.input("cost", sql.Decimal(10, 2), newEventData.cost);
-            request.input("eventImage", sql.VarBinary(sql.MAX), Buffer.from(newEventData.eventImage.split(',')[1], 'base64'));
+            request.input("eventImage", sql.VarBinary(sql.MAX), newEventData.eventImage);
 
             const result = await request.query(sqlQuery);
             const newEventId = result.recordset[0].newEventId;

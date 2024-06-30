@@ -3,12 +3,6 @@
     font-family:Arial, Helvetica, sans-serif
 }
 
-body{
-    margin: 0;
-    background-color:#f5f6fa;
-    padding: 30px 0px;
-}
-
 .display-none{
     opacity: 0;
 }
@@ -24,7 +18,7 @@ body{
 .comment-container{
     display: flex;
     flex-direction: column;
-    width: 90%;
+    width: 100%;
     gap: 15px;
 }
 
@@ -137,7 +131,7 @@ body{
 @media (min-width: 47em){
 
     .comment-section-container > .add-comment, .comment-container{
-        max-width: 720px;
+        max-width: 1000px;
     }
 
     .comment{
@@ -161,13 +155,21 @@ body{
         gap: 5px;
     }
 
+    .plus-btn, .minus-btn{
+        font-size: small;
+    }
+
+    .comment-score{
+        font-size:medium;
+    }
+
     .comment-votes{
         gap: 5px;
+        padding: 5px 10px;
     }
 
     .add-comment{
         flex-wrap: wrap;
-        justify-content: space-between !important;
     }
 
     .add-comment > .comment-input{
@@ -190,19 +192,26 @@ body{
 /* Styling of add-comment class and its child elements */
 .add-comment{
     background-color: white;
-    padding: 1rem 1.5rem;
+    padding: 1.5rem 2rem;
     border-radius: 10px;
     display: flex;
-    justify-content: center;
+    flex-wrap: wrap;
+    justify-content: end;
     width: 100%;
     gap: 20px;
 }
 
-.add-comment > .profile-pic{
+.add-comment > .textareaInput{
+    display: flex;
+    width: 100%;
+    flex-wrap: nowrap;
+}
+
+.textareaInput > .profile-pic{
     display: block;
     min-height: 36px;
     min-width: 36px;
-    margin: 0;
+    margin-right: 10px;
 }
 
 .comment-input{
@@ -216,8 +225,13 @@ body{
     resize: none;
 }
 
+.comment-input:focus{
+    outline: none;
+    border: 2px solid #119C62;
+}
+
 .edit-comment-btn, .send-comment-btn, .send-reply-btn, .cancel-btn{
-    background-color: #119C62;
+    background-color: transparent;
     padding: 10px 15px;
     border-radius: 10px;
     font-weight: bold;
@@ -225,6 +239,14 @@ body{
     cursor: pointer;
     order: 3;
     text-align: center;
+    transition: all 0.2s ease-in-out;
+    border:2px solid #6b6c76;
+    text-decoration: none !important;
+    color: black !important;
+}
+
+.edit-comment-btn:hover, .send-comment-btn:hover, .send-reply-btn:hover{
+    background-color: #119C62;
 }
 
 .send-comment-btn{
@@ -232,12 +254,16 @@ body{
 }
 
 .cancel-btn{
+    border:2px solid #6b6c76;
+    background-color: #c9c9c9;
+}
+
+.cancel-btn:hover{
     background-color: rgb(216, 10, 10);
 }
 
 .reply-btns-div{
     display:flex;
-    flex-direction: column;
     order: 3;
     align-content: center;
     gap: 10px;
@@ -246,6 +272,7 @@ body{
 .edit-btns-div{
     display:flex;
     flex-direction: row;
+    justify-content: flex-end;
     gap: 10px;
 }
 
@@ -271,4 +298,9 @@ body{
 
 .reply-container > .comment-container{
     width: 100%;
+}
+
+.add-comment, .comment{
+    border: 2px solid grey !important;
+    border-radius: 10px;
 }

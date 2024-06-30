@@ -30,7 +30,7 @@ class ArticleComments{
                         articleId,
                         0 AS level 
                     FROM ArticleComments
-                    WHERE parentCommentId IS NULL AND articleId = 1
+                    WHERE parentCommentId IS NULL AND articleId = @articleId
 
                     UNION ALL
 

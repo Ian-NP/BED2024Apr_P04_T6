@@ -1,0 +1,55 @@
+.article-card {
+    margin-bottom: 20px;
+}
+
+.article-card img {
+    max-height: 200px;
+    object-fit: cover;
+}
+
+.navbar-light {
+    margin-top: 56px; /* Adjust this if your fixed-top navbar height changes */
+    z-index: 1040; /* Ensure it is above other content */
+    background-color: transparent !important; /* Remove background color */
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: #000;
+}
+
+.navbar-light .navbar-nav .nav-link:hover {
+    color: #0056b3;
+}
+
+.mt-5.pt-3 {
+    margin-top: 3.5rem !important; /* Adjust for the space taken by the new navbar */
+    padding-top: 1rem !important;
+}
+
+.btn-custom {
+    color: #119C62;
+    background-color: #fff;
+    border-color: #119C62;
+}
+
+.btn-custom:hover {
+    color: #fff;
+    background-color: #0e8654;
+    border-color: #0e8654;
+}
+
+.custom-search-bar {
+    width: 600px; /* Adjust width as needed */
+}
+
+.btn-read-more {
+    color: #fff;
+    background-color: #119C62;
+    border-color: #119C62;
+}
+
+.btn-read-more:hover {
+    color: #fff;
+    background-color: #0e8654;
+    border-color: #0e8654;
+}

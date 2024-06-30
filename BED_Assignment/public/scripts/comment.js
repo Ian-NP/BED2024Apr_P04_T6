@@ -14,8 +14,13 @@ class Page{
     }
 }
 
-const user = new User(1, "Optimus Prime", "https://avatarfiles.alphacoders.com/341/341848.png");
-sessionStorage.setItem("User", JSON.stringify(user));
+// const user = new User(1, "Optimus Prime", "../images/default-profile-user.svg");
+// sessionStorage.setItem("User", JSON.stringify(user));
+const token = localStorage.getItem('token');
+const userDetails = jwt_decode(token);
+const currentUser = new User(userDetails.userId, userDetails.userName, "/images/profile-user.svg");
+console.log(userDetails.userId);
+
 
 // Function for converting the timeStamp ISO date to date text for comment
 const commentPostedTime = (timeInMileSec) => {
@@ -45,16 +50,28 @@ const commentPostedTime = (timeInMileSec) => {
 };
 
 function getCommentPage(){
-    const pathname = window.location.pathname; // e.g., /article/1
-    const pathSegments = pathname.split('/'); // Splits the pathname into an array: ["", "article", "1"]
+    // Get the current URL of the page
+    const currentUrl = window.location.href;
+
+    // Splitting the URL into different components
+    const urlParts = currentUrl.split('?');
+    const baseUrl = urlParts[0]; // Base URL without query parameters
+    const queryString = urlParts[1];
+
+    // Extracting the query parameter
+    const params = new URLSearchParams(queryString);
+
     let page;
-    if (pathSegments[1] == "article"){
-        const articleId = pathSegments[2];
-        page = new Page(pathSegments[1], articleId);
+    if (currentUrl.includes("article")){
+        const articleId = params.get('articleId');
+        console.log(articleId);
+        page = new Page("article", articleId);
     } else{
-        const eventId = pathSegments[2];
-        page = new Page(pathSegments[1], eventId);
+        const eventId = params.get('eventId');
+        page = new Page("event", eventId);
+        console.log(eventId);
     }
+
     return page
 }
 
@@ -64,6 +81,8 @@ async function fetchComments() {
     if (page.page === "article"){
         const response = await fetch(`/api/article/${page.pageId}/comments`);
         const comments = await response.json();
+        console.log(comments.length);
+        console.log(comments);
         displayComments(comments);
     } else{
         const response = await fetch(`/api/event/${page.pageId}/comments`);
@@ -72,22 +91,25 @@ async function fetchComments() {
     }
 }
 
-fetchComments();
-
 async function createCommentContainer(comment){
     // Get the value of the comment input
     const commentText = comment.content;
+    console.log(comment.commentId);
 
-    // const user = await fetch(`api/user/${comment.userId}`);
+    const responseUser = (await fetch(`/users/${comment.userId}`));
+    const userComment = await responseUser.json();
     // Uncomment the top line and delete bottom line once the user api is done
-    const user = JSON.parse(sessionStorage.getItem('User'));
+    // const user = JSON.parse(sessionStorage.getItem('User'));
 
     // Get user data from sessionStorage
-    if (user) {
+    if (userComment) {
         // Get user data from sessionStorage
-        const userId = parseInt(user.userId);
-        const username = user.username;
-        const profilePic = user.profilePic;
+        const userId = parseInt(userComment.userId);
+        const username = userComment.name;
+        let profilePic = userComment.profilePic;
+        if (profilePic === undefined){
+            profilePic = "/images/profile-user.svg"
+        }
 
         // Get the current date and time
         const dateOfComment = comment.timeStamp // output Eg.: "2024-06-14T19:14:23.200Z"
@@ -174,7 +196,7 @@ async function createCommentContainer(comment){
         replyBtn.appendChild(replyText);
         commentBtns.appendChild(replyBtn);
 
-        if (userId === comment.userId){
+        if (userId === currentUser.userId){
             const editBtn = document.createElement('button');
             editBtn.classList.add('edit-btn');
             const editIcon = document.createElement('i');
@@ -224,7 +246,7 @@ const displayComments = (comments) =>{
     // Logic for displayingComments
     comments.forEach(async(comment) => {
         if (comment.level === 0) {
-            console.log("Parent Comment:", comment);
+            // console.log("Parent Comment:", comment);
             // Display parent comment logic here
             const newCommentContainer = await createCommentContainer(comment);
 
@@ -235,7 +257,7 @@ const displayComments = (comments) =>{
 
             commentSectionContainerDiv.appendChild(newCommentContainer);
         } else if (comment.level === 1) {
-            console.log("Child Comment Level 1:", comment);
+            // console.log("Child Comment Level 1:", comment);
             // Display child comment level 1 logic here
             const newCommentContainer = await createCommentContainer(comment);
 
@@ -244,6 +266,8 @@ const displayComments = (comments) =>{
             replyContainer.classList.add("reply-container");
             newCommentContainer.appendChild(replyContainer);
 
+            // Sleep the thread due to the main comment section having yet to fully append to the main container
+            await new Promise(r => setTimeout(r, 80));
             const commentContainerDivs = commentSectionContainerDiv.querySelectorAll('.comment-container');
             commentContainerDivs.forEach(commentContainerDiv => {
                 if (parseInt(commentContainerDiv.getAttribute('data-commentid')) === comment.parentCommentId){
@@ -252,20 +276,24 @@ const displayComments = (comments) =>{
                 }
             });
         } else if(comment.level === 2) {
-            console.log("Comment Level = 2:", comment);
+            // console.log("Comment Level = 2:", comment);
 
             // Display deeper level comments if necessary
             const newCommentContainer = await createCommentContainer(comment);
-            const commentContainerDivs = commentSectionContainerDiv.querySelectorAll('.comment-container');
+            await new Promise(r => setTimeout(r, 80));
+            const commentContainerDivs = commentSectionContainerDiv.querySelectorAll('.comment-container[data-commentlevel="1"]');
             console.log(commentContainerDivs);
+
             commentContainerDivs.forEach(commentContainerDiv => {
+                console.log(parseInt(commentContainerDiv.getAttribute('data-commentid')));
                 if (parseInt(commentContainerDiv.getAttribute('data-commentid')) === comment.parentCommentId){
                     const replyContainer = commentContainerDiv.querySelector('.reply-container');
                     replyContainer.appendChild(newCommentContainer);
+                    console.log("Appended");
                 }
             });
         } else{
-            console.log("Comment Level > 2:", comment);
+            // console.log("Comment Level > 2:", comment);
 
             // Display deeper level comments if necessary
             const newCommentContainer = await createCommentContainer(comment);
@@ -280,6 +308,8 @@ const displayComments = (comments) =>{
         }
     });
 }
+
+fetchComments();
 
 async function getCommentById(commentId){
     const response = await fetch(`/api/article/comment/${commentId}`);
@@ -336,6 +366,11 @@ async function updateComment(commentId, newContent=null, newScore=null){
     console.log(commentId);
     console.log(newContent);
     console.log(newScore);
+
+    if (newContent && newScore){
+        console.log("Both newContent and newScore is null");
+        return;
+    }
     
     const updateCommentData = {
         commentId: commentId,
@@ -396,7 +431,7 @@ const commentSectionContainer = document.querySelector('.comment-section-contain
 
 // Attach click event listener to the comment section container
 commentSectionContainer.addEventListener('click', async(event) => {
-    console.log(event.target.classList);
+    console.log(event.target.classList); 
 
     // Increase score logic
     if (event.target.classList.contains('fa-plus')){
@@ -451,7 +486,6 @@ commentSectionContainer.addEventListener('click', async(event) => {
     if (event.target.classList.contains('reply-btn')){
         const replyButton = event.target;
         
-        // Check if add-comment div already exists
         // Get the parent comment container
         const commentContainer = replyButton.closest('.comment-container');
 
@@ -466,21 +500,29 @@ commentSectionContainer.addEventListener('click', async(event) => {
             const newAddCommentDiv = document.createElement('div');
             newAddCommentDiv.classList.add('add-comment');
 
+            // Create textarea input wrapper
+            const textareaInputDiv = document.createElement('div');
+            textareaInputDiv.classList.add('textareaInput');
+
             // Create profile pic div
             const profilePicDiv = document.createElement('div');
             profilePicDiv.classList.add('profile-pic');
-            newAddCommentDiv.appendChild(profilePicDiv);
+            textareaInputDiv.appendChild(profilePicDiv);
 
             // Create textarea for comment input
             const textarea = document.createElement('textarea');
             textarea.classList.add('comment-input');
             textarea.placeholder = 'Add a comment';
-            newAddCommentDiv.appendChild(textarea);
+            textareaInputDiv.appendChild(textarea);
 
+            // Append textarea input wrapper to add-comment div
+            newAddCommentDiv.appendChild(textareaInputDiv);
+
+            // Create reply buttons div
             const replyBtnsDiv = document.createElement('div');
             replyBtnsDiv.classList.add('reply-btns-div');
 
-            // Create reply button container
+            // Create reply button
             const replyBtnContainer = document.createElement('a');
             replyBtnContainer.classList.add('send-reply-btn');
             replyBtnContainer.textContent = 'Reply';
@@ -493,11 +535,13 @@ commentSectionContainer.addEventListener('click', async(event) => {
             cancelBtn.textContent = 'Cancel';
             replyBtnsDiv.appendChild(cancelBtn);
 
+            // Append reply buttons div to add-comment div
             newAddCommentDiv.appendChild(replyBtnsDiv);
 
             // Insert the new add-comment div after the current comment
             const currentComment = replyButton.closest('.comment');
             currentComment.parentNode.insertBefore(newAddCommentDiv, currentComment.nextSibling);
+            newAddCommentDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
     }
 
@@ -583,9 +627,11 @@ commentSectionContainer.addEventListener('click', async(event) => {
         const cancelEditBtn = event.target;
         const editBtnsDiv = cancelEditBtn.parentElement;
         const commentBody = editBtnsDiv.parentElement;
+        const commentContainer = commentBody.parentElement.parentElement;
+        const commentId = commentContainer.getAttribute("data-commentid");
         
         const textarea = commentBody.querySelector('.comment-input');
-        const textAreaContent = textarea.value;
+        const textAreaContent = await getCommentById(commentId);
 
         // Remove the textarea
         textarea.remove();
@@ -597,7 +643,7 @@ commentSectionContainer.addEventListener('click', async(event) => {
 
         const commentTextContent = document.createElement('p');
         commentTextContent.classList.add('comment-text-content');
-        commentTextContent.textContent = textAreaContent;
+        commentTextContent.textContent = textAreaContent.content;
 
         // Append the text content to the comment content div
         commentContent.appendChild(commentTextContent);
@@ -613,8 +659,9 @@ commentSectionContainer.addEventListener('click', async(event) => {
 
         const textarea = commentBody.querySelector('.comment-input');
         const textAreaContent = textarea.value;
+        console.log(textAreaContent.trim().length);
         
-        if (textAreaContent.trim() !== '') {
+        if (textAreaContent.trim() !== '' && textAreaContent.trim().length < 1000) {
             // Remove the textarea
             textarea.remove();
             const editBtnsDiv = commentBody.querySelector('.edit-btns-div');
@@ -637,8 +684,11 @@ commentSectionContainer.addEventListener('click', async(event) => {
             const commentContainer = commentBody.parentElement.parentElement;
             const commentId = commentContainer.getAttribute("data-commentid");
             await updateComment(commentId, textAreaContent);
-        } else{
-            alert('Please enter a comment before you finish editing.')
+        } else if (textAreaContent.trim().length > 1000){
+            alert('Comment exceeded 1000 character count limit. Please try again after shortening it.');
+        }
+        else{
+            alert('Please enter a comment before you finish editing.');
         }
     }
 
@@ -659,14 +709,13 @@ commentSectionContainer.addEventListener('click', async(event) => {
         const commentText = commentInput.value;
 
         // Check if comment text is not empty
-        if (commentText.trim() !== '') {
+        if (commentText.trim() !== '' && commentText.trim().length < 1000) {
             // Get user data from sessionStorage
-            if (sessionStorage.getItem('User')) {
+            if (token) {
                 // Get user data from sessionStorage
-                const user = JSON.parse(sessionStorage.getItem('User'));
-                const userId = parseInt(user.userId);
-                const username = user.username;
-                const profilePic = user.profilePic;
+                const userId = parseInt(currentUser.userId);
+                const username = currentUser.username;
+                const profilePic = currentUser.profilePic;
 
                 // Get the current date and time
                 const currentDate = new Date();
@@ -815,6 +864,8 @@ commentSectionContainer.addEventListener('click', async(event) => {
                 // If user data does not exist in sessionStorage, handle it accordingly
                 alert('User data not found. Please log in.');
             }
+        } else if(commentText.trim().length > 1000){
+            alert('Comment exceeded 1000 character count limit. Please try again after shortening it.');
         } else {
             // If comment text is empty, display an error message or handle it accordingly
             alert('Please enter a comment before replying.');
@@ -832,14 +883,13 @@ commentSectionContainer.addEventListener('click', async(event) => {
         commentInput.value = '';
 
         // Check if comment text is not empty
-        if (commentText.trim() !== '') {
+        if (commentText.trim() !== '' && commentText.trim().length < 1000) {
             // Get user data from sessionStorage
-            if (sessionStorage.getItem('User')) {
+            if (token) {
                 // Get user data from sessionStorage
-                const user = JSON.parse(sessionStorage.getItem('User'));
-                const userId = parseInt(user.userId);
-                const username = user.username;
-                const profilePic = user.profilePic;
+                const userId = parseInt(currentUser.userId);
+                const username = currentUser.username;
+                const profilePic = currentUser.profilePic;
 
                 // Get the current date and time
                 const currentDate = new Date();
@@ -962,9 +1012,12 @@ commentSectionContainer.addEventListener('click', async(event) => {
                 // If user data does not exist in sessionStorage, handle it accordingly
                 alert('User data not found. Please log in.');
             }
-        } else {
+        } else if(commentText.trim().length > 1000){
+            alert('Comment exceeded 1000 character count limit. Please try again after shortening it.');
+        }
+        else {
             // If comment text is empty, display an error message or handle it accordingly
-            alert('Please enter a comment before sending a comment.');
+            alert('Please enter something before sending a comment.');
         }
     }
 });
