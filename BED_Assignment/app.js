@@ -130,7 +130,7 @@ app.get("/manageblogs", async(req, res) => {
 });
 
 app.get("/", async(req, res) => {
-    res.sendFile(path.join(__dirname + "/public/html/home.html"));
+    res.sendFile(path.join(__dirname + "/public/html/index.html"));
 });
 
 app.get("/statistics", async(req, res) => {
