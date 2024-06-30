@@ -81,7 +81,7 @@ function createEventCard(event) {
 
 
 function calculateTimeLeft(eventTime) {
-    // Assuming eventTime is already a Date object
+   
     const now = new Date();
     const eventTimeInSG = new Date(eventTime);
 

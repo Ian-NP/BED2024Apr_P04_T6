@@ -4,20 +4,20 @@ const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
 
-    console.log('Token received:', token); // Debug log
+    console.log('Token received:', token); 
 
     if (!token) {
-        console.log('No token provided'); // Debug log
-        next(); // Continue to the next middleware/controller
+        console.log('No token provided'); 
+        next(); 
     } else {
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             req.user = decoded;
-            console.log('Token decoded:', decoded); // Debug log
-            next(); // Continue to the next middleware/controller
+            console.log('Token decoded:', decoded);
+            next(); 
         } catch (error) {
-            console.log('Invalid token:', error); // Debug log
-            next(); // Continue to the next middleware/controller
+            console.log('Invalid token:', error); 
+            next(); 
         }
     }
 };

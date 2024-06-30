@@ -42,8 +42,8 @@
         let hosterName = 'Hoster Name'; // Default value
         if (token) {
             try {
-                const decodedToken = jwt_decode(token); // Use jwt_decode directly
-                creatorName = decodedToken.userName || creatorName; // Use the userName from the token if available
+                const decodedToken = jwt_decode(token); 
+                creatorName = decodedToken.userName || creatorName; // Use the userName from the token
                 hosterName = decodedToken.userName || hosterName; // Use the same userName for hoster
             } catch (error) {
                 console.error('Failed to decode token:', error);

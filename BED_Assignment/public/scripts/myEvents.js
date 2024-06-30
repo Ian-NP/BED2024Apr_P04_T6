@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const token = localStorage.getItem('token'); // Assuming the token is stored in local storage
+    const token = localStorage.getItem('token'); 
     if (token && !isTokenExpired(token)) {
         fetchEventsDetails(token);
     } else {

@@ -14,7 +14,7 @@ const serveEventsContent = (req, res) => {
         return res.sendFile(path.join(__dirname + '/../public/html/events.html')); // Serve normal events if no token
     }
 
-    const userType = req.user.userType; // Extract user type from the request
+    const userType = req.user.userType; 
 
     if (userType === 'C') {
         console.log("hello12")
