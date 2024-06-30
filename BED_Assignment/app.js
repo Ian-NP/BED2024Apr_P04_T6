@@ -20,7 +20,7 @@ const validateUser = require("./middleware/validateUser");
 // import validateUser from './middleware/validateUser';
 import validateComment from './middleware/validateComment'
 import authenticateToken from "./middleware/auth";
-
+import eventPaymentController from "./controllers/eventPaymentController";
 import articleController from "./controllers/articleController"; 
 
 const app = express();
@@ -49,20 +49,42 @@ app.post('/adminlogin', adminController.loginUser);
 
 
 app.post('/createadmin', adminController.createAdminUser);
+
+
+//Routes for events
+
 app.post('/create-event', EventController.createEvent);
 
-// Serve protected.html for /events route
+// Serve protected.html for /events route, i used this for the js to authenticate before serving
 app.get('/events', (req, res) => {
     res.sendFile(path.join(__dirname + '/public/html/protected.html'));
 });
+// myEvents.html page
 app.get('/api/events/userEvents', authenticateToken, EventController.getEventsByUserId);
-// Handle content fetching based on token
+
+app.get('/myEvents', async(req, res) => {res.sendFile(path.join(__dirname + "/public/html/myEvents.html"))});
+
+// events-content is the route for the events page, so basically after protected.html is served, the js will fetch the events-content with the token, the middleware can then authenticate it.
 app.get('/events-content', authenticateToken, EventController.serveEventsContent);
+
 app.post('/api/:eventId/signup', authenticateToken, EventController.signUserUp);
+
+app.get("/api/events", EventController.getAllEvents);
+app.get("/api/events/:eventId", EventController.getEventById);
+app.post('/api/events', authenticateToken, EventController.createEvent);
+app.patch('/api/:eventId/leave', authenticateToken, EventController.updateEventAttendance);
+
+app.delete("/api/events/:eventId", EventController.deleteEvent);
+
+//paypal stuff
+app.post('/api/events/:eventId/authorize', authenticateToken, eventPaymentController.authorizePayment);
+app.post('/api/events/:eventId/capture', eventPaymentController.capturePayment);
+
+//Ends here
+
 app.get("/signup", async(req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/signup.html"));
 });
-app.get('/myEvents', async(req, res) => {res.sendFile(path.join(__dirname + "/public/html/myEvents.html"))});
 
 //Route for user sign up
 app.post("/signup", userController.createUser);
@@ -115,10 +137,7 @@ app.get("/statistics", async(req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/statistics.html"));
 });
 
-app.get("/api/events", EventController.getAllEvents);
-app.get("/api/events/:eventId", EventController.getEventById);
-app.post('/api/events', authenticateToken, EventController.createEvent);
-app.patch('/api/:eventId/leave', authenticateToken, EventController.updateEventAttendance);
+
 
 
 app.get("/api/users/:userId", userController.getUserByUserId);

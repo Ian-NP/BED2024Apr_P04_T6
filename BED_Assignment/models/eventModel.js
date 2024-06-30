@@ -42,7 +42,6 @@ class EventModel {
             const result = await request.query(sqlQuery);
 
             const events = result.recordset.map(record => {
-                // Convert binary image data to base64 string
                 const eventImageBase64 = record.eventImage ? record.eventImage.toString('base64') : null;
                 return new EventModel(
                     record.eventId,
@@ -113,7 +112,6 @@ class EventModel {
                 record.creatorId,
                 record.creatorName,
                 record.cost,
-                
                 record.eventImage ? record.eventImage.toString('base64') : null
             ) : null;
 
@@ -138,7 +136,7 @@ class EventModel {
 
     static async getEventsByCreatorId(creatorId) {
         let connection;
-
+    
         try {
             connection = await sql.connect(dbConfig);
             const sqlQuery = `
@@ -161,31 +159,28 @@ class EventModel {
             const request = connection.request();
             request.input("creatorId", sql.Int, creatorId);
             const result = await request.query(sqlQuery);
-
+    
             const events = result.recordset.map(record => {
                 const eventImageBase64 = record.eventImage ? record.eventImage.toString('base64') : null;
-                const event = new EventModel(
-                    record.eventId,
-                    record.eventName,
-                    record.eventDesc,
-                    record.eventOverview,
-                    record.eventCategory,
-                    record.eventReports,
-                    record.eventTime,
-                    record.creatorId,
-                    record.creatorName,
-                    record.cost,
-                    eventImageBase64
-                );
-                
-               
+                return {
+                    eventId: record.eventId,
+                    eventName: record.eventName,
+                    eventDesc: record.eventDesc,
+                    eventOverview: record.eventOverview,
+                    eventCategory: record.eventCategory,
+                    eventReports: record.eventReports,
+                    eventTime: record.eventTime,
+                    creatorId: record.creatorId,
+                    creatorName: record.creatorName,
+                    cost: record.cost,
+                    eventImage: eventImageBase64
+                };
             });
-
-            for (const event in events){
+    
+            for (const event of events) {
                 event.attendees = await EventAttendanceModel.getAttendeesByEventId(event.eventId);
             }
-            return events;
-
+    
             return events;
         } catch (error) {
             console.error('Error fetching events by creator ID:', error);
@@ -200,7 +195,7 @@ class EventModel {
             }
         }
     }
-
+    
     static async createEvent(newEventData) {
         let connection;
 
@@ -341,17 +336,14 @@ class EventModel {
 
         try {
             connection = await sql.connect(dbConfig);
-
-            const attendees = await EventAttendanceModel.getAttendeesByEventId(eventId);
-
+            console.log(eventId);
             const sqlQuery = `DELETE FROM Events WHERE eventId = @eventId`;
-
             const request = connection.request();
+            
             request.input("eventId", sql.Int, eventId);
-
             const result = await request.query(sqlQuery);
 
-            return { deleted: result.rowsAffected[0] > 0, attendees: attendees };
+            return { deleted: result.rowsAffected[0] > 0 };
         } catch (error) {
             console.error('Error deleting event:', error);
             throw error;

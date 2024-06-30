@@ -119,6 +119,7 @@ const getEventsByUserId = async (req, res) => {
     const userId = req.user.userId;
 
     console.log(userId);
+    if (req.user.userType == 'U'){
     try {
         const events = await EventModel.getEventsByUserId(userId);
         console.log(events);
@@ -127,6 +128,17 @@ const getEventsByUserId = async (req, res) => {
         console.error('Error getting events by user ID:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
+} else {
+    try {
+        const events = await EventModel.getEventsByCreatorId(userId);
+       
+        const companyEvents = events.map(event => ({ ...event, isCompanyEvent: true }));
+        res.status(200).json(companyEvents);
+    } catch (error) {
+        console.error('Error getting events by user ID:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
 
 }
 
@@ -151,6 +163,20 @@ const updateEventAttendance = async (req, res) => {
     }
 
 }
+
+const deleteEvent = async (req, res) => {
+    const eventId = parseInt(req.params.eventId, 10);
+    try {
+        const result = await EventModel.deleteEvent(eventId);
+        if (!result) {
+            return res.status(404).json({ error: 'Event not found' });
+        }
+        res.status(200).json({ message: 'Event deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting event:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
 module.exports = {
     getAllEvents,
     getEventById,
@@ -158,5 +184,6 @@ module.exports = {
     createEvent,
     signUserUp,
     getEventsByUserId,
-    updateEventAttendance
+    updateEventAttendance,
+    deleteEvent
 }

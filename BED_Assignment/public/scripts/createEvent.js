@@ -188,11 +188,17 @@
         const eventTime = document.getElementById('eventTime').value;
         let eventCost = document.querySelector('input[name="eventCost"]:checked').value;
     
+        // Check the actual price input value if the event is not free
         if (eventCost.toLowerCase() === 'free') {
             eventCost = 0;
         } else {
-            eventCost = parseFloat(eventCost);
+            eventCost = parseFloat(document.getElementById('eventPrice').value);
+            if (isNaN(eventCost)) {
+                alert('Please enter a valid price.');
+                return;
+            }
         }
+    
         const token = localStorage.getItem('token');
         if (!token) {
             alert('User not authenticated');
@@ -241,8 +247,6 @@
         if (eventImageFile) {
             reader.readAsDataURL(eventImageFile);
         } else {
-            // Handle the case where there is no image file
             alert('Please select an image file.');
         }
     });
-    

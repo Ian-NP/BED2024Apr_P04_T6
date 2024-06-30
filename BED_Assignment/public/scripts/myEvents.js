@@ -1,13 +1,21 @@
-
-
 document.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('token'); // Assuming the token is stored in local storage
-    if (token) {
+    if (token && !isTokenExpired(token)) {
         fetchEventsDetails(token);
     } else {
-        console.error('Token not found');
+        redirectToLogin();
     }
 });
+
+function isTokenExpired(token) {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const expirationDate = new Date(payload.exp * 1000);
+    return expirationDate < new Date();
+}
+
+function redirectToLogin() {
+    window.location.href = '/login';
+}
 
 async function fetchEventsDetails(token) {
     try {
@@ -25,16 +33,19 @@ async function fetchEventsDetails(token) {
         }
 
         const events = await response.json();
-        console.log(events);
-        events.forEach(event => populateEventDetails(event));
+        events.forEach(event => {
+            populateEventDetails(event);
+            checkIfEventStarted(event);
+        });
     } catch (error) {
         console.error('Error fetching event details:', error);
+        redirectToLogin();
     }
 }
+
 function populateEventDetails(event) {
-    console.log(event);
     const container = document.createElement('div');
-    container.className = 'eventContainer'; // Use className instead of id to handle multiple events
+    container.className = 'eventContainer';
 
     container.innerHTML = `
         <div class="top">
@@ -64,7 +75,7 @@ function populateEventDetails(event) {
                     <p class="timeLeft">${calculateTimeLeft(new Date(event.eventTime))}</p>
                 </div>
             </div>
-            <button class="Signup" onclick="leaveEvent('${event.eventId}')">Leave</button>
+            <button class="Signup" onclick="${event.isCompanyEvent ? `deleteEvent('${event.eventId}')` : `leaveEvent('${event.eventId}')`}">${event.isCompanyEvent ? 'Delete Event' : 'Leave'}</button>
         </div>
     `;
 
@@ -76,8 +87,8 @@ function populateEventDetails(event) {
 
 function leaveEvent(eventId) {
     const token = localStorage.getItem('token');
-    if (!token) {
-        console.error('Token not found');
+    if (!token || isTokenExpired(token)) {
+        redirectToLogin();
         return;
     }
 
@@ -96,10 +107,33 @@ function leaveEvent(eventId) {
             window.location.reload();
         })
         .catch(error => console.error('Error leaving event:', error));
-
 }
+
+function deleteEvent(eventId) {
+    const token = localStorage.getItem('token');
+    if (!token || isTokenExpired(token)) {
+        redirectToLogin();
+        return;
+    }
+
+    fetch(`/api/events/${eventId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to delete event');
+            }
+
+            window.location.reload();
+        })
+        .catch(error => console.error('Error deleting event:', error));
+}
+
 function calculateTimeLeft(eventTime) {
-    // Assuming eventTime is already a Date object
     const now = new Date();
     const eventTimeInSG = new Date(eventTime);
 
@@ -114,4 +148,15 @@ function calculateTimeLeft(eventTime) {
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
 
     return `${days}d ${hours}h ${minutes}m left`;
+}
+
+function checkIfEventStarted(event) {
+    const eventTime = new Date(event.eventTime);
+    const now = new Date();
+
+    if (now >= eventTime) {
+        const signUpButton = document.querySelector(`.eventContainer .Signup`);
+        signUpButton.classList.add('disabled');
+        signUpButton.innerText = 'Event has started';
+    }
 }
