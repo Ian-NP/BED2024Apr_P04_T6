@@ -17,10 +17,16 @@ class Page{
 // const user = new User(1, "Optimus Prime", "../images/default-profile-user.svg");
 // sessionStorage.setItem("User", JSON.stringify(user));
 const token = localStorage.getItem('token');
-const userDetails = jwt_decode(token);
-const currentUser = new User(userDetails.userId, userDetails.userName, "/images/profile-user.svg");
-console.log(userDetails.userId);
+let currentUser;
+if (token){
+    const userDetails = jwt_decode(token);
+    currentUser = new User(userDetails.userId, userDetails.userName, "/images/profile-user.svg");
+    console.log(userDetails.userId);
+} else{
+    currentUser = new User(null, null, null);
+}
 
+console.log(currentUser);
 
 // Function for converting the timeStamp ISO date to date text for comment
 const commentPostedTime = (timeInMileSec) => {
@@ -702,16 +708,16 @@ commentSectionContainer.addEventListener('click', async(event) => {
 
     // Check if the clicked element is a send-reply-btn
     if (event.target.classList.contains('send-reply-btn')) {
-        const sendReplyButton = event.target;
 
-        // Get the value of the comment input
-        const commentInput = event.target.parentElement.parentElement.querySelector('.comment-input');
-        const commentText = commentInput.value;
+        if (token){
+            const sendReplyButton = event.target;
 
-        // Check if comment text is not empty
-        if (commentText.trim() !== '' && commentText.trim().length < 1000) {
-            // Get user data from sessionStorage
-            if (token) {
+            // Get the value of the comment input
+            const commentInput = event.target.parentElement.parentElement.querySelector('.comment-input');
+            const commentText = commentInput.value;
+    
+            // Check if comment text is not empty
+            if (commentText.trim() !== '' && commentText.trim().length < 1000) {
                 // Get user data from sessionStorage
                 const userId = parseInt(currentUser.userId);
                 const username = currentUser.username;
@@ -860,33 +866,31 @@ commentSectionContainer.addEventListener('click', async(event) => {
                         addCommentDiv.remove();
                     }
                 }
+            } else if(commentText.trim().length > 1000){
+                alert('Comment exceeded 1000 character count limit. Please try again after shortening it.');
             } else {
-                // If user data does not exist in sessionStorage, handle it accordingly
-                alert('User data not found. Please log in.');
+                // If comment text is empty, display an error message or handle it accordingly
+                alert('Please enter a comment before replying.');
             }
-        } else if(commentText.trim().length > 1000){
-            alert('Comment exceeded 1000 character count limit. Please try again after shortening it.');
-        } else {
-            // If comment text is empty, display an error message or handle it accordingly
-            alert('Please enter a comment before replying.');
+        } else{
+            alert('Please Login or SignUp before making a comment.');
         }
     }
 
     // Add a comment to the comment-section-container
     if (event.target.classList.contains("send-comment-btn")){
-        const sendCommentBtn = event.target;
-        const commentSectionContainerDiv = sendCommentBtn.parentElement.parentElement;
-
-        // Get the value of the comment input
-        const commentInput = commentSectionContainerDiv.querySelector('.comment-input');
-        const commentText = commentInput.value;
-        commentInput.value = '';
-
-        // Check if comment text is not empty
-        if (commentText.trim() !== '' && commentText.trim().length < 1000) {
-            // Get user data from sessionStorage
-            if (token) {
-                // Get user data from sessionStorage
+        if (token){
+            const sendCommentBtn = event.target;
+            const commentSectionContainerDiv = sendCommentBtn.parentElement.parentElement;
+    
+            // Get the value of the comment input
+            const commentInput = commentSectionContainerDiv.querySelector('.comment-input');
+            const commentText = commentInput.value;
+            commentInput.value = '';
+    
+            // Check if comment text is not empty
+            if (commentText.trim() !== '' && commentText.trim().length < 1000) {
+                // Get user data from localStorage Token
                 const userId = parseInt(currentUser.userId);
                 const username = currentUser.username;
                 const profilePic = currentUser.profilePic;
@@ -1008,16 +1012,15 @@ commentSectionContainer.addEventListener('click', async(event) => {
                 
                 var childNodes = commentSectionContainerDiv.childNodes;
                 commentSectionContainerDiv.insertBefore(newCommentContainer, childNodes[2]);
-            } else {
-                // If user data does not exist in sessionStorage, handle it accordingly
-                alert('User data not found. Please log in.');
+            } else if(commentText.trim().length > 1000){
+                alert('Comment exceeded 1000 character count limit. Please try again after shortening it.');
             }
-        } else if(commentText.trim().length > 1000){
-            alert('Comment exceeded 1000 character count limit. Please try again after shortening it.');
-        }
-        else {
-            // If comment text is empty, display an error message or handle it accordingly
-            alert('Please enter something before sending a comment.');
+            else {
+                // If comment text is empty, display an error message or handle it accordingly
+                alert('Please enter something before sending a comment.');
+            }
+        } else{
+            alert('Please Login or SignUp before making a comment.');
         }
     }
 });
