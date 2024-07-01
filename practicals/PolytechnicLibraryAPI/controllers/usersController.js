@@ -32,7 +32,8 @@ const loginUser = async (req, res) => {
 
         // Generate JWT token
         const payload = {
-            id: user.user_id,
+            user_id: user.user_id,
+            username: user.username,
             role: user.role,
         };
         const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, { expiresIn: "3600s" }); // Expires in 1 hour
@@ -65,7 +66,8 @@ const registerUser = async (req, res) => {
 
         // Generate JWT token
         const payload = {
-            id: result.user_id,
+            user_id: result.user_id,
+            username: result.username,
             role: result.role,
         };
         const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, { expiresIn: "3600s" }); // Expires in 1 hour

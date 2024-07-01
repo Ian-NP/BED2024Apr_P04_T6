@@ -61,46 +61,15 @@ class Book {
         return this.getBookById(book_id);
     }
 
-    static async updateBook(book_id, newBookData){
+    static async updateBook(book_id, newAvailability){
         const connection = await sql.connect(dbConfig);
-        
-        // Initialize an array to store the SET clauses
-        const setClauses = [];
-    
-        // Check if the title is provided in the newBookData
-        if (newBookData.title) {
-            setClauses.push(`title = @title`);
-        }
-    
-        // Check if the author is provided in the newBookData
-        if (newBookData.author) {
-            setClauses.push(`author = @author`);
-        }
-
-        // Check if the availability is provided in the newBookData
-        if (newBookData.availability) {
-            setClauses.push(`availability = @availability`);
-        }
-    
-        // Construct the SET part of the SQL query
-        const setClause = setClauses.join(', ');
     
         // Construct the complete SQL query
-        const sqlQuery = `UPDATE Books SET ${setClause} WHERE book_id = @book_id`; 
+        const sqlQuery = `UPDATE Books SET availability = @availability WHERE book_id = @book_id`; 
     
         const request = connection.request();
         request.input("book_id", book_id);
-        
-        // Add input parameters based on provided data
-        if (newBookData.title) {
-            request.input("title", newBookData.title);
-        }
-        if (newBookData.author) {
-            request.input("author", newBookData.author);
-        }
-        if (newBookData.availability) {
-            request.input("availability", newBookData.availability);
-        }
+        request.input("availability", newAvailability);
     
         await request.query(sqlQuery);
     

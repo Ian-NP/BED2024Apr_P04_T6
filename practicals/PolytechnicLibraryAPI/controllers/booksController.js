@@ -36,11 +36,11 @@ const createBook = async (req, res) => {
 };
 
 const updateBook = async (req, res) => {
-    const bookId = parseInt(req.params.id);
-    const newBookData = req.body;
+    const bookId = parseInt(req.params.bookId);
+    const newAvailability = req.body.availability;
 
     try {
-        const updatedBook = await Book.updateBook(bookId, newBookData);
+        const updatedBook = await Book.updateBook(bookId, newAvailability);
         if (!updatedBook) {
             return res.status(404).send("Book not found");
         }
