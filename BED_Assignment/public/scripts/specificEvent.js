@@ -142,7 +142,7 @@ signUpButton.addEventListener('click', async function(event) {
 
         // Fetch the PayPal email of the creator
         try {
-            const response = await fetch(`/api/users/${creatorId}`);
+            const response = await fetch(`/users/${creatorId}`);
             const user = await response.json();
             const paypalEmail = user.paypalEmail;
 
