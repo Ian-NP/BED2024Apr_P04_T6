@@ -121,6 +121,10 @@ app.get("/viewaccounts", async(req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/viewaccounts.html"));
 });
 
+app.get("/updateaccount", async(req, res) => {
+    res.sendFile(path.join(__dirname + "/public/html/updateaccount.html"));
+});
+
 app.get("/manageevents", async(req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/manageevents.html"));
 });

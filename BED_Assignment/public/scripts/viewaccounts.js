@@ -26,8 +26,8 @@ async function fetchAccounts() {
                 <td>${user.name}</td>
                 <td>${user.email}</td>
                 <td>
-                    <button class="update" onclick="updateAccount(${user.id})">Update</button>
-                    <button class="delete" onclick="deleteAccount(${user.id})">Delete</button>
+                    <button class="update" onclick="updateAccount(${user.id},'${user.type}')">Update</button>
+                    <button class="delete" onclick="deleteAccount(${user.id}, '${user.type}')">Delete</button>
                 </td>
             `;
             tableBody.appendChild(row);
@@ -61,6 +61,10 @@ async function fetchAccounts() {
 //         }
 //     }
 // }
+function updateAccount(userId, userType) {
+    console.log(`Navigating to update page for user ID: ${userId}`);
+    window.location.href = `/html/updateaccount.html?id=${userId}&type=${userType}`;
+}
 
 // async function deleteAccount(adminId) {
 //     if (confirm("Are you sure you want to delete this account?")) {
