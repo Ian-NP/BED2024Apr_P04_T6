@@ -11,6 +11,10 @@ registerForm.addEventListener('submit', async (event) => {
         formObject[key] = value;
     });
 
+    delete formObject.remember;
+
+    console.log(formObject);
+
     try {
         // Modify formObject to include role from dropdown
         formObject.role = document.getElementById('dropdownInput').value;
