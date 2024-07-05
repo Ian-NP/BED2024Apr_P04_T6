@@ -3,6 +3,8 @@ document.getElementById('login-form').addEventListener('submit', async function(
     var email = document.getElementById('email').value;
     var password = document.getElementById('password').value;
 
+    console.log('Form submitted with email:', email); // Debug log
+
     console.log('Form submitted with:', { email, password }); // Debug log
 
     try {

@@ -109,6 +109,7 @@ async function submitForm() {
             if (response.ok) {
                 alert('Form submitted!');
                 // Redirect the user or show a success message
+                window.location.href = '/login';
             } else {
                 alert('Sign-up failed. Please try again.');
             }

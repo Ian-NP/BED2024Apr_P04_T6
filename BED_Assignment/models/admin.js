@@ -1,4 +1,5 @@
 const sql = require("mssql");
+const bcrypt = require("bcrypt");
 const dbConfig = require("../dbConfig");
 
 class Admin {
@@ -46,13 +47,16 @@ class Admin {
     }
 
     static async createAdminUser(newAdminData) {
+        // Hash the user's password
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(newAdminData.password, saltRounds);
         const connection = await sql.connect(dbConfig);
     
         const sqlQuery = `INSERT INTO AdminUser (name, password, adminEmail) VALUES (@name, @password, @adminEmail); SELECT SCOPE_IDENTITY() AS adminId;`; // Retrieve ID of inserted record
     
         const request = connection.request();
         request.input("name", newAdminData.name);
-        request.input("password", newAdminData.password);
+        request.input("password", hashedPassword);
         request.input("adminEmail", newAdminData.adminEmail);
     
         const result = await request.query(sqlQuery);
@@ -94,6 +98,21 @@ class Admin {
     
         return result.rowsAffected > 0; // Indicate success based on affected rows
       }
+
+      static async getAdminByEmail(email) {
+        console.log('Received email in getAdminByEmail:', email); // Debug log
+        const connection = await sql.connect(dbConfig);
+        const sqlQuery = `SELECT * FROM AdminUser WHERE adminEmail = @Email`;
+        const request = connection.request();
+        request.input("Email", sql.NVarChar, email);
+        console.log('Executing SQL query with email:', email);
+        const result = await request.query(sqlQuery);
+        console.log('SQL query result:', result); // Log the result for inspection
+        connection.close();
+        if (result.recordset.length === 0) return null;
+        const row = result.recordset[0];
+        return new Admin(row.adminId, row.name, row.password, row.email,);
+    }
     
   }
   

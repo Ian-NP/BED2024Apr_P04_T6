@@ -1,5 +1,6 @@
 const Admin = require("../models/admin");
 const sql = require('mssql');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const dbConfig = require('../dbConfig');
 
@@ -74,49 +75,98 @@ const createAdminUser = async (req, res) => {
     return jwt.sign(payload, 'your_jwt_secret', { expiresIn: '1h' });
 };
 
+// const loginUser = async (req, res) => {
+//     const { email, password } = req.body;
+//     console.log('Received login request:', { email, password }); // Debug log
+
+//     try {
+//         const connection = await sql.connect(dbConfig);
+//         const sqlQuery = `
+//             SELECT * FROM AdminUser
+//             WHERE adminEmail = @Email
+//         `;
+//         const request = connection.request();
+//         request.input('Email', sql.VarChar, email);
+//         const result = await request.query(sqlQuery);
+
+//         console.log('SQL query executed'); // Debug log
+//         console.log('Query result:', result); // Debug log
+
+//         if (result.recordset.length === 0) {
+//             console.log('Email not found'); // Debug log
+//             return res.status(401).json({ success: false, message: 'Email not found' });
+//         }
+
+//         const user = result.recordset[0];
+//         console.log('User found:', user); // Debug log
+
+//         // Log retrieved hashed password
+//         console.log('Retrieved hashed password:', user.password);
+
+//         // Directly compare passwords
+//         const isMatch = await bcrypt.compare(password, user.password);
+//         console.log('Password comparison result:', isMatch); // Debug log
+
+//         if (!isMatch) {
+//             console.log('Incorrect password'); // Debug log
+//             return res.status(401).json({ success: false, message: 'Incorrect password' });
+//         }
+
+//         // Generate token upon successful login
+//         const token = generateToken(user.userId, user.userType);
+
+//         // Authenticated successfully
+//         console.log('Login successful'); // Debug log
+//         return res.status(200).json({ success: true, message: 'Login successful', token });
+//     } catch (error) {
+//         console.error('Error logging in user:', error);
+//         return res.status(500).json({ success: false, message: 'Internal server error' });
+//     } finally {
+//         sql.close(); // Ensure to close the SQL connection
+//     }
+// };
+
 const loginUser = async (req, res) => {
-    const { email, password } = req.body;
-    console.log('Received login request:', { email, password }); // Debug log
+  const { email, password } = req.body;
 
-    try {
-        const connection = await sql.connect(dbConfig);
-        const sqlQuery = `
-            SELECT * FROM AdminUser
-            WHERE adminEmail = @Email
-        `;
-        const request = connection.request();
-        request.input('Email', sql.VarChar, email);
-        const result = await request.query(sqlQuery);
+  try {
+      const user = await Admin.getAdminByEmail(email);
 
-        console.log('Query result:', result); // Debug log
+      if (!user) {
+          return res.status(401).json({ success: false, message: 'Email not found' });
+      }
 
-        if (result.recordset.length === 0) {
-            console.log('Email not found'); // Debug log
-            return res.status(401).json({ success: false, message: 'Email not found' });
-        }
+      console.log('User retrieved from DB:', user); // Check the user object retrieved
 
-        const user = result.recordset[0];
-        console.log('User found:', user); // Debug log
+      let isMatch = false;
 
-        // Directly compare passwords
-        if (password !== user.password) {
-            console.log('Incorrect password'); // Debug log
-            return res.status(401).json({ success: false, message: 'Incorrect password' });
-        }
+      if (user.password.startsWith('$2b$')) {
+          // Password is hashed, compare with bcrypt
+          isMatch = await bcrypt.compare(password, user.password);
+      } else {
+          // Legacy plain text password handling (not recommended for production)
+          isMatch = (password === user.password);
+      }
 
-        // Generate token upon successful login
-        const token = generateToken(user.userId, user.userType);
+      console.log('Password comparison result:', isMatch); // Check the result of password comparison
 
-        // Authenticated successfully
-        console.log('Login successful'); // Debug log
-        return res.status(200).json({ success: true, message: 'Login successful', token });
-    } catch (error) {
-        console.error('Error logging in user:', error);
-        return res.status(500).json({ success: false, message: 'Internal server error' });
-    } finally {
-        sql.close(); // Ensure to close the SQL connection
-    }
+      if (!isMatch) {
+          return res.status(401).json({ success: false, message: 'Incorrect password' });
+      }
+
+      // Generate token upon successful login
+      const token = generateToken(user.userId, user.userType);
+
+      // Authenticated successfully
+      return res.status(200).json({ success: true, message: 'Login successful', token });
+  } catch (error) {
+      console.error('Error logging in user:', error);
+      return res.status(500).json({ success: false, message: 'Internal server error' });
+  }
 };
+
+
+
 
 module.exports = {
   getAllAdminUsers,

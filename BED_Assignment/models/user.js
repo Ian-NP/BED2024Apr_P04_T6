@@ -53,6 +53,8 @@
           console.log('Received new user data:', newUserData);
     
           // Hash the user's password
+          const saltRounds = 10;
+          const hashedPassword = await bcrypt.hash(newUserData.password, saltRounds);
           
     
           // Connect to the database
@@ -69,7 +71,7 @@
           const request = connection.request();
           request.input('Email', sql.VarChar, newUserData.email);
           request.input('Name', sql.VarChar, newUserData.firstName); // Adjusted to use firstName
-          request.input('Password', sql.VarChar, newUserData.password);
+          request.input('Password', sql.VarChar, hashedPassword);
           request.input('UserType', sql.Char, newUserData.userType);
           request.input('PaypalEmail', sql.VarChar, newUserData.userType === 'C' ? newUserData.paypalEmail : null);
     
@@ -116,17 +118,17 @@
           return result.rowsAffected > 0; // Indicate success based on affected rows
         }
 
-      //   static async getUserByEmail(email) {
-      //     const connection = await sql.connect(dbConfig);
-      //     const sqlQuery = `SELECT * FROM Users WHERE email = @Email`;
-      //     const request = connection.request();
-      //     request.input("Email", sql.NVarChar, email);
-      //     const result = await request.query(sqlQuery);
-      //     connection.close();
-      //     if (result.recordset.length === 0) return null;
-      //     const row = result.recordset[0];
-      //     return new User(row.userId, row.email, row.name, row.password, row.userType);
-      // }
+        static async getUserByEmail(email) {
+          const connection = await sql.connect(dbConfig);
+          const sqlQuery = `SELECT * FROM Users WHERE email = @Email`;
+          const request = connection.request();
+          request.input("Email", sql.NVarChar, email);
+          const result = await request.query(sqlQuery);
+          connection.close();
+          if (result.recordset.length === 0) return null;
+          const row = result.recordset[0];
+          return new User(row.userId, row.email, row.name, row.password, row.userType);
+      }
 
       // async validatePassword(password) {
       //     return await bcrypt.compare(password, this.password);
