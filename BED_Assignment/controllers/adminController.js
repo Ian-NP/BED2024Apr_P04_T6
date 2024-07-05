@@ -16,17 +16,21 @@ const getAllAdminUsers = async (req, res) => {
 
 const getAdminById = async (req, res) => {
   const adminId = parseInt(req.params.adminId);
+  console.log(`Fetching admin with adminId: ${adminId}`);
   try {
-    const admin = await Admin.getAdminById(adminId);
-    if (!admin) {
-      return res.status(404).send("Admin not found");
-    }
-    res.json(admin);
+      const admin = await Admin.getAdminById(adminId);
+      if (!admin) {
+          console.log(`Admin with adminId ${adminId} not found`);
+          return res.status(404).send("Admin not found");
+      }
+      console.log(`Fetched admin data:`, admin);
+      res.json(admin);
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Error retrieving admin user");
+      console.error(error);
+      res.status(500).send("Error retrieving admin");
   }
 };
+
 
 const createAdminUser = async (req, res) => {
     const newAdmin = req.body;

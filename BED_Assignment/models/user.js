@@ -87,22 +87,29 @@
         }
       }
 
-        static async updateUser(userId, newUserData) {
-          const connection = await sql.connect(dbConfig);
-      
-          const sqlQuery = `UPDATE [Users] SET email = @email, name = @name WHERE userId = @userId`; // Parameterized query
-      
-          const request = connection.request();
-          request.input("userId", userId);
-          request.input("email", newUserData.email || null); // Handle optional fields
-          request.input("name", newUserData.name || null);
-      
-          await request.query(sqlQuery);
-      
-          connection.close();
-      
-          return this.getUserByUserId(userId); // returning the updated user data
+      static async updateUser(userId, newUserData) {
+        try {
+            const connection = await sql.connect(dbConfig);
+        
+            const sqlQuery = `UPDATE [Users] SET email = @email, name = @name WHERE userId = @userId`;
+        
+            const request = connection.request();
+            request.input("userId", userId);
+            request.input("email", newUserData.email || null); // Handle optional fields
+            request.input("name", newUserData.name || null);
+        
+            await request.query(sqlQuery);
+        
+            connection.close();
+        
+            // Fetch and return the updated user data
+            const updatedUserData = await this.getUserByUserId(userId);
+            return updatedUserData;
+        } catch (error) {
+            console.error("Error updating user:", error);
+            throw error; // Propagate the error up to the caller
         }
+    }
       
         static async deleteUser(userId) {
           const connection = await sql.connect(dbConfig);

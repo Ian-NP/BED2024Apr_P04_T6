@@ -16,17 +16,21 @@ const getAllUsers = async (req, res) => {
 
 const getUserByUserId = async (req, res) => {
   const userId = parseInt(req.params.userId);
+  console.log(`Fetching user with userId: ${userId}`);
   try {
-    const user = await User.getUserByUserId(userId);
-    if (!user) {
-      return res.status(404).send("User not found");
-    }
-    res.json(user);
+      const user = await User.getUserByUserId(userId);
+      if (!user) {
+          console.log(`User with userId ${userId} not found`);
+          return res.status(404).send("User not found");
+      }
+      console.log(`Fetched user data:`, user);
+      res.json(user);
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Error retrieving user");
+      console.error(error);
+      res.status(500).send("Error retrieving user");
   }
 };
+
 
 const createUser = async (req, res) => {
   // try {

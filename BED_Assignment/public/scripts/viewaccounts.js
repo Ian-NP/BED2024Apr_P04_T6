@@ -14,8 +14,8 @@ async function fetchAccounts() {
         const normalUsers = await responseUsers.json();
 
         // Merge both arrays into one array of users
-        const mergedUsers = adminUsers.map(user => ({ id: user.adminId, name: user.name, email: user.adminEmail }))
-                                    .concat(normalUsers.map(user => ({ id: user.userId, name: user.name, email: user.email })));
+        const mergedUsers = adminUsers.map(user => ({ id: user.adminId, name: user.name, email: user.adminEmail, type:'admin' }))
+                                    .concat(normalUsers.map(user => ({ id: user.userId, name: user.name, email: user.email, type:'user' })));
 
         const tableBody = document.querySelector('#accounts-table tbody');
         tableBody.innerHTML = '';
@@ -62,7 +62,7 @@ async function fetchAccounts() {
 //     }
 // }
 function updateAccount(userId, userType) {
-    console.log(`Navigating to update page for user ID: ${userId}`);
+    console.log(`Navigating to update page for user ID: ${userId} with type: ${userType}`);
     window.location.href = `/html/updateaccount.html?id=${userId}&type=${userType}`;
 }
 

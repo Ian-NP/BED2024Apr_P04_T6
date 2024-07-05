@@ -68,22 +68,29 @@ class Admin {
       }
 
       static async updateAdminUser(adminId, newAdminData) {
-        const connection = await sql.connect(dbConfig);
-    
-        const sqlQuery = `UPDATE AdminUser SET name = @name, password = @password, adminEmail = @adminEmail WHERE adminId = @adminId`; // Parameterized query
-    
-        const request = connection.request();
-        request.input("adminId", adminId);
-        request.input("name", newAdminData.name || null); // Handle optional fields
-        request.input("password", newAdminData.password || null);
-        request.input("adminEmail", newAdminData.adminEmail || null);
-    
-        await request.query(sqlQuery);
-    
-        connection.close();
-    
-        return this.getAdminById(adminId); // returning the updated admin user data
-      }
+        try {
+            const connection = await sql.connect(dbConfig);
+        
+            const sqlQuery = `UPDATE AdminUser SET name = @name, password = @password, adminEmail = @adminEmail WHERE adminId = @adminId`;
+        
+            const request = connection.request();
+            request.input("adminId", adminId);
+            request.input("name", newAdminData.name || null); // Handle optional fields
+            request.input("password", newAdminData.password || null);
+            request.input("adminEmail", newAdminData.adminEmail || null);
+        
+            await request.query(sqlQuery);
+        
+            connection.close();
+        
+            // Fetch and return the updated admin user data
+            const updatedAdminData = await this.getAdminById(adminId);
+            return updatedAdminData;
+        } catch (error) {
+            console.error("Error updating admin user:", error);
+            throw error; // Propagate the error up to the caller
+        }
+    }
     
       static async deleteAdmin(adminId) {
         const connection = await sql.connect(dbConfig);
