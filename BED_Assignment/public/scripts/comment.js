@@ -1011,7 +1011,7 @@ commentSectionContainer.addEventListener('click', async(event) => {
                 newCommentContainer.appendChild(replyContainer);
                 
                 var childNodes = commentSectionContainerDiv.childNodes;
-                commentSectionContainerDiv.insertBefore(newCommentContainer, childNodes[2]);
+                commentSectionContainerDiv.insertBefore(newCommentContainer, childNodes[4]);
             } else if(commentText.trim().length > 1000){
                 alert('Comment exceeded 1000 character count limit. Please try again after shortening it.');
             }
