@@ -93,6 +93,64 @@ function getUserTypeFromURL() {
     return urlParams.get('type');
 }
 
+// async function submitForm() {
+//     const firstName = document.getElementById('first-name').value;
+//     const email = document.getElementById('email').value;
+//     const password = document.getElementById('password').value;
+
+//     const userId = getUserIdFromURL();
+//     const userType = getUserTypeFromURL();
+
+//     console.log('User ID:', userId);
+//     console.log('User Type:', userType);
+
+//     const endpoint = userType === 'admin' ? `/admin/${userId}` : `/users/${userId}`;
+
+//     console.log('Endpoint:', endpoint);
+
+//     const data = {
+//         name: firstName,
+//         email: email,
+//         password: password
+//     };
+
+//     if (userType !== 'admin') {
+//         // Adjust userType to either "N" or "C" for normal users
+//         const adjustedUserType = userType === 'C' ? 'C' : 'U'; // Assuming "U" is for normal users
+//         data.userType = adjustedUserType;
+//     }
+
+//     console.log('Data to send:', data);
+
+//     try {
+//         const response = await fetch(endpoint, {
+//             method: 'PUT',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify(data)
+//         });
+
+//         console.log('Response:', response);
+
+//         if (response.ok) {
+//             alert('Account updated successfully!');
+//         } else {
+//             const errorData = await response.json();
+//             console.error('Error data:', errorData);
+//             if (errorData && errorData.errors) {
+//                 // Handle validation errors
+//                 const errorMessage = errorData.errors.join('\n');
+//                 alert('Error updating account:\n' + errorMessage);
+//             } else {
+//                 alert('Error updating account: ' + response.statusText);
+//             }
+//         }
+//     } catch (error) {
+//         console.error('Error:', error);
+//         alert('An error occurred while updating the account.');
+//     }
+// }
 async function submitForm() {
     const firstName = document.getElementById('first-name').value;
     const email = document.getElementById('email').value;
@@ -110,10 +168,15 @@ async function submitForm() {
 
     const data = {
         name: firstName,
-        email: email,
-        password: password,
-        userType: userType
+        password: password
     };
+
+    if (userType === 'admin') {
+        data.adminEmail = email;
+    } else {
+        data.email = email;
+        data.userType = userType === 'C' ? 'C' : 'U';
+    }
 
     console.log('Data to send:', data);
 
@@ -134,8 +197,7 @@ async function submitForm() {
             const errorData = await response.json();
             console.error('Error data:', errorData);
             if (errorData && errorData.errors) {
-                // Handle validation errors
-                const errorMessage = errorData.errors.map(error => error.message).join('\n');
+                const errorMessage = errorData.errors.join('\n');
                 alert('Error updating account:\n' + errorMessage);
             } else {
                 alert('Error updating account: ' + response.statusText);
@@ -146,5 +208,7 @@ async function submitForm() {
         alert('An error occurred while updating the account.');
     }
 }
+
+
 
 

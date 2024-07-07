@@ -10,12 +10,12 @@ const validateUser = (req, res, next) => {
       'string.min': 'Password must be at least 6 characters long',
       'any.required': 'Password is required',
     }),
-    userType: Joi.string().valid('N', 'C').required().messages({
-      'any.only': 'User type must be either "N" or "C"',
+    userType: Joi.string().valid('U', 'C').required().messages({
+      'any.only': 'User type must be either "U" or "C"',
       'any.required': 'User type is required',
     }),
     name: Joi.when('userType', {
-      is: 'N',
+      is: 'U',
       then: Joi.string().min(3).required().messages({
         'string.min': 'Name must be at least 3 characters long',
         'any.required': 'Name is required for normal users',
@@ -50,4 +50,26 @@ const validateUser = (req, res, next) => {
   next();
 };
 
-module.exports = validateUser;
+const validateAdmin = (req, res, next) => {
+  const schema = Joi.object({
+      name: Joi.string().required().messages({
+          'any.required': 'Name is required',
+      }),
+      adminEmail: Joi.string().email().required().messages({
+          'string.email': 'Must be a valid email address',
+          'any.required': 'Email is required',
+      }),
+      password: Joi.string().optional()
+  });
+
+  const validation = schema.validate(req.body, { abortEarly: false });
+
+  if (validation.error) {
+      const errors = validation.error.details.map((error) => error.message);
+      return res.status(400).json({ message: "Validation error", errors });
+  }
+
+  next();
+};
+
+module.exports = { validateUser, validateAdmin };

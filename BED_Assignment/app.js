@@ -16,7 +16,8 @@ import userController from "./controllers/userController"
 import adminController from "./controllers/adminController"
 
 // Importing middleware
-const validateUser = require("./middleware/validateUser");
+const {validateUser} = require("./middleware/validateUser");
+const {validateAdmin} = require("./middleware/validateUser");
 // import validateUser from './middleware/validateUser';
 import validateComment from './middleware/validateComment'
 import authenticateToken from "./middleware/auth";
@@ -166,8 +167,8 @@ app.delete("/api/event/:eventId/comments", eventCommentController.deleteEventCom
 //Routes for admin accounts
 app.get("/admin", adminController.getAllAdminUsers);
 app.get("/admin/:adminId", adminController.getAdminById);
-app.post("/admin", adminController.createAdminUser);
-app.put("/admin/:adminId", adminController.updateAdminUser);
+app.post("/admin", validateAdmin, adminController.createAdminUser);
+app.put("/admin/:adminId", validateAdmin, adminController.updateAdminUser);
 app.delete("/admin/:adminId", adminController.deleteAdminUser);
 
 // Routes for articles
