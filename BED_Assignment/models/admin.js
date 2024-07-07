@@ -1,4 +1,5 @@
 const sql = require("mssql");
+const bcrypt = require("bcrypt");
 const dbConfig = require("../dbConfig");
 
 class Admin {
@@ -46,13 +47,16 @@ class Admin {
     }
 
     static async createAdminUser(newAdminData) {
+        // Hash the user's password
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(newAdminData.password, saltRounds);
         const connection = await sql.connect(dbConfig);
     
         const sqlQuery = `INSERT INTO AdminUser (name, password, adminEmail) VALUES (@name, @password, @adminEmail); SELECT SCOPE_IDENTITY() AS adminId;`; // Retrieve ID of inserted record
     
         const request = connection.request();
         request.input("name", newAdminData.name);
-        request.input("password", newAdminData.password);
+        request.input("password", hashedPassword);
         request.input("adminEmail", newAdminData.adminEmail);
     
         const result = await request.query(sqlQuery);
@@ -64,22 +68,29 @@ class Admin {
       }
 
       static async updateAdminUser(adminId, newAdminData) {
-        const connection = await sql.connect(dbConfig);
-    
-        const sqlQuery = `UPDATE AdminUser SET name = @name, password = @password, adminEmail = @adminEmail WHERE adminId = @adminId`; // Parameterized query
-    
-        const request = connection.request();
-        request.input("adminId", adminId);
-        request.input("name", newAdminData.name || null); // Handle optional fields
-        request.input("password", newAdminData.password || null);
-        request.input("adminEmail", newAdminData.adminEmail || null);
-    
-        await request.query(sqlQuery);
-    
-        connection.close();
-    
-        return this.getAdminById(adminId); // returning the updated admin user data
-      }
+        try {
+            const connection = await sql.connect(dbConfig);
+        
+            const sqlQuery = `UPDATE AdminUser SET name = @name, password = @password, adminEmail = @adminEmail WHERE adminId = @adminId`;
+        
+            const request = connection.request();
+            request.input("adminId", adminId);
+            request.input("name", newAdminData.name || null); // Handle optional fields
+            request.input("password", newAdminData.password || null);
+            request.input("adminEmail", newAdminData.adminEmail || null);
+        
+            await request.query(sqlQuery);
+        
+            connection.close();
+        
+            // Fetch and return the updated admin user data
+            const updatedAdminData = await this.getAdminById(adminId);
+            return updatedAdminData;
+        } catch (error) {
+            console.error("Error updating admin user:", error);
+            throw error; // Propagate the error up to the caller
+        }
+    }
     
       static async deleteAdmin(adminId) {
         const connection = await sql.connect(dbConfig);
@@ -94,6 +105,31 @@ class Admin {
     
         return result.rowsAffected > 0; // Indicate success based on affected rows
       }
+
+      static async deleteAdminById(adminId) {
+        const connection = await sql.connect(dbConfig);
+        const sqlQuery = `DELETE FROM [AdminUser] WHERE adminId = @adminId`;
+        const request = connection.request();
+        request.input("adminId", adminId);
+        const result = await request.query(sqlQuery);
+        connection.close();
+        return result;
+      }
+
+      static async getAdminByEmail(email) {
+        console.log('Received email in getAdminByEmail:', email); // Debug log
+        const connection = await sql.connect(dbConfig);
+        const sqlQuery = `SELECT * FROM AdminUser WHERE adminEmail = @Email`;
+        const request = connection.request();
+        request.input("Email", sql.NVarChar, email);
+        console.log('Executing SQL query with email:', email);
+        const result = await request.query(sqlQuery);
+        console.log('SQL query result:', result); // Log the result for inspection
+        connection.close();
+        if (result.recordset.length === 0) return null;
+        const row = result.recordset[0];
+        return new Admin(row.adminId, row.name, row.password, row.email,);
+    }
     
   }
   

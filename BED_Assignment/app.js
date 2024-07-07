@@ -16,7 +16,8 @@ import userController from "./controllers/userController"
 import adminController from "./controllers/adminController"
 
 // Importing middleware
-const validateUser = require("./middleware/validateUser");
+const {validateUser} = require("./middleware/validateUser");
+const {validateAdmin} = require("./middleware/validateUser");
 // import validateUser from './middleware/validateUser';
 import validateComment from './middleware/validateComment'
 import authenticateToken from "./middleware/auth";
@@ -39,7 +40,7 @@ app.get("/users", userController.getAllUsers);
 app.get("/users/:userId", userController.getUserByUserId);
 app.post("/users", validateUser, userController.createUser);
 app.put("/users/:userId", validateUser, userController.updateUser);
-app.delete("/users/:userId", userController.deleteUser);
+app.delete("/users/:userId", userController.deleteUserById);
 
 
 //Routes for user login to login user
@@ -121,6 +122,10 @@ app.get("/viewaccounts", async(req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/viewaccounts.html"));
 });
 
+app.get("/updateaccount", async(req, res) => {
+    res.sendFile(path.join(__dirname + "/public/html/updateaccount.html"));
+});
+
 app.get("/manageevents", async(req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/manageevents.html"));
 });
@@ -162,9 +167,9 @@ app.delete("/api/event/:eventId/comments", eventCommentController.deleteEventCom
 //Routes for admin accounts
 app.get("/admin", adminController.getAllAdminUsers);
 app.get("/admin/:adminId", adminController.getAdminById);
-app.post("/admin", adminController.createAdminUser);
-app.put("/admin/:adminId", adminController.updateAdminUser);
-app.delete("/admin/:adminId", adminController.deleteAdminUser);
+app.post("/admin", validateAdmin, adminController.createAdminUser);
+app.put("/admin/:adminId", validateAdmin, adminController.updateAdminUser);
+app.delete("/admin/:adminId", adminController.deleteAdminById);
 
 // Routes for articles
 app.get('/article', async (req, res) => {

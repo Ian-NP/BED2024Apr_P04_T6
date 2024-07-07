@@ -53,6 +53,8 @@
           console.log('Received new user data:', newUserData);
     
           // Hash the user's password
+          const saltRounds = 10;
+          const hashedPassword = await bcrypt.hash(newUserData.password, saltRounds);
           
     
           // Connect to the database
@@ -69,7 +71,7 @@
           const request = connection.request();
           request.input('Email', sql.VarChar, newUserData.email);
           request.input('Name', sql.VarChar, newUserData.firstName); // Adjusted to use firstName
-          request.input('Password', sql.VarChar, newUserData.password);
+          request.input('Password', sql.VarChar, hashedPassword);
           request.input('UserType', sql.Char, newUserData.userType);
           request.input('PaypalEmail', sql.VarChar, newUserData.userType === 'C' ? newUserData.paypalEmail : null);
     
@@ -85,22 +87,29 @@
         }
       }
 
-        static async updateUser(userId, newUserData) {
-          const connection = await sql.connect(dbConfig);
-      
-          const sqlQuery = `UPDATE [Users] SET email = @email, name = @name WHERE userId = @userId`; // Parameterized query
-      
-          const request = connection.request();
-          request.input("userId", userId);
-          request.input("email", newUserData.email || null); // Handle optional fields
-          request.input("name", newUserData.name || null);
-      
-          await request.query(sqlQuery);
-      
-          connection.close();
-      
-          return this.getUserByUserId(userId); // returning the updated user data
+      static async updateUser(userId, newUserData) {
+        try {
+            const connection = await sql.connect(dbConfig);
+        
+            const sqlQuery = `UPDATE [Users] SET email = @email, name = @name WHERE userId = @userId`;
+        
+            const request = connection.request();
+            request.input("userId", userId);
+            request.input("email", newUserData.email || null); // Handle optional fields
+            request.input("name", newUserData.name || null);
+        
+            await request.query(sqlQuery);
+        
+            connection.close();
+        
+            // Fetch and return the updated user data
+            const updatedUserData = await this.getUserByUserId(userId);
+            return updatedUserData;
+        } catch (error) {
+            console.error("Error updating user:", error);
+            throw error; // Propagate the error up to the caller
         }
+    }
       
         static async deleteUser(userId) {
           const connection = await sql.connect(dbConfig);
@@ -116,17 +125,27 @@
           return result.rowsAffected > 0; // Indicate success based on affected rows
         }
 
-      //   static async getUserByEmail(email) {
-      //     const connection = await sql.connect(dbConfig);
-      //     const sqlQuery = `SELECT * FROM Users WHERE email = @Email`;
-      //     const request = connection.request();
-      //     request.input("Email", sql.NVarChar, email);
-      //     const result = await request.query(sqlQuery);
-      //     connection.close();
-      //     if (result.recordset.length === 0) return null;
-      //     const row = result.recordset[0];
-      //     return new User(row.userId, row.email, row.name, row.password, row.userType);
-      // }
+        static async deleteUserById(userId) {
+          const connection = await sql.connect(dbConfig);
+          const sqlQuery = `DELETE FROM [Users] WHERE userId = @userId`;
+          const request = connection.request();
+          request.input("userId", userId);
+          const result = await request.query(sqlQuery);
+          connection.close();
+          return result;
+        }
+
+        static async getUserByEmail(email) {
+          const connection = await sql.connect(dbConfig);
+          const sqlQuery = `SELECT * FROM Users WHERE email = @Email`;
+          const request = connection.request();
+          request.input("Email", sql.NVarChar, email);
+          const result = await request.query(sqlQuery);
+          connection.close();
+          if (result.recordset.length === 0) return null;
+          const row = result.recordset[0];
+          return new User(row.userId, row.email, row.name, row.password, row.userType);
+      }
 
       // async validatePassword(password) {
       //     return await bcrypt.compare(password, this.password);
