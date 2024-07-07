@@ -106,6 +106,16 @@ class Admin {
         return result.rowsAffected > 0; // Indicate success based on affected rows
       }
 
+      static async deleteAdminById(adminId) {
+        const connection = await sql.connect(dbConfig);
+        const sqlQuery = `DELETE FROM [AdminUser] WHERE adminId = @adminId`;
+        const request = connection.request();
+        request.input("adminId", adminId);
+        const result = await request.query(sqlQuery);
+        connection.close();
+        return result;
+      }
+
       static async getAdminByEmail(email) {
         console.log('Received email in getAdminByEmail:', email); // Debug log
         const connection = await sql.connect(dbConfig);

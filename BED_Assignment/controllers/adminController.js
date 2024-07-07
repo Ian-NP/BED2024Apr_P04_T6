@@ -74,6 +74,20 @@ const createAdminUser = async (req, res) => {
     }
   };
 
+  const deleteAdminById = async (req, res) => {
+    const adminId = parseInt(req.params.adminId);
+    try {
+      const result = await Admin.deleteAdminById(adminId); // Ensure this method exists
+      if (result.affectedRows === 0) {
+        return res.status(404).send("Admin not found");
+      }
+      res.status(200).send("Admin deleted successfully");
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Error deleting admin");
+    }
+  };
+
   const generateToken = (userId, userType) => {
     const payload = { userId, userType };
     return jwt.sign(payload, 'your_jwt_secret', { expiresIn: '1h' });
@@ -178,5 +192,6 @@ module.exports = {
   createAdminUser,
   updateAdminUser,
   deleteAdminUser,
+  deleteAdminById,
   loginUser,
 };

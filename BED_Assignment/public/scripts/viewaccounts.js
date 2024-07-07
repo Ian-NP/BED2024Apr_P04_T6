@@ -66,6 +66,11 @@ function updateAccount(userId, userType) {
     window.location.href = `/html/updateaccount.html?id=${userId}&type=${userType}`;
 }
 
+function deleteAccount(userId, userType) {
+    console.log(`Navigating to update page for user ID: ${userId} with type: ${userType}`);
+    window.location.href = `/html/deleteaccount.html?id=${userId}&type=${userType}`;
+}
+
 // async function deleteAccount(adminId) {
 //     if (confirm("Are you sure you want to delete this account?")) {
 //         try {

@@ -93,6 +93,20 @@ const createUser = async (req, res) => {
     return jwt.sign(payload, 'your_jwt_secret', { expiresIn: '1h' });
 };
 
+const deleteUserById = async (req, res) => {
+  const userId = parseInt(req.params.userId);
+  try {
+    const result = await User.deleteUserById(userId); // Ensure this method exists
+    if (result.affectedRows === 0) {
+      return res.status(404).send("User not found");
+    }
+    res.status(200).send("User deleted successfully");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error deleting user");
+  }
+};
+
 // const loginUser = async (req, res) => {
 //     const { email, password } = req.body;
 //     console.log('Received login request:', { email, password }); // Debug log
@@ -200,5 +214,6 @@ module.exports = {
   createUser,
   updateUser,
   deleteUser,
+  deleteUserById,
   loginUser,
 };

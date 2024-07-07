@@ -40,7 +40,7 @@ app.get("/users", userController.getAllUsers);
 app.get("/users/:userId", userController.getUserByUserId);
 app.post("/users", validateUser, userController.createUser);
 app.put("/users/:userId", validateUser, userController.updateUser);
-app.delete("/users/:userId", userController.deleteUser);
+app.delete("/users/:userId", userController.deleteUserById);
 
 
 //Routes for user login to login user
@@ -169,7 +169,7 @@ app.get("/admin", adminController.getAllAdminUsers);
 app.get("/admin/:adminId", adminController.getAdminById);
 app.post("/admin", validateAdmin, adminController.createAdminUser);
 app.put("/admin/:adminId", validateAdmin, adminController.updateAdminUser);
-app.delete("/admin/:adminId", adminController.deleteAdminUser);
+app.delete("/admin/:adminId", adminController.deleteAdminById);
 
 // Routes for articles
 app.get('/article', async (req, res) => {

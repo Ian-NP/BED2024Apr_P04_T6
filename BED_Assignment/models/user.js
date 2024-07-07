@@ -125,6 +125,16 @@
           return result.rowsAffected > 0; // Indicate success based on affected rows
         }
 
+        static async deleteUserById(userId) {
+          const connection = await sql.connect(dbConfig);
+          const sqlQuery = `DELETE FROM [Users] WHERE userId = @userId`;
+          const request = connection.request();
+          request.input("userId", userId);
+          const result = await request.query(sqlQuery);
+          connection.close();
+          return result;
+        }
+
         static async getUserByEmail(email) {
           const connection = await sql.connect(dbConfig);
           const sqlQuery = `SELECT * FROM Users WHERE email = @Email`;
