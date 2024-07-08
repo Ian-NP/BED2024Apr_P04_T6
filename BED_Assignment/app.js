@@ -11,6 +11,7 @@ import multer from "multer";
 // Importing Controllers
 import articleCommentController from "./controllers/articleCommentsController"
 import eventCommentController from "./controllers/eventCommentsController"
+import chatBotController from "./controllers/chatBotController"
 import EventController from "./controllers/eventController"
 import userController from "./controllers/userController"
 import adminController from "./controllers/adminController"
@@ -145,7 +146,7 @@ app.get("/statistics", async(req, res) => {
 
 
 
-
+// Backend routes for comments
 app.get("/api/article/comment/:commentId", articleCommentController.getArticleCommentById);
 app.get("/article/:articleId/comments", async (req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/comment.html"));
@@ -163,6 +164,11 @@ app.get("/api/event/:eventId/comments", eventCommentController.getAllCommentsFro
 app.post("/api/event/:eventId/comments", validateComment, eventCommentController.createEventComment);
 app.put("/api/event/:eventId/comments", validateComment, eventCommentController.updateEventCommentContent);
 app.delete("/api/event/:eventId/comments", eventCommentController.deleteEventComment);
+
+// Backend routes for chatbot
+app.get("/api/chatbot/:userId", chatBotController.fetchChatHistory);
+app.post("/api/chatbot/:userId", chatBotController.postUserInput);
+app.delete("/api/chatbot/:userId", chatBotController.clearChatHistoryFromUserId);
 
 //Routes for admin accounts
 app.get("/admin", adminController.getAllAdminUsers);
