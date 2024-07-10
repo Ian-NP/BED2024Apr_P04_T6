@@ -1,10 +1,22 @@
 import EventComments from "../models/eventComments"
 
-const getAllCommentsFromEventId = async(req, res) =>{
+const getAllCommentsFromEventIdByLatest = async(req, res) =>{
     const eventId = parseInt(req.params.eventId);
     
     try{
-        const eventComments = await EventComments.getAllCommentsFromEventId(eventId);
+        const eventComments = await EventComments.getAllCommentsFromEventIdByLatest(eventId);
+        return res.status(200).json(eventComments);
+    } catch(err){
+        console.error('Error getting comments for EventId: ', err);
+        res.status(500).send("Error retrieving comments for EventId");
+    }
+}
+
+const getAllCommentsFromEventIdByRelevance = async(req, res) =>{
+    const eventId = parseInt(req.params.eventId);
+    
+    try{
+        const eventComments = await EventComments.getAllCommentsFromEventIdByRelevance(eventId);
         return res.status(200).json(eventComments);
     } catch(err){
         console.error('Error getting comments for EventId: ', err);
@@ -70,7 +82,8 @@ const deleteEventComment = async(req, res) =>{
 }
 
 module.exports = {
-    getAllCommentsFromEventId,
+    getAllCommentsFromEventIdByLatest,
+    getAllCommentsFromEventIdByRelevance,
     getEventCommentById,
     createEventComment,
     updateEventCommentContent,

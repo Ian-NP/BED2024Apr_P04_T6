@@ -143,32 +143,43 @@ app.get("/statistics", async(req, res) => {
     res.sendFile(path.join(__dirname + "/public/html/statistics.html"));
 });
 
+app.get("/article/:articleId/comments", async (req, res) => {
+    res.sendFile(path.join(__dirname + "/public/html/comment.html"));
+});
+
+app.get("/event/:eventId/comments", async (req, res) => {
+    res.sendFile(path.join(__dirname + "/public/html/comment.html"));
+});
+
+app.get("/chatbot", async (req, res) =>{
+    res.sendFile(path.join(__dirname + "/public/html/chatbot.html"))
+})
 
 
 
 // Backend routes for comments
 app.get("/api/article/comment/:commentId", articleCommentController.getArticleCommentById);
-app.get("/article/:articleId/comments", async (req, res) => {
-    res.sendFile(path.join(__dirname + "/public/html/comment.html"));
-});
-app.get("/api/article/:articleId/comments", articleCommentController.getAllCommentsFromArticleId);
+app.get("/api/article/:articleId/comments/latest", articleCommentController.getAllCommentsFromArticleIdByLatest);
+app.get("/api/article/:articleId/comments/relevance", articleCommentController.getAllCommentsFromArticleIdByRelevance);
 app.post("/api/article/:articleId/comments", validateComment, articleCommentController.createArticleComment);
 app.put("/api/article/:articleId/comments", validateComment, articleCommentController.updateArticleCommentContent);
 app.delete("/api/article/:articleId/comments", articleCommentController.deleteArticleComment);
 
 app.get("/api/event/comment/:commentId", eventCommentController.getEventCommentById);
-app.get("/event/:eventId/comments", async (req, res) => {
-    res.sendFile(path.join(__dirname + "/public/html/comment.html"));
-});
-app.get("/api/event/:eventId/comments", eventCommentController.getAllCommentsFromEventId);
+app.get("/api/event/:eventId/comments/latest", eventCommentController.getAllCommentsFromEventIdByLatest);
+app.get("/api/event/:eventId/comments/relevance", eventCommentController.getAllCommentsFromEventIdByRelevance);
 app.post("/api/event/:eventId/comments", validateComment, eventCommentController.createEventComment);
 app.put("/api/event/:eventId/comments", validateComment, eventCommentController.updateEventCommentContent);
 app.delete("/api/event/:eventId/comments", eventCommentController.deleteEventComment);
 
 // Backend routes for chatbot
-app.get("/api/chatbot/:userId", chatBotController.fetchChatHistory);
-app.post("/api/chatbot/:userId", chatBotController.postUserInput);
-app.delete("/api/chatbot/:userId", chatBotController.clearChatHistoryFromUserId);
+app.get("/api/chatbot/:conversationId", chatBotController.fetchChatHistory);
+app.post("/api/chatbot/:conversationId", chatBotController.postUserInput);
+
+app.get("/api/chatConversation/:userId", chatBotController.fetchChatConversationsByUserId);
+app.post("/api/chatConversation/:userId", chatBotController.addNewConversation);
+app.put("/api/chatConversation/:conversationId", chatBotController.editConversationTitle);
+app.delete("/api/chatConversation/:conversationId", chatBotController.deleteChatConversation);
 
 //Routes for admin accounts
 app.get("/admin", adminController.getAllAdminUsers);

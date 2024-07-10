@@ -83,16 +83,17 @@ function getCommentPage(){
 
 const page = getCommentPage();
 
-async function fetchComments() {
+async function fetchComments(sortType) {
     if (page.page === "article"){
-        const response = await fetch(`/api/article/${page.pageId}/comments`);
+        const response = await fetch(`/api/article/${page.pageId}/comments/${sortType}`);
         const comments = await response.json();
         console.log(comments.length);
         console.log(comments);
         displayComments(comments);
     } else{
-        const response = await fetch(`/api/event/${page.pageId}/comments`);
+        const response = await fetch(`/api/event/${page.pageId}/comments/${sortType}`);
         const comments = await response.json();
+        console.log(comments);
         displayComments(comments);
     }
 }
@@ -315,7 +316,7 @@ const displayComments = (comments) =>{
     });
 }
 
-fetchComments();
+fetchComments("relevance");
 
 async function getCommentById(commentId){
     const response = await fetch(`/api/article/comment/${commentId}`);

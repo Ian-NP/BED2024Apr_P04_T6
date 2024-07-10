@@ -13,7 +13,7 @@ class EventComments{
         this.level = level;
     }
 
-    static async getAllCommentsFromEventId(eventId){
+    static async getAllCommentsFromEventIdByLatest(eventId){
         let connection;
         
         try{
@@ -47,7 +47,79 @@ class EventComments{
                     INNER JOIN CommentTree ct ON ac.parentCommentId = ct.commentId
                 )
                 SELECT * FROM CommentTree
-                ORDER BY level, timeStamp
+                ORDER BY level, timeStamp DESC
+                OPTION (MAXRECURSION 0);
+            `;
+            // MIGHT NEED TO CHANGE SQL QUERY
+    
+            const request = connection.request();
+            request.input("eventId", sql.Int, eventId);
+            const result = await request.query(sqlQuery);
+            
+            // Map the recordset to an array of EventComments objects
+            const comments = result.recordset.map(record => 
+                new EventComments(
+                    record.commentId,
+                    record.content,
+                    record.score,
+                    record.timeStamp,
+                    record.userId,
+                    record.eventId,
+                    record.parentCommentId,
+                    record.level
+                )
+            );
+            return comments;
+        } catch (error) {
+            console.error('Error getting comments:', error);
+            throw new Error("Error getting comments");
+        } finally {
+            // Ensure the connection is closed even if an error occurs
+            if (connection) {
+                try {
+                    await connection.close();
+                } catch (closeError) {
+                    console.error('Error closing the connection:', closeError);
+                }
+            }
+        }
+    }
+
+    static async getAllCommentsFromEventIdByRelevance(eventId){
+        let connection;
+        
+        try{
+            const connection = await sql.connect(dbConfig);
+            const sqlQuery = `
+                WITH CommentTree AS (
+                    SELECT
+                        commentId,
+                        content,
+                        parentCommentId,
+                        timeStamp,
+                        score,
+                        userId,
+                        eventId,
+                        0 AS level
+                    FROM EventComments
+                    WHERE parentCommentId IS NULL AND eventId = @eventId
+
+                    UNION ALL
+
+                    SELECT
+                        ac.commentId,
+                        ac.content,
+                        ac.parentCommentId,
+                        ac.timeStamp,
+                        ac.score,
+                        ac.userId,
+                        ac.eventId,
+                        ct.level + 1
+                    FROM EventComments ac
+                    INNER JOIN CommentTree ct ON ac.parentCommentId = ct.commentId
+                )
+                SELECT * FROM CommentTree
+                ORDER BY level, score DESC
                 OPTION (MAXRECURSION 0);
             `;
             // MIGHT NEED TO CHANGE SQL QUERY

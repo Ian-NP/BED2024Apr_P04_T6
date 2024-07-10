@@ -4,8 +4,122 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chatbot Page</title>
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/carousel/">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+    <link href="/bootstrap assets/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/styles/navbar.css" rel="stylesheet">
+    <link href="/styles/chatbot.css" rel="stylesheet">
 </head>
 <body>
-    
+    <header data-bs-theme="dark">
+        <nav class="navbar navbar-expand-xl navbar-dark fixed-top bg-dark">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="/">A+4BED</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+              <ul class="navbar-nav ms-auto mb-2 mb-md-0 me-4">
+                <li class="nav-item">
+                  <a class="nav-link inactive custom-navlink" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link inactive custom-navlink" href="/myEvents">My Events</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link inactive custom-navlink" href="/article">Articles</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active custom-navlink" href="/chatbot">Chatbot</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link inactive custom-navlink" id="view-events-link" href="/events">View Events</a>
+              </li>
+                <li class="nav-item">
+                  <a class="nav-link inactive  custom-navlink" href="#">View Kickstarters</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link inactive  custom-navlink" href="#">About Us</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link inactive  custom-navlink" href="#">Contact Us</a>
+                </li>
+              </ul>
+              <div class="d-flex">
+                <a class="btn btn-outline-primary me-2" href="/signup" id="signUp_btn">Sign up</a>
+                <a class="btn btn-outline-primary" href="/login" id="login_btn">Login</a>
+              </div>
+            </div>
+          </div>
+        </nav>
+    </header>
+    <main>
+      <div class="sidebarControllerDiv" position="fixed">
+        <i class="fa-solid fa-bars me-3 sideBarController"></i>
+      </div>
+      <div class="grid-container">
+          <div class="sidebar-container">
+              <div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-body-tertiary" style="width: 300px;">
+                  <a href="#" class="d-flex align-items-center flex-shrink-0 p-3 link-body-emphasis text-decoration-none border-bottom">
+                    <span class="fs-5 fw-semibold ms-5">Chats</span>
+                  </a>
+                  <a href="#" id="add-new-chat" class="d-flex align-items-center flex-shrink-0 p-3 link-body-emphasis text-decoration-none border-bottom">
+                    <span class="fs-6 fw-bold">Add New Chat</span>
+                    <i class="fs-5 fa-solid fa-circle-plus ms-2"></i>
+                  </a>
+                  <div id="chat-conversation-group" class="list-group list-group-flush border-bottom scrollarea">
+                    <!-- <a href="#" class="list-group-item list-group-item-action active py-3 lh-sm" aria-current="true" data-conversation-id="2">
+                      <div class="d-flex w-100 align-items-center justify-content-between">
+                        <strong class="mb-1 conversation-title">Chat 1</strong>
+                      </div>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action py-3 lh-sm" data-conversation-id="2">
+                      <div class="d-flex w-100 align-items-center justify-content-between">
+                        <strong class="mb-1 conversation-title">Chat 2</strong>
+                      </div>
+                    </a> -->
+                  </div>
+              </div>
+          </div>
+          <div class="mainchat-wrapper">
+              <div class="mainchat-container">
+                  <div class="conversation-wrapper">
+                      <!-- <div class="user-message">
+                          <p>Hey! What can you do?</p>
+                      </div>
+                      <div class="chat-message">
+                          <p>
+                              Hi there! I'm A+4BED, your friendly AI guide to the world of agriculture, manufacturing, and services. I'm here to help you navigate the complexities of these industries by offering insightful information, personalized recommendations, and data-driven analyses.
+                              Here's what I can do for you:
+                              General Industry Insights:
+                              Trend Spotting: I can break down current trends across various industries, highlighting the impact of technological advancements like automation, AI, and big data.
+                              Political Landscape: I'll explain how recent political changes, new regulations, and trade agreements are shaping the agricultural, manufacturing, and service sectors.
+                              Climate Change Challenges: We'll discuss the challenges faced by these industries due to climate change, and I'll provide potential solutions for sustainable practices.
+                              Interactive Assistance:
+                              Real-time Updates: Stay informed with the latest developments in different sectors. Just ask, and I'll provide you with relevant news and insights.
+                              Expert Answers: I'm happy to answer your questions about industry-specific practices and improvements, whether it's about farming techniques, production processes, or customer service strategies.
+                              Predictive Analytics: Let's explore the future! I can offer insights and predictions about growth potential and emerging trends across industries.
+                              Personalized Recommendations:
+                              Tailored Content: Tell me what interests you, and I'll recommend articles, resources, and research that align with your specific needs.
+                              Best Practices: I'll suggest best practices for businesses to adapt to new technologies, political changes, and climate-related trends.
+                              Data Analysis and Visualization:
+                              Unveiling the Numbers: I can analyze industry data and present it visually to help you understand complex information in a clear and concise way.
+                              Scenario Planning: Let's explore different futures! I can generate scenario analyses for various sectors, considering potential future policies and their impacts.
+                              So, what are you interested in learning about today? Tell me your questions or interests, and I'll do my best to provide you with valuable insights!
+                          </p>
+                      </div> -->
+                  </div>
+                  <div class="queryBar">
+                      <textarea id="queryText" placeholder="Type your message here..." rows="1"></textarea>
+                      <button id="submitQuery" type="button"><i class="fa-solid fa-paper-plane"></i></button>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </main>
+    <script src="/bootstrap assets/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/229dff7a33.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+    <script src="/scripts/chatbot.js"></script>
 </body>
 </html>

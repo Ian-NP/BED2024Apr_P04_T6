@@ -1,10 +1,22 @@
 import ArticleComments from "../models/articleComments"
 
-const getAllCommentsFromArticleId = async(req, res) =>{
+const getAllCommentsFromArticleIdByLatest = async(req, res) =>{
     const articleId = parseInt(req.params.articleId);
     
     try{
-        const articleComments = await ArticleComments.getAllCommentsFromArticleId(articleId);
+        const articleComments = await ArticleComments.getAllCommentsFromArticleIdByLatest(articleId);
+        return res.status(200).json(articleComments);
+    } catch(err){
+        console.error('Error getting comments for ArticleId: ', err);
+        res.status(500).send("Error retrieving comments for ArticleId");
+    }
+}
+
+const getAllCommentsFromArticleIdByRelevance = async(req, res) =>{
+    const articleId = parseInt(req.params.articleId);
+    
+    try{
+        const articleComments = await ArticleComments.getAllCommentsFromArticleIdByRelevance(articleId);
         return res.status(200).json(articleComments);
     } catch(err){
         console.error('Error getting comments for ArticleId: ', err);
@@ -70,7 +82,8 @@ const deleteArticleComment = async(req, res) =>{
 }
 
 module.exports = {
-    getAllCommentsFromArticleId,
+    getAllCommentsFromArticleIdByLatest,
+    getAllCommentsFromArticleIdByRelevance,
     getArticleCommentById,
     createArticleComment,
     updateArticleCommentContent,
