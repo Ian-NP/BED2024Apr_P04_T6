@@ -26,7 +26,7 @@ const sideBarController = document.querySelector(".sideBarController");
 sideBarController.addEventListener("click", toggleSideBar);
 
 // Function to handle sending the message
-async function sendMessage(userId, conversationId) {
+async function sendMessage(conversationId) {
     const message = userInput.value.trim();
     if (message !== '') {
         const messageWithBreaks = message.replace(/\n/g, '<br>');
@@ -47,7 +47,7 @@ async function sendMessage(userId, conversationId) {
 
         let modelMessage;
         try {
-            const response = await fetch(`/api/chatbot/${userId}`, {
+            const response = await fetch(`/api/chatbot/${conversationId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -80,6 +80,7 @@ function updateUI(modelMessage) {
 
 // Function to parse model message into HTML content
 function parseModelMessage(modelMessage) {
+    console.log(modelMessage);
     let htmlContent = modelMessage.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
     htmlContent = htmlContent.replace(/\* (.*?)\n/g, '<li>$1</li>');
     htmlContent = htmlContent.replace(/\n\n/g, '<br><br>');
@@ -165,6 +166,23 @@ async function populateChatConversation(userId) {
                 conversationElement.appendChild(innerDiv);
 
                 chatConversationGroup.appendChild(conversationElement);
+
+                conversationElement.addEventListener("click", async() =>{
+                    const conversationId = conversationElement.dataset.conversationId;
+                    populateChatHistory(conversationId);
+                    
+                    // Remove active class from currently active conversation
+                    const activeChatConversation = document.querySelector(".list-group-item.list-group-item-action.active.py-3.lh-sm");
+                    if (activeChatConversation) {
+                        activeChatConversation.classList.remove("active");
+                    }
+                
+                    // Add active class to the clicked conversation
+                    const newActiveConversation = document.querySelector(`.list-group-item.list-group-item-action.py-3.lh-sm[data-conversation-id="${conversationId}"]`);
+                    if (newActiveConversation) {
+                        newActiveConversation.classList.add("active");
+                    }
+                })
             });
 
             return firstConversationId;
@@ -181,6 +199,9 @@ async function populateChatHistory(conversationId) {
         const data = await response.json();
         const chatHistory = data.chatHistory; // Adjust this based on your backend response structure
 
+        const conversationWrapper = document.querySelector('.conversation-wrapper');
+        conversationWrapper.innerHTML='';
+
         chatHistory.forEach(history => {
             const messageDiv = document.createElement('div');
             messageDiv.classList.add(history.role === 'user' ? 'user-message' : 'chat-message');
@@ -188,7 +209,6 @@ async function populateChatHistory(conversationId) {
             messageParagraph.innerHTML = parseModelMessage(history.text);
             messageDiv.appendChild(messageParagraph);
 
-            const conversationWrapper = document.querySelector('.conversation-wrapper');
             conversationWrapper.appendChild(messageDiv);
         });
 
@@ -218,6 +238,12 @@ function getUser(){
     return currentUserId;
 }
 
+function getCurrentConversation(){
+    const activeChatConversation = document.querySelector(".list-group-item.list-group-item-action.active.py-3.lh-sm");
+    const currentConversationId = activeChatConversation.dataset.conversationId;
+    return currentConversationId;
+}
+
 function getNoOfConversations(){
     const chatConversationGroup = document.getElementById("chat-conversation-group");
     const chatList = chatConversationGroup.querySelectorAll('.list-group-item');
@@ -238,12 +264,13 @@ window.addEventListener('load', async() => {
 userInput.addEventListener('keydown', function(event) {
     if (event.key === 'Enter' && !event.shiftKey) {
         event.preventDefault();
-        sendMessage(userId);
+        console.log(getCurrentConversation());
+        sendMessage(getCurrentConversation());
     }
 });
 
 // Event listener for Send button click
 sendButton.addEventListener('click', function() {
-    sendMessage(userId);
+    sendMessage(getCurrentConversation());
 });
 
