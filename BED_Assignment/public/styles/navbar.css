@@ -4,10 +4,6 @@
   font-family: "poppins", Calibri, 'Gill Sans', sans-serif !important;
 }
 
-.active{
-  color: #119C62 !important;
-}
-
 .navbar-brand{
     font-weight: 700;
     font-size: 25px;
@@ -23,6 +19,7 @@
   
   .custom-navlink.active {
     font-weight: 600;
+    color: #119C62 !important;
   }
 
   .custom-navlink:hover{

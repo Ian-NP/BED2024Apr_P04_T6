@@ -14,19 +14,42 @@ class Page{
     }
 }
 
-// const user = new User(1, "Optimus Prime", "../images/default-profile-user.svg");
-// sessionStorage.setItem("User", JSON.stringify(user));
 const token = localStorage.getItem('token');
 let currentUser;
-if (token){
-    const userDetails = jwt_decode(token);
-    currentUser = new User(userDetails.userId, userDetails.userName, "/images/profile-user.svg");
-    console.log(userDetails.userId);
-} else{
-    currentUser = new User(null, null, null);
+
+async function getUserDetails(userId) {
+    try {
+        const response = await fetch(`/users/${userId}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch user details');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching user details:', error);
+        return null;
+    }
 }
 
-console.log(currentUser);
+async function initializeUser() {
+    if (token) {
+        const userId = jwt_decode(token).userId;
+        const userDetails = await getUserDetails(userId);
+        // console.log(userDetails);
+        if (userDetails) {
+            currentUser = new User(userDetails.userId, userDetails.name, "/images/profile-user.svg");
+            // console.log(userDetails.userId);
+        } else {
+            console.error('Failed to retrieve user details');
+            currentUser = new User(null, null, null);
+        }
+    } else {
+        currentUser = new User(null, null, null);
+    }
+
+    console.log(currentUser);
+}
+
+initializeUser();
 
 // Function for converting the timeStamp ISO date to date text for comment
 const commentPostedTime = (timeInMileSec) => {
@@ -247,11 +270,11 @@ async function createCommentContainer(comment){
     }
 }
 
-const displayComments = (comments) =>{
+
+const displayComments = async(comments) =>{
     const commentSectionContainerDiv = document.getElementById('comment-section-container');
     
-    // Logic for displayingComments
-    comments.forEach(async(comment) => {
+    for (const comment of comments){
         if (comment.level === 0) {
             // console.log("Parent Comment:", comment);
             // Display parent comment logic here
@@ -273,8 +296,6 @@ const displayComments = (comments) =>{
             replyContainer.classList.add("reply-container");
             newCommentContainer.appendChild(replyContainer);
 
-            // Sleep the thread due to the main comment section having yet to fully append to the main container
-            await new Promise(r => setTimeout(r, 80));
             const commentContainerDivs = commentSectionContainerDiv.querySelectorAll('.comment-container');
             commentContainerDivs.forEach(commentContainerDiv => {
                 if (parseInt(commentContainerDiv.getAttribute('data-commentid')) === comment.parentCommentId){
@@ -287,7 +308,6 @@ const displayComments = (comments) =>{
 
             // Display deeper level comments if necessary
             const newCommentContainer = await createCommentContainer(comment);
-            await new Promise(r => setTimeout(r, 80));
             const commentContainerDivs = commentSectionContainerDiv.querySelectorAll('.comment-container[data-commentlevel="1"]');
             console.log(commentContainerDivs);
 
@@ -313,7 +333,7 @@ const displayComments = (comments) =>{
                 }
             });
         }
-    });
+    }
 }
 
 fetchComments("relevance");
@@ -893,6 +913,7 @@ commentSectionContainer.addEventListener('click', async(event) => {
             if (commentText.trim() !== '' && commentText.trim().length < 1000) {
                 // Get user data from localStorage Token
                 const userId = parseInt(currentUser.userId);
+                console.log(currentUser.username);
                 const username = currentUser.username;
                 const profilePic = currentUser.profilePic;
 
@@ -1025,3 +1046,56 @@ commentSectionContainer.addEventListener('click', async(event) => {
         }
     }
 });
+
+function toggleDropdown() {
+    document.getElementById("custom-dropdown-content").classList.toggle("show");
+}
+
+function selectOption(optionId) {
+    const items = document.querySelectorAll('.custom-dropdown-content a');
+    items.forEach(item => {
+        item.classList.remove('selected');
+    });
+    document.getElementById(optionId).classList.add('selected');
+    console.log("User selected:", optionId);
+}
+
+// Close the dropdown if the user clicks outside of it
+window.onclick = function(event) {
+    if (!event.target.matches('.custom-dropdown button')) {
+        const dropdowns = document.getElementsByClassName("custom-dropdown-content");
+        for (let i = 0; i < dropdowns.length; i++) {
+            const openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+            }
+        }
+    }
+}
+
+const topCommentBtn = document.getElementById("top-comments");
+const newestCommentBtn = document.getElementById("newest-comments");
+
+topCommentBtn.addEventListener("click", () =>{
+    const commentSectionContainerDiv = document.getElementById('comment-section-container');
+    const commentContainers = commentSectionContainerDiv.querySelectorAll('.comment-container');
+    
+    commentContainers.forEach(commentContainer => {
+        commentContainer.remove();
+    });
+    fetchComments("relevance");
+    console.log("relevance");
+});
+
+newestCommentBtn.addEventListener("click", () =>{
+    const commentSectionContainerDiv = document.getElementById('comment-section-container');
+    const commentContainers = commentSectionContainerDiv.querySelectorAll('.comment-container');
+    
+    commentContainers.forEach(commentContainer => {
+        commentContainer.remove();
+    });
+    fetchComments("latest");
+    console.log("latest");
+});
+
+

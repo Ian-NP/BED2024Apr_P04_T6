@@ -102,7 +102,7 @@ const editConversationTitle = async (req, res) => {
     if (!updatedConversation){
       return res.status(404).send("Conversation not found");
     }
-    return res.status(200).json(updatedConversation);
+    return res.status(200).json({message: "Conversation updated successfully"});
   } catch(err){
     console.error(err);
     res.status(500).send("Error updating conversationTitle");
@@ -115,7 +115,7 @@ const deleteChatConversation = async (req, res) => {
   try {
       const deleteConversation = await ChatConversation.deleteChatConversation(conversationId);
       if (deleteConversation) {
-          res.status(204).json({ message: 'Conversation deleted successfully' });
+          res.status(200).json({ message: 'Conversation deleted successfully' });
       } else {
           res.status(404).json({ message: 'Conversation not found' });
       }

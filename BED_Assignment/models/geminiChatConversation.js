@@ -82,24 +82,29 @@ class ChatConversation{
 
     static async addNewConversation(conversationTitle, userId){
         let connection;
-    
+        
         try {
             connection = await sql.connect(dbConfig);
-            const sqlQuery = `
+            const insertQuery = `
                 INSERT INTO ChatConversations (conversationTitle, timeStamp, userId)
+                OUTPUT INSERTED.conversationId, INSERTED.conversationTitle, INSERTED.timeStamp, INSERTED.userId
                 VALUES (@conversationTitle, GETDATE(), @userId);
             `;
     
             const request = connection.request();
-            request.input("conversationTitle", sql.NVarChar(sql.MAX), conversationTitle)
+            request.input("conversationTitle", sql.NVarChar(sql.MAX), conversationTitle);
             request.input("userId", sql.Int, userId);
-            const result = await request.query(sqlQuery);
+            const result = await request.query(insertQuery);
     
-            // Check the number of rows affected
-            return result.rowsAffected[0] > 0;
+            if (result.recordset.length > 0) {
+                // Return the newly added conversation details
+                return result.recordset[0];
+            } else {
+                throw new Error("Error creating chat conversation: No record returned");
+            }
         } catch (error) {
-            console.error('Error creating chat conversation by conversationId:', error);
-            throw new Error("Error creating chat conversation by conversationId");
+            console.error('Error creating chat conversation:', error);
+            throw new Error("Error creating chat conversation");
         } finally {
             // Ensure the connection is closed even if an error occurs
             if (connection) {

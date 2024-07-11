@@ -29,6 +29,20 @@ main{
     opacity: 0.5;
 }
 
+.list-group-item{
+    transition: all 0.3s ease-in-out;
+}
+
+.list-group-item.active{
+    background-color: #119C62;
+    outline: none;
+    border: none;
+}
+
+.edit-input{
+    width: 200px !important;
+}
+
 .grid-container {
     display: grid;
     grid-template-columns: 300px 1fr;

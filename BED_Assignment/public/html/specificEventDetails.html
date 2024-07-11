@@ -31,6 +31,18 @@
         </div>
     </div>
     <div id="comment-section-container" class="comment-section-container">
+        <div class="comment-section-header">
+            <h2 id="comment-section-header-title">Comments</h2>
+            <div class="custom-dropdown">
+                <button onclick="toggleDropdown()">
+                    <i class="fa-solid fa-filter"></i> Sort By
+                </button>
+                <div id="custom-dropdown-content" class="custom-dropdown-content">
+                    <a id="top-comments" onclick="selectOption('top-comments')">Top comments</a>
+                    <a id="newest-comments" onclick="selectOption('newest-comments')">Newest first</a>
+                </div>
+            </div>
+        </div>
         <div class="add-comment">
             <div class="textareaInput">
                 <div class="profile-pic"></div>
