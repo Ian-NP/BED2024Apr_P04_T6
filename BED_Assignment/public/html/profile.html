@@ -1,19 +1,61 @@
-<!-- profile.html -->
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Profile</title>
-  <script defer src="profile.js"></script>
+    <script src="../bootstrap assets/js/color-modes.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.122.0">
+    <title>Profile</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/carousel/">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+    <link href="/bootstrap assets/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/styles/navbar.css" rel="stylesheet">
+    <link href="/styles/home.css" rel="stylesheet">
 </head>
 <body>
-  <h1>User Profile</h1>
-  <div id="profile-container">
-    <p>Username: <span id="username"></span></p>
-    <p>Email: <span id="email"></span></p>
-    <!-- Add other user details here -->
-  </div>
-  <script src="../scripts/userProfile.js"></script>
+    <header data-bs-theme="dark">
+        <nav class="navbar navbar-expand-xl navbar-dark fixed-top bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">A+4BED</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav ms-auto mb-2 mb-md-0 me-4">
+                        <li class="nav-item">
+                            <a class="nav-link active custom-navlink" href="/">Home</a>
+                        </li>
+                        <!-- Other nav links here -->
+                    </ul>
+                    <div class="d-flex">
+                        <a class="btn btn-outline-primary me-2" href="/signup" id="signUp_btn">Sign up</a>
+                        <a class="btn btn-outline-primary" href="/login" id="login_btn">Login</a>
+                        <a class="btn btn-outline-primary" href="/profile" id="profile_btn">Profile</a>
+                        <a class="btn btn-outline-primary" href="#" id="logout_btn">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    
+    <main class="container mt-5">
+        <div class="profile-info">
+            <h1>Profile</h1>
+            <div class="profile-picture">
+                <img id="profile-picture" src="" alt="Profile Picture" class="rounded-circle" width="150" height="150">
+            </div>
+            <div class="profile-details mt-3" id="profileInfo">
+                <p><strong>Name:</strong> <span id="profile-name"></span></p>
+                <p><strong>Email:</strong> <span id="profile-email"></span></p>
+            </div>
+        </div>
+    </main>
+
+    <script src="/bootstrap assets/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../scripts/generalScripts.js"></script>
+    <script src="../scripts/userProfile.js"></script>
 </body>
 </html>

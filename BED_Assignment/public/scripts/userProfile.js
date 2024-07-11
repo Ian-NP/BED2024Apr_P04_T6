@@ -1,32 +1,27 @@
-// profile.js
 document.addEventListener('DOMContentLoaded', () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      window.location.href = '/login'; // Redirect to login page if not logged in
-    } else {
-      fetchUserProfile(token);
-    }
-  });
-  
-  async function fetchUserProfile(token) {
-    try {
-      const response = await fetch('/profile', {
-        headers: {
-          'Authorization': token
-        }
+  const token = localStorage.getItem('token');
+  if (token) {
+      fetch('/api/profile', {
+          headers: {
+              'Authorization': `Bearer ${token}`
+          }
+      })
+      .then(response => {
+          if (response.ok) {
+              return response.json();
+          } else {
+              throw new Error('Failed to fetch profile data');
+          }
+      })
+      .then(data => {
+          document.getElementById('profile-name').textContent = data.name;
+          document.getElementById('profile-email').textContent = data.email;
+          document.getElementById('profile-picture').src = data.profilePicture || '/default-profile-picture.jpg';
+      })
+      .catch(error => {
+          console.error('Error:', error);
       });
-      if (!response.ok) throw new Error('Failed to fetch profile');
-      const userProfile = await response.json();
-      displayUserProfile(userProfile);
-    } catch (err) {
-      console.error(err);
-      window.location.href = '/login'; // Redirect to login page if token is invalid
-    }
+  } else {
+      window.location.href = '/login';
   }
-  
-  function displayUserProfile(user) {
-    document.getElementById('username').textContent = user.username;
-    document.getElementById('email').textContent = user.email;
-    // Display other user info as needed
-  }
-  
+});

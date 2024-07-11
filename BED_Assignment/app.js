@@ -24,7 +24,7 @@ import validateComment from './middleware/validateComment'
 import authenticateToken from "./middleware/auth";
 import eventPaymentController from "./controllers/eventPaymentController";
 import articleController from "./controllers/articleController"; 
-import auth from "./middleware/auth";
+
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -202,7 +202,7 @@ app.get('/articleIndividual', async (req, res) => {
     res.sendFile(path.join(__dirname, "/public/html/articleIndividual.html"));
 });
 
-app.get('/profile.html', async (req, res) => {
+app.get('/profile', async (req, res) => {
     res.sendFile(path.join(__dirname, "/public/html/profile.html"));
 });
 
