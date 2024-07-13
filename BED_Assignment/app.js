@@ -22,6 +22,7 @@ const {validateAdmin} = require("./middleware/validateUser");
 // import validateUser from './middleware/validateUser';
 import validateComment from './middleware/validateComment'
 import authenticateToken from "./middleware/auth";
+import specialAuthenticateToken from "./middleware/specialAuth";
 import { validateAddNewConversation, validateEditConversationTitle, validateAddChatHistory } from "./middleware/validateBot"
 import eventPaymentController from "./controllers/eventPaymentController";
 import articleController from "./controllers/articleController"; 
@@ -57,31 +58,31 @@ app.post('/createadmin', adminController.createAdminUser);
 
 //Routes for events
 
-app.post('/create-event', EventController.createEvent);
+// app.post('/create-event', specialAuthenticateToken, EventController.createEvent);
 
 // Serve protected.html for /events route, i used this for the js to authenticate before serving
 app.get('/events', (req, res) => {
     res.sendFile(path.join(__dirname + '/public/html/protected.html'));
 });
 // myEvents.html page
-app.get('/api/events/userEvents', authenticateToken, EventController.getEventsByUserId);
+app.get('/api/events/userEvents', specialAuthenticateToken, EventController.getEventsByUserId);
 
 app.get('/myEvents', async(req, res) => {res.sendFile(path.join(__dirname + "/public/html/myEvents.html"))});
 
 // events-content is the route for the events page, so basically after protected.html is served, the js will fetch the events-content with the token, the middleware can then authenticate it.
-app.get('/events-content', authenticateToken, EventController.serveEventsContent);
+app.get('/events-content', specialAuthenticateToken, EventController.serveEventsContent);
 
-app.post('/api/:eventId/signup', authenticateToken, EventController.signUserUp);
+app.post('/api/:eventId/signup', specialAuthenticateToken, EventController.signUserUp);
 
 app.get("/api/events", EventController.getAllEvents);
 app.get("/api/events/:eventId", EventController.getEventById);
-app.post('/api/events', authenticateToken, EventController.createEvent);
-app.patch('/api/:eventId/leave', authenticateToken, EventController.updateEventAttendance);
+app.post('/api/events', specialAuthenticateToken, EventController.createEvent);
+app.patch('/api/:eventId/leave', specialAuthenticateToken, EventController.updateEventAttendance);
 
-app.delete("/api/events/:eventId", EventController.deleteEvent);
+app.delete("/api/events/:eventId", specialAuthenticateToken, EventController.deleteEvent);
 
 //paypal stuff
-app.post('/api/events/:eventId/authorize', authenticateToken, eventPaymentController.authorizePayment);
+app.post('/api/events/:eventId/authorize', specialAuthenticateToken, eventPaymentController.authorizePayment);
 app.post('/api/events/:eventId/capture', eventPaymentController.capturePayment);
 
 //Ends here
