@@ -10,7 +10,7 @@ const authenticateToken = (req, res, next) => {
 
     if (!token) {
         console.log('No token provided'); 
-        return res.sendStatus(401); 
+        next();
     } else {
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
