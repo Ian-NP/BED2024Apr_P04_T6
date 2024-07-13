@@ -52,7 +52,7 @@ async function sendMessage(conversationId) {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ query: message, conversationId: conversationId })
+                body: JSON.stringify({ query: message })
             });
             const data = await response.json();
             modelMessage = data.message; // Adjust this based on your backend response structure
@@ -256,8 +256,9 @@ function scrollToBottomOfChat(){
 }
 
 async function populateChatConversation(userId) {
-    if (userId === null) {
-        alert("Please login / register for an account before accessing this.");
+    if (!(userId)) {
+        // alert("Please login / register for an account before accessing this.");
+        // window.location.href="/login";
         return;
     } else {
         try {
@@ -472,8 +473,6 @@ function getUser(){
         const userDetails = jwt_decode(token);
         currentUserId = userDetails.userId;
     } else{
-        alert("Please login / register for an account before accessing this.");
-        window.location.href="/login";
         currentUserId = null
     }
 
@@ -495,12 +494,16 @@ function getNoOfConversations(){
     return numberOfChat;
 }
 
-const userId = getUser();
-
 // Populate chat history when the window is loaded
 window.addEventListener('load', async() => {
-    const firstConversationId = await populateChatConversation(userId);
-    populateChatHistory(firstConversationId);
+    const userId = getUser();
+    if (userId){
+        const firstConversationId = await populateChatConversation(userId);
+        populateChatHistory(firstConversationId);
+    } else{
+        alert("Please login / register for an account before accessing this.");
+        window.location.href="/login";
+    }
 });
 
 const addNewChat = document.getElementById("add-new-chat");

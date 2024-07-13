@@ -22,6 +22,7 @@ const {validateAdmin} = require("./middleware/validateUser");
 // import validateUser from './middleware/validateUser';
 import validateComment from './middleware/validateComment'
 import authenticateToken from "./middleware/auth";
+import { validateAddNewConversation, validateEditConversationTitle, validateAddChatHistory } from "./middleware/validateBot"
 import eventPaymentController from "./controllers/eventPaymentController";
 import articleController from "./controllers/articleController"; 
 
@@ -173,13 +174,21 @@ app.put("/api/event/:eventId/comments", validateComment, eventCommentController.
 app.delete("/api/event/:eventId/comments", eventCommentController.deleteEventComment);
 
 // Backend routes for chatbot
-app.get("/api/chatbot/:conversationId", chatBotController.fetchChatHistory);
-app.post("/api/chatbot/:conversationId", chatBotController.postUserInput);
+app.get("/api/chatbot/:conversationId", authenticateToken,  chatBotController.fetchChatHistory);
+app.post("/api/chatbot/:conversationId", authenticateToken, validateAddChatHistory, chatBotController.postUserInput);
 
-app.get("/api/chatConversation/:userId", chatBotController.fetchChatConversationsByUserId);
-app.post("/api/chatConversation/:userId", chatBotController.addNewConversation);
-app.put("/api/chatConversation/:conversationId", chatBotController.editConversationTitle);
-app.delete("/api/chatConversation/:conversationId", chatBotController.deleteChatConversation);
+app.get("/api/chatConversation/:userId", authenticateToken, chatBotController.fetchChatConversationsByUserId);
+app.post("/api/chatConversation/:userId", authenticateToken, validateEditConversationTitle, chatBotController.addNewConversation);
+app.put("/api/chatConversation/:conversationId", authenticateToken, validateEditConversationTitle, chatBotController.editConversationTitle);
+app.delete("/api/chatConversation/:conversationId", authenticateToken, chatBotController.deleteChatConversation);
+
+// app.get("/api/chatbot/:conversationId", chatBotController.fetchChatHistory);
+// app.post("/api/chatbot/:conversationId", validateAddChatHistory, chatBotController.postUserInput);
+
+// app.get("/api/chatConversation/:userId", chatBotController.fetchChatConversationsByUserId);
+// app.post("/api/chatConversation/:userId", validateAddNewConversation, chatBotController.addNewConversation);
+// app.put("/api/chatConversation/:conversationId", validateEditConversationTitle, chatBotController.editConversationTitle);
+// app.delete("/api/chatConversation/:conversationId", chatBotController.deleteChatConversation);
 
 //Routes for admin accounts
 app.get("/admin", adminController.getAllAdminUsers);
