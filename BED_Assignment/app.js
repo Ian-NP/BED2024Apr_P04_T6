@@ -26,6 +26,7 @@ import { validateAddNewConversation, validateEditConversationTitle, validateAddC
 import eventPaymentController from "./controllers/eventPaymentController";
 import articleController from "./controllers/articleController"; 
 
+
 const app = express();
 const PORT = process.env.PORT || 3001;
 const staticMiddleware = express.static("./public"); // Path to the public folder
@@ -210,6 +211,10 @@ app.get('/articleIndividual', async (req, res) => {
     res.sendFile(path.join(__dirname, "/public/html/articleIndividual.html"));
 });
 
+app.get('/profile', async (req, res) => {
+    res.sendFile(path.join(__dirname, "/public/html/profile.html"));
+});
+
 app.get("/api/article", articleController.getAllArticles);
 app.post("/create-blog", articleController.createArticle);
 app.post("/api/article", authenticateToken, articleController.createArticle);
@@ -218,6 +223,15 @@ app.get("/api/article/:title", articleController.getArticleByTitle);
 app.put("/api/article/:articleId", articleController.updateArticle);
 app.delete("/api/article/:articleId", articleController.deleteArticle);
 
+app.get('/profile', authenticateToken, async (req, res) => {
+    try {
+      const user = await User.findById(req.user.id); // Assuming req.user contains the user id
+      if (!user) return res.status(404).json({ message: 'User not found' });
+      res.json(user);
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  });
 
 app.listen(PORT, async () => {
     try {
