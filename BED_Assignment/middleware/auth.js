@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 
-const secret = 'your_secret';
 
 // const authenticateToken = (req, res, next) => {
 //     const authHeader = req.headers['authorization'];
@@ -24,21 +23,31 @@ const secret = 'your_secret';
 //     }
 // };
 
-function authenticateToken(req, res, next) {
-    const token = req.headers['authorization'];
+require('dotenv').config(); // Load environment variables
+
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
 
     if (!token) {
-        return res.status(401).json({ error: 'Unauthorized: Token not provided' });
+        console.error('No token provided');
+        return res.sendStatus(401); // Unauthorized: No token provided
     }
 
-    jwt.verify(token, secret, (err, decoded) => {
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
         if (err) {
-            return res.status(401).json({ error: 'Unauthorized: Invalid token' });
+            console.error('JWT Verification Error:', err);
+            return res.sendStatus(403); // Forbidden: Invalid token
         }
-        req.user = decoded;
+        
+        console.log('Authenticated user:', decoded); // Log authenticated user
+        req.user = decoded; // Attach user information to the request object
         next();
     });
-}
+};
+
+
+
 
 module.exports = authenticateToken;
   
