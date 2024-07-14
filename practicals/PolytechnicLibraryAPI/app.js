@@ -7,10 +7,18 @@ import userController from "./controllers/usersController"
 import bookController from "./controllers/booksController"
 import registerUserValidation from "./middlewares/RegisterUserValidation"
 import tokenAuthorization from "./middlewares/tokenAuthorization"
+
+import swaggerUi from "swagger-ui-express"
+import swaggerDocument from "./swagger-output.json"
+
+
+
+
+
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 const staticMiddleware = express.static("./public");
 
 app.use(bodyParser.json({ limit: '400mb' }));
@@ -35,7 +43,7 @@ app.post("/api/users/register", registerUserValidation, userController.registerU
 app.post("/api/users/login", userController.loginUser);
 app.get("/books", tokenAuthorization, bookController.getAllBooks);
 app.put("/books/:bookId/availability", tokenAuthorization, bookController.updateBook);
-
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.listen(PORT, async () => {
     try {
         // Await to connect to the database

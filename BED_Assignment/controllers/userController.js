@@ -88,9 +88,9 @@ const createUser = async (req, res) => {
     }
   };
 
-  const generateToken = (userId, userType, userName) => {
-    const payload = { userId, userType, userName };
-    return jwt.sign(payload, 'your_jwt_secret', { expiresIn: '1h' });
+  const generateToken = (userId, userType, userName, userEmail) => {
+    const payload = { userId, userType, userName, userEmail };
+    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
 };
 
 const deleteUserById = async (req, res) => {

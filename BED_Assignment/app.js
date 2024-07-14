@@ -1,6 +1,6 @@
-import dotenv from 'dotenv';
-dotenv.config();
-
+//import dotenv from 'dotenv';
+//dotenv.config();
+require('dotenv').config();
 import express from "express";
 import bodyParser from "body-parser";
 import sql from "mssql";
@@ -22,12 +22,14 @@ const {validateAdmin} = require("./middleware/validateUser");
 // import validateUser from './middleware/validateUser';
 import validateComment from './middleware/validateComment'
 import authenticateToken from "./middleware/auth";
+import specialAuthenticateToken from "./middleware/specialAuth";
 import { validateAddNewConversation, validateEditConversationTitle, validateAddChatHistory } from "./middleware/validateBot"
 import eventPaymentController from "./controllers/eventPaymentController";
 import articleController from "./controllers/articleController"; 
 
 
 const app = express();
+const jwt = require('jsonwebtoken');
 const PORT = process.env.PORT || 3001;
 const staticMiddleware = express.static("./public"); // Path to the public folder
   
@@ -57,31 +59,31 @@ app.post('/createadmin', adminController.createAdminUser);
 
 //Routes for events
 
-app.post('/create-event', EventController.createEvent);
+// app.post('/create-event', specialAuthenticateToken, EventController.createEvent);
 
 // Serve protected.html for /events route, i used this for the js to authenticate before serving
 app.get('/events', (req, res) => {
     res.sendFile(path.join(__dirname + '/public/html/protected.html'));
 });
 // myEvents.html page
-app.get('/api/events/userEvents', authenticateToken, EventController.getEventsByUserId);
+app.get('/api/events/userEvents', specialAuthenticateToken, EventController.getEventsByUserId);
 
 app.get('/myEvents', async(req, res) => {res.sendFile(path.join(__dirname + "/public/html/myEvents.html"))});
 
 // events-content is the route for the events page, so basically after protected.html is served, the js will fetch the events-content with the token, the middleware can then authenticate it.
-app.get('/events-content', authenticateToken, EventController.serveEventsContent);
+app.get('/events-content', specialAuthenticateToken, EventController.serveEventsContent);
 
-app.post('/api/:eventId/signup', authenticateToken, EventController.signUserUp);
+app.post('/api/:eventId/signup', specialAuthenticateToken, EventController.signUserUp);
 
 app.get("/api/events", EventController.getAllEvents);
 app.get("/api/events/:eventId", EventController.getEventById);
-app.post('/api/events', authenticateToken, EventController.createEvent);
-app.patch('/api/:eventId/leave', authenticateToken, EventController.updateEventAttendance);
+app.post('/api/events', specialAuthenticateToken, EventController.createEvent);
+app.patch('/api/:eventId/leave', specialAuthenticateToken, EventController.updateEventAttendance);
 
-app.delete("/api/events/:eventId", EventController.deleteEvent);
+app.delete("/api/events/:eventId", specialAuthenticateToken, EventController.deleteEvent);
 
 //paypal stuff
-app.post('/api/events/:eventId/authorize', authenticateToken, eventPaymentController.authorizePayment);
+app.post('/api/events/:eventId/authorize', specialAuthenticateToken, eventPaymentController.authorizePayment);
 app.post('/api/events/:eventId/capture', eventPaymentController.capturePayment);
 
 //Ends here
@@ -227,15 +229,21 @@ app.get("/api/article/:title", articleController.getArticleByTitle);
 app.put("/api/article/:articleId", articleController.updateArticle);
 app.delete("/api/article/:articleId", articleController.deleteArticle);
 
-app.get('/profile', authenticateToken, async (req, res) => {
-    try {
-      const user = await User.findById(req.user.id); // Assuming req.user contains the user id
-      if (!user) return res.status(404).json({ message: 'User not found' });
-      res.json(user);
-    } catch (err) {
-      res.status(500).json({ message: err.message });
-    }
-  });
+app.get('/api/profile', authenticateToken, (req, res) => {
+    // Fetch user data from your database based on req.user.id
+    const userId = req.user.id;
+    // Example SQL query:
+    // const query = `SELECT name, email, profilePicture FROM users WHERE id = ${userId}`;
+    
+    // Replace with your actual database query
+    const userData = {
+        name: 'User Name',
+        email: 'user@example.com',
+        profilePicture: './images/default-profile-user.jpg'
+    };
+
+    res.json(userData);
+});
 
 app.listen(PORT, async () => {
     try {
