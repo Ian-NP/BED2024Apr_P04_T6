@@ -27,6 +27,7 @@ sideBarController.addEventListener("click", toggleSideBar);
 
 // Function to handle sending the message
 async function sendMessage(conversationId) {
+    const token = localStorage.getItem('token');
     const message = userInput.value.trim();
     if (message !== '') {
         const messageWithBreaks = message.replace(/\n/g, '<br>');
@@ -50,7 +51,8 @@ async function sendMessage(conversationId) {
             const response = await fetch(`/api/chatbot/${conversationId}`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({ query: message })
             });
@@ -66,6 +68,7 @@ async function sendMessage(conversationId) {
 }
 
 async function addNewConversation() {
+    const token = localStorage.getItem('token');
     const userId = getUser(); // Ensure you have a function that gets the current user's ID
     const conversationTitle = "New Chat"; // You can replace this with a dynamic title if needed
 
@@ -73,7 +76,8 @@ async function addNewConversation() {
         const response = await fetch(`/api/chatConversation/${userId}`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({ conversationTitle })
         });
@@ -129,6 +133,7 @@ async function addNewConversation() {
                                 method: 'PUT',
                                 headers: {
                                     'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${token}`
                                 },
                                 body: JSON.stringify({ conversationTitle: newTitle }),
                             });
@@ -168,6 +173,7 @@ async function addNewConversation() {
                         method: 'DELETE',
                         headers: {
                             'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
                         },
                     });
                     if (response.ok) {
@@ -261,9 +267,16 @@ async function populateChatConversation(userId) {
         // window.location.href="/login";
         return;
     } else {
+        const token = localStorage.getItem('token');
         try {
             console.log(userId);
-            let response = await fetch(`/api/chatConversation/${userId}`);
+            let response = await fetch(`/api/chatConversation/${userId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            console.log("testing")
             let data = await response.json();
 
             if (data.length === 0) {
@@ -271,13 +284,19 @@ async function populateChatConversation(userId) {
                 response = await fetch(`/api/chatConversation/${userId}`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
                     },
                     body: JSON.stringify({ conversationTitle: "New Chat" })
                 });
 
                 // Fetch the conversations again after adding the new one
-                response = await fetch(`/api/chatConversation/${userId}`);
+                response = await fetch(`/api/chatConversation/${userId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 data = await response.json();
             }
 
@@ -348,6 +367,7 @@ async function populateChatConversation(userId) {
                                     method: 'PUT',
                                     headers: {
                                         'Content-Type': 'application/json',
+                                        'Authorization': `Bearer ${token}`
                                     },
                                     body: JSON.stringify({ conversationTitle: newTitle }),
                                 });
@@ -386,6 +406,7 @@ async function populateChatConversation(userId) {
                             method: 'DELETE',
                             headers: {
                                 'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`
                             },
                         });
                         if (response.ok) {
@@ -439,7 +460,13 @@ async function populateChatConversation(userId) {
 // Function to populate chat history when window is loaded
 async function populateChatHistory(conversationId) {
     try {
-        const response = await fetch(`/api/chatbot/${conversationId}`);
+        const token = localStorage.getItem("token");
+        const response = await fetch(`/api/chatbot/${conversationId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
         const data = await response.json();
         const chatHistory = data.chatHistory; // Adjust this based on your backend response structure
 

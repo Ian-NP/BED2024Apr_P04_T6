@@ -2,7 +2,7 @@
 
 body{
   font-family: "poppins", Calibri, 'Gill Sans', sans-serif !important;
-  background-color: white !important;
+  background-color: rgb(33, 37, 41) !important;
 }
 
 .carousel-control-prev, .carousel-control-next{
@@ -17,7 +17,7 @@ body{
   position: relative;
   overflow: hidden;
   transition: color 0.4s ease-out, background-color 0.4s ease-out;
-  border: 2px solid rgba(0, 0, 0, 0.1); /* Black solid border */
+  border: 2px solid rgba(255, 255, 255, 0.1); /* Black solid border */
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
@@ -95,8 +95,69 @@ body {
   height: 32rem;
 }
 
+.service-title{
+  color: white;
+  margin: 50px auto;
+  text-align: center;
+}
+
+.service-title h2{
+  font-size: calc(2rem + .9vw) !important;
+}
+
 .col-lg-4{
   color: black !important;
+}
+
+.card {
+  width: 100%; /* Ensure the card width takes up the full width of the column */
+  max-width: 350px; /* Max card width */
+  height: 100%;
+  max-height: 600px;
+  background-color: #262E35; /* Darker background */
+  border-radius: 12px; /* Rounded corners */
+  overflow: hidden; /* Ensure content doesn't overflow */
+  box-shadow: 0 0 20px rgba(17, 156, 98, 0.6); /* Default drop shadow with subtle green glow */
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Transition effect for transform and box-shadow */
+  cursor: pointer;
+
+  /* Center align the content */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto; /* Center align the card within the column */
+}
+
+.card:hover {
+  transform: scale(1.05) translateY(-5px); /* Scale up and move card up slightly on hover */
+  box-shadow: 0 0 30px 10px rgba(17, 156, 98, 0.8); /* Stronger glowing green shadow on hover */
+}
+
+.card-img-top {
+  border-radius: 50%; /* Make the image circular */
+  height: 200px; /* Image height */
+  width: 200px; /* Image width */
+  object-fit: cover;
+  display: block; /* Ensures image behaves as a block element */
+  margin: 0 20px; /* Center image and add space below */
+  margin-top: 20px;
+}
+
+.card-body {
+  padding: 20px;
+  color: white;
+  transition: all 0.3s ease-in-out;
+}
+
+.card-text {
+  font-size: 0.85rem;
+}
+
+
+footer{
+  background-color: rgb(33, 37, 41);
+  color: #119C62;
 }
 
 /* MARKETING CONTENT
@@ -120,6 +181,10 @@ body {
 
 .featurette-divider {
   margin: 5rem 0; /* Space out the Bootstrap <hr> more */
+}
+
+.row.featurette{
+  color: white;
 }
 
 /* Thin out the marketing headings */

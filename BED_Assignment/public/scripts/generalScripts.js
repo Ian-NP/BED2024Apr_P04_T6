@@ -54,6 +54,18 @@ function toggleButtons(isLoggedIn) {
     }
 }
 
+function articlePage() {
+    window.location.href="/article";
+}
+
+function chatBotPage(){
+    window.location.href="/chatbot"
+}
+
+function eventsPage(){
+    window.location.href="/events"
+}
+
 
 document.getElementById('logout_btn').addEventListener('click', () => {
     localStorage.removeItem('token');

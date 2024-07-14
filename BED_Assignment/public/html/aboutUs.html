@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="./bootstrap assets/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="./styles/navbar.css" rel="stylesheet">
+    <link href="./styles/aboutUs.css" rel="stylesheet">
+</head>
+<body>
+    <header data-bs-theme="dark">
+        <nav class="navbar navbar-expand-xl navbar-dark fixed-top bg-dark">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="/">A+4BED</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+              <ul class="navbar-nav ms-auto mb-2 mb-md-0 me-4">
+                <li class="nav-item">
+                  <a class="nav-link inactive custom-navlink" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link inactive custom-navlink" href="/myEvents">My Events</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link inactive custom-navlink" href="/article">Articles</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link inactive custom-navlink" href="/chatbot">Chatbot</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link inactive custom-navlink" id="view-events-link" href="/events">View Events</a>
+              </li>
+                <li class="nav-item">
+                  <a class="nav-link inactive  custom-navlink" href="#">View Kickstarters</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active  custom-navlink" href="#">About Us</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link inactive  custom-navlink" href="#">Contact Us</a>
+                </li>
+              </ul>
+              <div class="d-flex">
+                <a class="btn btn-outline-primary me-2" href="/signup" id="signUp_btn">Sign up</a>
+                <a class="btn btn-outline-primary" href="/login" id="login_btn">Login</a>
+                <a class="btn btn-outline-primary" href="/profile" id="profile_btn" style="display:none;">Profile</a>
+                <a class="btn btn-outline-primary" href="#" id="logout_btn" style="display:none;" onclick="logout()">Logout</a>
+              </div>
+            </div>
+          </div>
+        </nav>
+    </header>
+    <main>
+        <div id="hero-section" class="hero-section">
+            <h1>About Us A+4BED</h1>
+            <p>Your go-to website for information on industrial relevance.</p>
+            <a class="btn btn-primary btn-lg" href="#individuals-section" role="button">Learn More</a>
+        </div>        
+        <div id="individuals-section" class="individuals-section">
+            <h2>Meet Our Team</h2>
+            <p>Learn more about the passionate individuals driving A+4BED forward.</p>
+            
+            <div class="card-container">
+                <div class="card">
+                    <img src="../images/Dallas.jpg" class="card-img-top" alt="John Doe">
+                    <div class="card-body">
+                        <h5 class="card-title">Dallas</h5>
+                        <p class="card-text">Wizard of Algorithms and Cat Memes!</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <img src="../images/YunZe.jpg" class="card-img-top" alt="Jane Smith">
+                    <div class="card-body">
+                        <h5 class="card-title">Yun Ze</h5>
+                        <p class="card-text">The Ninja Coder with a Taste for Sushi!</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <img src="../images/Daniel.jpg" class="card-img-top" alt="Wayne">
+                    <div class="card-body">
+                        <h5 class="card-title">Daniel</h5>
+                        <p class="card-text">Chief Troublemaker and Pizza Enthusiast!</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <img src="../images/Ian.jpg" class="card-img-top" alt="Ian Lim">
+                    <div class="card-body">
+                        <h5 class="card-title">Ian</h5>
+                        <p class="card-text">Master of Coffee Runs and Code Breaks!</p>
+                    </div>
+                </div>
+            </div>            
+        </div>
+        <footer class="container">
+            <p class="float-end"><a href="#" class="footer_btn" style="color: #119C62;">Back to top</a></p>
+            <p>&copy; 2024 A+4BED, Inc. &middot; <a href="#" class="footer_btn" style="color: #119C62;">Contact Us</a> &middot; <a href="#" class="footer_btn" style="color: #119C62;">About Us</a></p>
+        </footer>        
+    </main>
+</body>
+</html>

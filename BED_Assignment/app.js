@@ -155,7 +155,11 @@ app.get("/event/:eventId/comments", async (req, res) => {
 
 app.get("/chatbot", async (req, res) =>{
     res.sendFile(path.join(__dirname + "/public/html/chatbot.html"))
-})
+});
+
+app.get("/about-us", async(req, res) =>{
+    res.sendFile(path.join(__dirname + "/public/html/aboutUs.html"))
+});
 
 
 
@@ -175,21 +179,21 @@ app.put("/api/event/:eventId/comments", validateComment, eventCommentController.
 app.delete("/api/event/:eventId/comments", eventCommentController.deleteEventComment);
 
 // Backend routes for chatbot
-app.get("/api/chatbot/:conversationId", authenticateToken,  chatBotController.fetchChatHistory);
-app.post("/api/chatbot/:conversationId", authenticateToken, validateAddChatHistory, chatBotController.postUserInput);
+// app.get("/api/chatbot/:conversationId", authenticateToken,  chatBotController.fetchChatHistory);
+// app.post("/api/chatbot/:conversationId", authenticateToken, validateAddChatHistory, chatBotController.postUserInput);
 
-app.get("/api/chatConversation/:userId", authenticateToken, chatBotController.fetchChatConversationsByUserId);
-app.post("/api/chatConversation/:userId", authenticateToken, validateEditConversationTitle, chatBotController.addNewConversation);
-app.put("/api/chatConversation/:conversationId", authenticateToken, validateEditConversationTitle, chatBotController.editConversationTitle);
-app.delete("/api/chatConversation/:conversationId", authenticateToken, chatBotController.deleteChatConversation);
+// app.get("/api/chatConversation/:userId", authenticateToken, chatBotController.fetchChatConversationsByUserId);
+// app.post("/api/chatConversation/:userId", authenticateToken, validateEditConversationTitle, chatBotController.addNewConversation);
+// app.put("/api/chatConversation/:conversationId", authenticateToken, validateEditConversationTitle, chatBotController.editConversationTitle);
+// app.delete("/api/chatConversation/:conversationId", authenticateToken, chatBotController.deleteChatConversation);
 
-// app.get("/api/chatbot/:conversationId", chatBotController.fetchChatHistory);
-// app.post("/api/chatbot/:conversationId", validateAddChatHistory, chatBotController.postUserInput);
+app.get("/api/chatbot/:conversationId", chatBotController.fetchChatHistory);
+app.post("/api/chatbot/:conversationId", validateAddChatHistory, chatBotController.postUserInput);
 
-// app.get("/api/chatConversation/:userId", chatBotController.fetchChatConversationsByUserId);
-// app.post("/api/chatConversation/:userId", validateAddNewConversation, chatBotController.addNewConversation);
-// app.put("/api/chatConversation/:conversationId", validateEditConversationTitle, chatBotController.editConversationTitle);
-// app.delete("/api/chatConversation/:conversationId", chatBotController.deleteChatConversation);
+app.get("/api/chatConversation/:userId", chatBotController.fetchChatConversationsByUserId);
+app.post("/api/chatConversation/:userId", validateAddNewConversation, chatBotController.addNewConversation);
+app.put("/api/chatConversation/:conversationId", validateEditConversationTitle, chatBotController.editConversationTitle);
+app.delete("/api/chatConversation/:conversationId", chatBotController.deleteChatConversation);
 
 //Routes for admin accounts
 app.get("/admin", adminController.getAllAdminUsers);
