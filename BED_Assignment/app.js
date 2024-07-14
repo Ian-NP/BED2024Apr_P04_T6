@@ -1,6 +1,6 @@
-import dotenv from 'dotenv';
-dotenv.config();
-
+//import dotenv from 'dotenv';
+//dotenv.config();
+require('dotenv').config();
 import express from "express";
 import bodyParser from "body-parser";
 import sql from "mssql";
@@ -29,6 +29,7 @@ import articleController from "./controllers/articleController";
 
 
 const app = express();
+const jwt = require('jsonwebtoken');
 const PORT = process.env.PORT || 3001;
 const staticMiddleware = express.static("./public"); // Path to the public folder
   
@@ -224,15 +225,21 @@ app.get("/api/article/:title", articleController.getArticleByTitle);
 app.put("/api/article/:articleId", articleController.updateArticle);
 app.delete("/api/article/:articleId", articleController.deleteArticle);
 
-app.get('/profile', authenticateToken, async (req, res) => {
-    try {
-      const user = await User.findById(req.user.id); // Assuming req.user contains the user id
-      if (!user) return res.status(404).json({ message: 'User not found' });
-      res.json(user);
-    } catch (err) {
-      res.status(500).json({ message: err.message });
-    }
-  });
+app.get('/api/profile', authenticateToken, (req, res) => {
+    // Fetch user data from your database based on req.user.id
+    const userId = req.user.id;
+    // Example SQL query:
+    // const query = `SELECT name, email, profilePicture FROM users WHERE id = ${userId}`;
+    
+    // Replace with your actual database query
+    const userData = {
+        name: 'User Name',
+        email: 'user@example.com',
+        profilePicture: './images/default-profile-user.jpg'
+    };
+
+    res.json(userData);
+});
 
 app.listen(PORT, async () => {
     try {
