@@ -1,5 +1,6 @@
-body{
+body {
     background-color: rgb(33, 37, 41);
+    color: white;
 }
 
 .hero-section {
@@ -155,4 +156,47 @@ body{
 footer{
     background-color: rgb(33, 37, 41);
     color: #119C62;
+}
+
+/* Credits Section */
+.credits-section {
+    background-color: rgb(33, 37, 41); /* Dark background */
+    text-align: center;
+    color: white; /* Text color */
+    padding: 50px 20px;
+}
+
+.credits-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 50px;
+}
+
+.credits-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 40px;
+}
+
+.credits-subsection {
+    text-align: center;
+    width: 200px; /* Adjust width as needed */
+    cursor: pointer;
+}
+
+.credits-subsection img {
+    width: 100px; /* Adjust logo size */
+    height: 100px;
+    margin-bottom: 10px;
+    object-fit: contain; /* Maintain aspect ratio */
+}
+
+.credits-subsection h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.credits-subsection p {
+    font-size: 1rem;
 }

@@ -159,8 +159,8 @@ app.get("/chatbot", async (req, res) =>{
     res.sendFile(path.join(__dirname + "/public/html/chatbot.html"))
 });
 
-app.get("/about-us", async(req, res) =>{
-    res.sendFile(path.join(__dirname + "/public/html/aboutUs.html"))
+app.get("/credits", async(req, res) =>{
+    res.sendFile(path.join(__dirname + "/public/html/credits.html"))
 });
 
 
