@@ -57,7 +57,7 @@ const getUserProfileByUserId = async (req, res) => {
     const pool = await sql.connect(dbConfig);
     const result = await pool.request()
       .input('userId', sql.Int, userId)
-      .query('SELECT name, email, userType, paypalEmail FROM Users WHERE userId = @userId');
+      .query('SELECT name, email, userType, paypalEmail, profilePicture FROM Users WHERE userId = @userId');
 
     const userData = result.recordset[0];
 
@@ -69,6 +69,7 @@ const getUserProfileByUserId = async (req, res) => {
     const response = {
       name: userData.name,
       email: userData.email,
+      profilePictureUrl: userData.profilePicture ? `/api/profilePicture/${userId}` : '../images/default-profile-user.jpg',
     };
 
     if (userData.userType === 'C') {
