@@ -31,6 +31,58 @@ const getUserByUserId = async (req, res) => {
   }
 };
 
+// const getUserProfileByUserId = async (req, res) => {
+//   const userId = req.user.userId;
+//     try {
+//         const pool = await sql.connect(dbConfig);
+//         const result = await pool.request()
+//             .input('userId', sql.Int, userId)
+//             .query('SELECT name, email FROM Users WHERE userId = @userId');
+        
+//         const userData = result.recordset[0];
+
+//         if (!userData) {
+//             return res.status(404).json({ message: 'User not found' });
+//         }
+
+//         res.json(userData);
+//     } catch (error) {
+//         console.error('Error fetching user data:', error);
+//         res.status(500).json({ message: 'Error fetching user data' });
+//     }
+// };
+const getUserProfileByUserId = async (req, res) => {
+  const userId = req.user.userId;
+  try {
+    const pool = await sql.connect(dbConfig);
+    const result = await pool.request()
+      .input('userId', sql.Int, userId)
+      .query('SELECT name, email, userType, paypalEmail FROM Users WHERE userId = @userId');
+
+    const userData = result.recordset[0];
+
+    if (!userData) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Prepare the response data
+    const response = {
+      name: userData.name,
+      email: userData.email,
+    };
+
+    if (userData.userType === 'C') {
+      response.paypalEmail = userData.paypalEmail;
+    }
+
+    res.json(response);
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    res.status(500).json({ message: 'Error fetching user data' });
+  }
+};
+
+
 
 const createUser = async (req, res) => {
   // try {
@@ -216,4 +268,5 @@ module.exports = {
   deleteUser,
   deleteUserById,
   loginUser,
+  getUserProfileByUserId,
 };

@@ -61,6 +61,9 @@ body{
   color: black;
 }
 
+.spacing {
+  padding: 40px;
+}
 
 
 /* Bootstrap carousel CSS Styling */

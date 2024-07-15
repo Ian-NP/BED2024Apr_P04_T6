@@ -229,21 +229,23 @@ app.get("/api/article/:title", articleController.getArticleByTitle);
 app.put("/api/article/:articleId", articleController.updateArticle);
 app.delete("/api/article/:articleId", articleController.deleteArticle);
 
-app.get('/api/profile', authenticateToken, (req, res) => {
-    // Fetch user data from your database based on req.user.id
-    const userId = req.user.id;
-    // Example SQL query:
-    // const query = `SELECT name, email, profilePicture FROM users WHERE id = ${userId}`;
+// app.get('/api/profile', authenticateToken, (req, res) => {
+//     // Fetch user data from your database based on req.user.id
+//     const userId = req.user.id;
+//     // Example SQL query:
+//     // const query = `SELECT name, email, profilePicture FROM users WHERE id = ${userId}`;
     
-    // Replace with your actual database query
-    const userData = {
-        name: 'User Name',
-        email: 'user@example.com',
-        profilePicture: './images/default-profile-user.jpg'
-    };
+//     // Replace with your actual database query
+//     const userData = {
+//         name: 'User Name',
+//         email: 'user@example.com',
+//         profilePicture: './images/default-profile-user.jpg'
+//     };
 
-    res.json(userData);
-});
+//     res.json(userData);
+// });
+
+app.get('/api/profile', authenticateToken, userController.getUserProfileByUserId);
 
 app.listen(PORT, async () => {
     try {
