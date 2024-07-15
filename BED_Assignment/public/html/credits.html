@@ -6,7 +6,7 @@
     <title>Document</title>
     <link href="./bootstrap assets/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="./styles/navbar.css" rel="stylesheet">
-    <link href="./styles/aboutUs.css" rel="stylesheet">
+    <link href="./styles/credits.css" rel="stylesheet">
 </head>
 <body>
     <header data-bs-theme="dark">
@@ -37,10 +37,7 @@
                   <a class="nav-link inactive  custom-navlink" href="#">View Kickstarters</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link active  custom-navlink" href="#">About Us</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link inactive  custom-navlink" href="#">Contact Us</a>
+                  <a class="nav-link active  custom-navlink" href="/credit">Credits</a>
                 </li>
               </ul>
               <div class="d-flex">
@@ -55,7 +52,7 @@
     </header>
     <main>
         <div id="hero-section" class="hero-section">
-            <h1>About Us A+4BED</h1>
+            <h1>A+4BED Credits</h1>
             <p>Your go-to website for information on industrial relevance.</p>
             <a class="btn btn-primary btn-lg" href="#individuals-section" role="button">Learn More</a>
         </div>        
@@ -97,9 +94,82 @@
                 </div>
             </div>            
         </div>
-        <footer class="container">
-            <p class="float-end"><a href="#" class="footer_btn" style="color: #119C62;">Back to top</a></p>
-            <p>&copy; 2024 A+4BED, Inc. &middot; <a href="#" class="footer_btn" style="color: #119C62;">Contact Us</a> &middot; <a href="#" class="footer_btn" style="color: #119C62;">About Us</a></p>
+        
+        <!-- Credits Section -->
+        <div id="credits-section" class="credits-section">
+          <div class="container">
+              <h2>Third-Party Resources</h2>
+              <div class="credits-container">
+                  <div class="credits-subsection" onclick="window.location.href='https://getbootstrap.com/'">
+                      <img src="../images/boostrap-logo.png" alt="Third Party Resource 2">
+                      <h3>Bootstrap Framework</h3>
+                  </div>
+                  <div class="credits-subsection" onclick="window.location.href='https://ai.google.dev/aistudio'">
+                    <img src="../images/googleAI-logo.png" alt="Third Party Resource 3">
+                    <h3>Google Generative AI</h3>
+                </div>
+                <div class="credits-subsection" onclick="window.location.href='https://fontawesome.com/'">
+                  <img src="../images/font-awesome-logo.png" alt="Third Party Resource 4">
+                  <h3>Font Awesome</h3>
+                </div>
+                <div class="credits-subsection" onclick="window.location.href='https://getbootstrap.com/'">
+                  <img src="../images/mssql-logo.png" alt="Third Party Resource 5">
+                  <h3>MSSQL</h3>
+                </div>
+              </div>
+
+              <h2 style="margin-top: 100px;">Package Modules Used</h2>
+              <div class="credits-container">
+                  <div class="credits-subsection">
+                      <h3>Babel</h3>
+                  </div>
+                  <div class="credits-subsection">
+                      <h3>Body-parser</h3>
+                  </div>
+                  <div class="credits-subsection">
+                      <h3>Express</h3>
+                  </div>
+                  <div class="credits-subsection">
+                      <h3>Nodemon</h3>
+                  </div>
+                  <div class="credits-subsection">
+                      <h3>Google Generative-AI</h3>
+                  </div>
+                  <div class="credits-subsection">
+                      <h3>bcrypt</h3>
+                  </div>
+                  <div class="credits-subsection">
+                      <h3>CORS</h3>
+                  </div>
+                  <div class="credits-subsection">
+                      <h3>dotenv</h3>
+                  </div>
+                  <div class="credits-subsection">
+                      <h3>Joi</h3>
+                  </div>
+                  <div class="credits-subsection">
+                      <h3>Jsonwebtoken</h3>
+                  </div>
+                  <div class="credits-subsection">
+                      <h3>JWT-decode</h3>
+                  </div>
+                  <div class="credits-subsection">
+                      <h3>MSSQL</h3>
+                  </div>
+              </div>
+
+              <h2 style="margin-top: 100px;">External Sources</h2>
+              <ul class="external-sources-list">
+                <li>What Is a Complex Sentence? (With Examples) | Grammarly. (2022, August 29). Grammarly. https://www.grammarly.com/blog/news-article/</li>
+                <li>News and Events | European Circular Economy Stakeholder Platform. (2019, October 10). European Circular Economy Stakeholder Platform - European Union. https://circulareconomy.europa.eu/platform/en/news-and-events/all-events</li>
+                <li>Ivankin, V. (n.d.). Robot vector, chat bot concept illustration. Vecteezy. https://www.vecteezy.com/vector-art/7225199-robot-vector-chat-bot-concept-illustration</li>
+              </ul>
+          </div>
+        </div>
+
+        <footer class="container" style="margin-top: 100px;">
+          <p class="float-end"><a href="#" class="footer_btn" style="color: #119C62;">Back to top</a></p>
+          <p>&copy; 2024 A+4BED, Inc. &middot; <a href="/credits" class="footer_btn" style="color: #119C62;">Credits</a></p>
         </footer>        
     </main>
 </body>

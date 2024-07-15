@@ -58,7 +58,7 @@ body{
 }
 
 .footer_btn{
-  color: black;
+  color: #119C62;
 }
 
 .spacing {
@@ -169,7 +169,7 @@ body {
 
 footer{
   background-color: rgb(33, 37, 41);
-  color: #119C62;
+  color: #119C62 !important;
 }
 
 /* MARKETING CONTENT
