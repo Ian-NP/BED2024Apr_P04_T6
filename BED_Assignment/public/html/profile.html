@@ -64,12 +64,16 @@
     <main class="container mt-5">
         <div class="profile-info">
             <h1>Profile</h1>
-            <div class="profile-picture">
-                <img id="profile-picture" src="" alt="Profile Picture" class="rounded-circle" width="150" height="150">
+            <div class="spacing">
+              
             </div>
-            <div class="profile-details mt-3" id="profileInfo">
+            <div class="d-flex flex-column align-items-center profile-picture">
+                <img id="profile-picture" src="" alt="Profile Picture" class="rounded-circle" width="250" height="250">
+            </div>
+            <div class="profile-details mt-3 text-center" id="profileInfo">
                 <p><strong>Name:</strong> <span id="profile-name"></span></p>
                 <p><strong>Email:</strong> <span id="profile-email"></span></p>
+                <p id="paypal-email-container" style="display: none;"><strong>PayPal Email:</strong> <span id="profile-paypal-email"></span></p>
             </div>
         </div>
     </main>

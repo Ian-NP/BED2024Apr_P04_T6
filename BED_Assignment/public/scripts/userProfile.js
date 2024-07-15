@@ -7,8 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
-        })
-        console.log()
+        })       
         .then(response => {
             if (response.ok) {
                 return response.json();
@@ -22,7 +21,12 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(data => {
             document.getElementById('profile-name').textContent = data.name;
             document.getElementById('profile-email').textContent = data.email;
-            document.getElementById('profile-picture').src = data.profilePicture || '/default-profile-picture.jpg';
+            document.getElementById('profile-picture').src = '../images/default-profile-user.jpg';
+
+            if (data.paypalEmail) {
+                document.getElementById('paypal-email-container').style.display = 'block';
+                document.getElementById('profile-paypal-email').textContent = data.paypalEmail;
+              }
         })
         .catch(error => {
             console.error('Error fetching profile data:', error.message);
@@ -35,4 +39,9 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         window.location.href = '/login';
     }
+});
+
+document.getElementById('logout_btn').addEventListener('click', function() {
+    localStorage.removeItem('token'); // Remove the token from local storage
+    window.location.href = '/'; // Redirect to the home page
 });
