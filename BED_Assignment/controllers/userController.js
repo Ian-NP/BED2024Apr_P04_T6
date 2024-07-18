@@ -52,34 +52,64 @@ const getUserByUserId = async (req, res) => {
 //     }
 // };
 const getUserProfileByUserId = async (req, res) => {
-  const userId = req.user.userId;
+  const userId = parseInt(req.params.userId);
   try {
-    const pool = await sql.connect(dbConfig);
-    const result = await pool.request()
-      .input('userId', sql.Int, userId)
-      .query('SELECT name, email, userType, paypalEmail, profilePicture FROM Users WHERE userId = @userId');
+      const userData = await User.getUserProfile(userId);
 
-    const userData = result.recordset[0];
+      if (!userData) {
+          return res.status(404).json({ message: 'User not found' });
+      }
 
-    if (!userData) {
-      return res.status(404).json({ message: 'User not found' });
-    }
+      // Prepare the response data
+      const response = {
+          name: userData.name,
+          email: userData.email,
+          profilePictureUrl: userData.profilePicture ? `/api/profilePicture/${userId}` : '../images/default-profile-user.jpg',
+      };
 
-    // Prepare the response data
-    const response = {
-      name: userData.name,
-      email: userData.email,
-      profilePictureUrl: userData.profilePicture ? `/api/profilePicture/${userId}` : '../images/default-profile-user.jpg',
-    };
+      if (userData.userType === 'C') {
+          response.paypalEmail = userData.paypalEmail;
+      }
 
-    if (userData.userType === 'C') {
-      response.paypalEmail = userData.paypalEmail;
-    }
-
-    res.json(response);
+      res.json(response);
   } catch (error) {
-    console.error('Error fetching user data:', error);
-    res.status(500).json({ message: 'Error fetching user data' });
+      console.error('Error fetching user data:', error);
+      res.status(500).json({ message: 'Error fetching user data' });
+  }
+};
+
+const fetchProfilePicture = async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+      const user = await User.getUserProfile(userId);
+      if (!user || !user.profilePicture) {
+          return res.status(404).json({ message: 'Profile picture not found' });
+      }
+
+      res.set('Content-Type', 'image/jpeg'); // Adjust content type based on your image format
+      res.send(user.profilePicture);
+  } catch (error) {
+      console.error('Error fetching profile picture:', error);
+      res.status(500).json({ message: 'Error fetching profile picture' });
+  }
+}
+
+const uploadProfilePicture = async (req, res) => {
+  const userId = req.user.userId;
+  const profilePicture = req.file.buffer;
+
+  try {
+    const updateSuccessful = await User.updateUserProfilePicture(userId, profilePicture);
+
+    if (updateSuccessful) {
+      res.json({ profilePictureUrl: `/api/profilePicture/${userId}` });
+    } else {
+      res.status(404).json({ message: 'No user found or profile picture unchanged' });
+    }
+  } catch (error) {
+    console.error('Error uploading profile picture:', error);
+    res.status(500).json({ message: 'Failed to upload profile picture' });
   }
 };
 
@@ -270,4 +300,6 @@ module.exports = {
   deleteUserById,
   loginUser,
   getUserProfileByUserId,
+  fetchProfilePicture,
+  uploadProfilePicture,
 };

@@ -48,6 +48,56 @@
           : null; // Handle user not found
       }
 
+      static async getUserProfile(userId) {
+        try {
+            const pool = await sql.connect(dbConfig);
+            const result = await pool.request()
+                .input('userId', sql.Int, userId)
+                .query('SELECT name, email, userType, paypalEmail, profilePicture FROM Users WHERE userId = @userId');
+    
+            return result.recordset[0];
+        } catch (error) {
+            throw new Error('Database query failed');
+        }
+      }
+
+      static async getUserProfilePicture(userId) {
+        try {
+            const pool = await sql.connect(dbConfig);
+            const result = await pool.request()
+                .input('userId', sql.Int, userId)
+                .query('SELECT profilePicture FROM Users WHERE userId = @userId');
+            pool.close();
+            return result.recordset[0];
+        } catch (error) {
+            throw new Error('Database query failed');
+        }
+      }
+      
+      static async updateUserProfilePicture(userId, profilePicture) {
+        const pool = await sql.connect(dbConfig);
+        try {
+          const result = await pool.request()
+            .input('userId', sql.Int, userId)
+            .input('profilePicture', sql.VarBinary(sql.MAX), profilePicture)
+            .query('UPDATE Users SET profilePicture = @profilePicture WHERE userId = @userId');
+      
+          // Check if rows were affected
+          if (result.rowsAffected[0] > 0) {
+            console.log(`${result.rowsAffected[0]} row(s) updated.`);
+            return true; // Update successful
+          } else {
+            console.log('No rows updated. User not found or profile picture unchanged.');
+            return false; // Update unsuccessful
+          }
+        } catch (error) {
+          console.error('Error updating user profile:', error);
+          throw new Error('Database update failed');
+        } finally {
+          pool.close();
+        }
+      }          
+
       static async createUser(newUserData) {
         try {
           console.log('Received new user data:', newUserData);

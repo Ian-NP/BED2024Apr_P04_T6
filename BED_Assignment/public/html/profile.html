@@ -26,7 +26,7 @@
             <div class="collapse navbar-collapse" id="navbarCollapse">
               <ul class="navbar-nav ms-auto mb-2 mb-md-0 me-4">
                 <li class="nav-item">
-                  <a class="nav-link active custom-navlink" href="/">Home</a>
+                  <a class="nav-link inactive custom-navlink" href="/">Home</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link inactive custom-navlink" href="/myEvents">My Events</a>
@@ -38,25 +38,18 @@
                   <a class="nav-link inactive custom-navlink" href="/chatbot">Chatbot</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link inactive custom-navlink" id="view-events-link" href="/events">View Events</a>
+                  <a class="nav-link active custom-navlink" id="view-events-link" href="/events">View Events</a>
               </li>
                 <li class="nav-item">
-                  <a class="nav-link inactive  custom-navlink" href="#">View Kickstarters</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link inactive  custom-navlink" href="#">About Us</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link inactive  custom-navlink" href="#">Contact Us</a>
+                  <a class="nav-link inactive  custom-navlink" href="/credits">Credits</a>
                 </li>
               </ul>
-                    <div class="d-flex">
-                        <a class="btn btn-outline-primary me-2" href="/signup" id="signUp_btn">Sign up</a>
-                        <a class="btn btn-outline-primary" href="/login" id="login_btn">Login</a>
-                        <a class="btn btn-outline-primary" href="/profile" id="profile_btn">Profile</a>
-                        <a class="btn btn-outline-primary" href="#" id="logout_btn">Logout</a>
-                    </div>
-                </div>
+              <div class="d-flex">
+                <a class="btn btn-outline-primary me-2" href="/signup" id="signUp_btn">Sign up</a>
+                <a class="btn btn-outline-primary" href="/login" id="login_btn">Login</a>
+                <a class="btn btn-outline-primary me-2" href="/profile" id="profile_btn" style="display:none;">Profile</a>
+                <a class="btn btn-outline-primary" href="#" id="logout_btn" style="display:none;">Logout</a>
+              </div>
             </div>
         </nav>
     </header>
@@ -69,18 +62,19 @@
             </div>
             <div class="d-flex flex-column align-items-center profile-picture">
                 <img id="profile-picture" src="" alt="Profile Picture" class="rounded-circle" width="250" height="250">
-                <input type="file" id="profile-picture-input" accept="image/*" class="form control mt-3 text-center">
+                <input type="file" id="profile-picture-input" accept="image/*" class="form control mt-3 text-center" style="width: 107px;">
                 <button class="btn btn-primary mt-2" id="upload-profile-picture">Upload Profile Picture</button>
             </div>
             <div class="profile-details mt-3 text-center" id="profileInfo">
-                <p><strong>Name:</strong> <span id="profile-name"></span></p>
-                <p><strong>Email:</strong> <span id="profile-email"></span></p>
+                <p style="color: white;"><strong>Name:</strong> <span id="profile-name"></span></p>
+                <p style="color: white;"><strong>Email:</strong> <span id="profile-email"></span></p>
                 <p id="paypal-email-container" style="display: none;"><strong>PayPal Email:</strong> <span id="profile-paypal-email"></span></p>
             </div>
         </div>
     </main>
 
     <script src="/bootstrap assets/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
     <script src="../scripts/generalScripts.js"></script>
     <script src="../scripts/userProfile.js"></script>
 </body>

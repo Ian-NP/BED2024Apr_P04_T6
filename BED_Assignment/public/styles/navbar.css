@@ -46,7 +46,7 @@
     transform: scaleX(1);
   }
   
-  #signUp_btn, #login_btn {
+  #signUp_btn, #login_btn, #profile_btn, #logout_btn {
     position: relative;
     overflow: hidden;
     transition: color 0.4s ease-out, background-color 0.4s ease-out;
@@ -63,7 +63,7 @@
     font-weight: 500;
   }
   
-  #signUp_btn::before, #login_btn::before {
+  #signUp_btn::before, #login_btn::before, #profile_btn::before, #logout_btn::before {
     content: '';
     position: absolute;
     top: 50%;
@@ -77,13 +77,13 @@
     transform: translate(-50%, -50%);
   }
   
-  #signUp_btn:hover::before, #login_btn:hover::before {
+  #signUp_btn:hover::before, #login_btn:hover::before, #profile_btn:hover::before, #logout_btn:hover::before {
     width: 300%;
     height: 300%;
     background-color: rgba(0, 0, 0, 0); /* Background color on hover */
   }
   
-  #signUp_btn:hover, #login_btn:hover {
+  #signUp_btn:hover, #login_btn:hover, #profile_btn:hover, #logout_btn:hover {
     color: white; /* Text color on hover */
     background-color: #262E35; /* Initial background color */
     border-color: #000; /* Black solid border on hover */

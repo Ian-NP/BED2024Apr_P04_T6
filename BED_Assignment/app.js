@@ -189,21 +189,21 @@ app.put("/api/event/:eventId/comments", validateComment, eventCommentController.
 app.delete("/api/event/:eventId/comments", eventCommentController.deleteEventComment);
 
 // Backend routes for chatbot
-// app.get("/api/chatbot/:conversationId", authenticateToken,  chatBotController.fetchChatHistory);
-// app.post("/api/chatbot/:conversationId", authenticateToken, validateAddChatHistory, chatBotController.postUserInput);
+app.get("/api/chatbot/:conversationId", authenticateToken,  chatBotController.fetchChatHistory);
+app.post("/api/chatbot/:conversationId", authenticateToken, validateAddChatHistory, chatBotController.postUserInput);
 
-// app.get("/api/chatConversation/:userId", authenticateToken, chatBotController.fetchChatConversationsByUserId);
-// app.post("/api/chatConversation/:userId", authenticateToken, validateEditConversationTitle, chatBotController.addNewConversation);
-// app.put("/api/chatConversation/:conversationId", authenticateToken, validateEditConversationTitle, chatBotController.editConversationTitle);
-// app.delete("/api/chatConversation/:conversationId", authenticateToken, chatBotController.deleteChatConversation);
+app.get("/api/chatConversation/:userId", authenticateToken, chatBotController.fetchChatConversationsByUserId);
+app.post("/api/chatConversation/:userId", authenticateToken, validateEditConversationTitle, chatBotController.addNewConversation);
+app.put("/api/chatConversation/:conversationId", authenticateToken, validateEditConversationTitle, chatBotController.editConversationTitle);
+app.delete("/api/chatConversation/:conversationId", authenticateToken, chatBotController.deleteChatConversation);
 
-app.get("/api/chatbot/:conversationId", chatBotController.fetchChatHistory);
-app.post("/api/chatbot/:conversationId", validateAddChatHistory, chatBotController.postUserInput);
+// app.get("/api/chatbot/:conversationId", chatBotController.fetchChatHistory);
+// app.post("/api/chatbot/:conversationId", validateAddChatHistory, chatBotController.postUserInput);
 
-app.get("/api/chatConversation/:userId", chatBotController.fetchChatConversationsByUserId);
-app.post("/api/chatConversation/:userId", validateAddNewConversation, chatBotController.addNewConversation);
-app.put("/api/chatConversation/:conversationId", validateEditConversationTitle, chatBotController.editConversationTitle);
-app.delete("/api/chatConversation/:conversationId", chatBotController.deleteChatConversation);
+// app.get("/api/chatConversation/:userId", chatBotController.fetchChatConversationsByUserId);
+// app.post("/api/chatConversation/:userId", validateAddNewConversation, chatBotController.addNewConversation);
+// app.put("/api/chatConversation/:conversationId", validateEditConversationTitle, chatBotController.editConversationTitle);
+// app.delete("/api/chatConversation/:conversationId", chatBotController.deleteChatConversation);
 
 //Routes for admin accounts
 app.get("/admin", adminController.getAllAdminUsers);
@@ -253,67 +253,9 @@ app.delete("/api/article/:articleId", articleController.deleteArticle);
 //     res.json(userData);
 // });
 
-app.get('/api/profile', authenticateToken, userController.getUserProfileByUserId);
-
-app.get('/api/profilePicture/:userId', async (req, res) => {
-    const userId = req.params.userId;
-
-    try {
-        const pool = await sql.connect(dbConfig);
-        const result = await pool.request()
-            .input('userId', sql.Int, userId)
-            .query('SELECT profilePicture FROM Users WHERE userId = @userId');
-
-        if (!result.recordset[0] || !result.recordset[0].profilePicture) {
-            res.status(404).json({ message: 'Profile picture not found' });
-            return;
-        }
-
-        res.set('Content-Type', 'image/jpeg'); // Adjust content type based on your image format
-        res.send(result.recordset[0].profilePicture);
-    } catch (error) {
-        console.error('Error fetching profile picture:', error);
-        res.status(500).json({ message: 'Error fetching profile picture' });
-    }
-});
-
-// app.post('/api/uploadProfilePicture', authenticateToken, upload.single('profilePicture'), async (req, res) => {
-//     const userId = req.user.userId;
-//     const profilePicture = req.file.buffer;
-
-//     try {
-//         const pool = await sql.connect(dbConfig);
-//         const result = await pool.request()
-//             .input('userId', sql.Int, userId)
-//             .input('profilePicture', sql.VarBinary(sql.MAX), profilePicture)
-//             .query('UPDATE Users SET profilePicture = @profilePicture WHERE userId = @userId');
-
-//         res.json({ profilePictureUrl: '/api/profilePicture/' + userId }); // Assuming you have an endpoint to fetch profile pictures
-//     } catch (error) {
-//         console.error('Error uploading profile picture:', error);
-//         res.status(500).json({ message: 'Failed to upload profile picture' });
-//     }
-// });
-app.post('/api/uploadProfilePicture', authenticateToken, upload.single('profilePicture'), async (req, res) => {
-    const userId = req.user.userId;
-    const profilePicture = req.file.buffer;
-
-    try {
-        const pool = await sql.connect(dbConfig);
-        await pool.request()
-            .input('userId', sql.Int, userId)
-            .input('profilePicture', sql.VarBinary(sql.MAX), profilePicture)
-            .query('UPDATE Users SET profilePicture = @profilePicture WHERE userId = @userId');
-
-        res.json({ profilePictureUrl: `/api/profilePicture/${userId}` });
-    } catch (error) {
-        console.error('Error uploading profile picture:', error);
-        res.status(500).json({ message: 'Failed to upload profile picture' });
-    }
-});
-
-// Endpoint to fetch profile picture
-
+app.get('/api/profile/:userId', userController.getUserProfileByUserId);
+app.get('/api/profilePicture/:userId', userController.fetchProfilePicture);
+app.post('/api/uploadProfilePicture/:userId', authenticateToken, upload.single('profilePicture'), userController.uploadProfilePicture);
 
 app.listen(PORT, async () => {
     try {

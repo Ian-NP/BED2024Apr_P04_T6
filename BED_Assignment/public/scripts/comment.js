@@ -19,7 +19,7 @@ let currentUser;
 
 async function getUserDetails(userId) {
     try {
-        const response = await fetch(`/users/${userId}`);
+        const response = await fetch(`/api/profile/${userId}`);
         if (!response.ok) {
             throw new Error('Failed to fetch user details');
         }
@@ -36,14 +36,15 @@ async function initializeUser() {
         const userDetails = await getUserDetails(userId);
         // console.log(userDetails);
         if (userDetails) {
-            currentUser = new User(userDetails.userId, userDetails.name, "/images/profile-user.svg");
-            // console.log(userDetails.userId);
+            currentUser = new User(userId, userDetails.name, userDetails.profilePictureUrl || '../images/default-profile-user.jpg');
+            const sendCommentProfilePic = document.querySelector(".profile-pic");
+            sendCommentProfilePic.style.backgroundImage= `url(${currentUser.profilePic})`;
         } else {
             console.error('Failed to retrieve user details');
-            currentUser = new User(null, null, null);
+            currentUser = new User(null, null, '../images/default-profile-user.jpg');
         }
     } else {
-        currentUser = new User(null, null, null);
+        currentUser = new User(null, null, '../images/default-profile-user.jpg');
     }
 
     console.log(currentUser);
@@ -126,31 +127,28 @@ async function createCommentContainer(comment){
     const commentText = comment.content;
     console.log(comment.commentId);
 
-    const responseUser = (await fetch(`/users/${comment.userId}`));
+    const responseUser = (await fetch(`/api/profile/${comment.userId}`));
     const userComment = await responseUser.json();
-    // Uncomment the top line and delete bottom line once the user api is done
-    // const user = JSON.parse(sessionStorage.getItem('User'));
+    console.log(userComment);
 
     // Get user data from sessionStorage
     if (userComment) {
         // Get user data from sessionStorage
-        const userId = parseInt(userComment.userId);
+        const userId = parseInt(comment.userId);
         const username = userComment.name;
-        let profilePic = userComment.profilePic;
-        if (profilePic === undefined){
-            profilePic = "/images/profile-user.svg"
-        }
+        // console.log(userComment.profilePictureUrl)
+        let profilePic = userComment.profilePictureUrl || '../images/default-profile-user.jpg'
 
         // Get the current date and time
         const dateOfComment = comment.timeStamp // output Eg.: "2024-06-14T19:14:23.200Z"
         const commentDate = new Date(dateOfComment);
         const commentDateLocal = new Date(commentDate.getTime());
-        // console.log(commentDateLocal.getTime());
+        console.log(commentDateLocal.getTime());
 
         const currentDate = new Date();
-        // console.log(currentDate.getTime());
+        console.log(currentDate.getTime());
 
-        // console.log(currentDate.getTime() - commentDateLocal.getTime());
+        console.log(currentDate.getTime() - commentDateLocal.getTime());
         const formattedDate = commentPostedTime(currentDate.getTime() - commentDateLocal.getTime());
 
         // Create a new comment container
