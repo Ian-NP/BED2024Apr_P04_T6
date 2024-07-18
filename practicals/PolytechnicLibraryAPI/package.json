@@ -4,7 +4,8 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon --experimental-json-modules --exec babel-node app.js",
-    "debug": "set DEBUG=express:* & nodemon --experimental-json-modules --exec babel-node app.js"
+    "debug": "set DEBUG=express:* & nodemon --experimental-json-modules --exec babel-node app.js",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +18,7 @@
     "@babel/preset-env": "^7.24.7",
     "body-parser": "^1.20.2",
     "express": "^4.19.2",
+    "jest": "^29.7.0",
     "joi": "^17.13.3",
     "mssql": "^11.0.0",
     "nodemon": "^3.1.4"

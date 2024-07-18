@@ -12,15 +12,17 @@ class Book {
     static async getAllBooks() {
         const connection = await sql.connect(dbConfig);
         const sqlQuery = `SELECT * FROM Books`;
-
+    
         const request = connection.request();
         const result = await request.query(sqlQuery);
-
+    
         connection.close();
 
-        return result.recordset.map(
-            (row) => new Book(row.book_id, row.title, row.author, row.availability)
-        ); // Convert rows to Book Objects
+        const books = result.recordset.map(
+            (row) => new Book(row.id, row.title, row.author, row.availability)
+        )
+    
+        return books;
     }
 
     static async getBookById(book_id){
@@ -61,21 +63,28 @@ class Book {
         return this.getBookById(book_id);
     }
 
-    static async updateBook(book_id, newAvailability){
-        const connection = await sql.connect(dbConfig);
-    
-        // Construct the complete SQL query
-        const sqlQuery = `UPDATE Books SET availability = @availability WHERE book_id = @book_id`; 
-    
-        const request = connection.request();
-        request.input("book_id", book_id);
-        request.input("availability", newAvailability);
-    
-        await request.query(sqlQuery);
-    
-        connection.close();
-    
-        return this.getBookById(book_id); // returning the updated book data
+    static async updateBook(book_id, newAvailability) {
+        let connection;
+        try {
+            connection = await sql.connect(dbConfig);
+        
+            // Construct the complete SQL query
+            const sqlQuery = `UPDATE Books SET availability = @availability WHERE book_id = @book_id`; 
+        
+            const request = connection.request();
+            request.input("book_id", book_id);
+            request.input("availability", newAvailability);
+        
+            await request.query(sqlQuery);
+        
+            return await this.getBookById(book_id); // returning the updated book data
+        } catch (error) {
+            throw new Error(`Failed to update book: ${error.message}`);
+        } finally {
+            if (connection) {
+                connection.close();
+            }
+        }
     }
 
     static async deleteBook(book_id){
