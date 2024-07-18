@@ -32,7 +32,15 @@ const app = express();
 const jwt = require('jsonwebtoken');
 const PORT = process.env.PORT || 3001;
 const staticMiddleware = express.static("./public"); // Path to the public folder
-  
+
+//const multer = require('multer');
+const fs = require('fs');
+//const path = require('path');
+const { promisify } = require('util');
+const writeFileAsync = promisify(fs.writeFile);
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 app.use(bodyParser.json({ limit: '400mb' }));
 app.use(bodyParser.urlencoded({ limit: '400mb', extended: true }));
@@ -246,6 +254,66 @@ app.delete("/api/article/:articleId", articleController.deleteArticle);
 // });
 
 app.get('/api/profile', authenticateToken, userController.getUserProfileByUserId);
+
+app.get('/api/profilePicture/:userId', async (req, res) => {
+    const userId = req.params.userId;
+
+    try {
+        const pool = await sql.connect(dbConfig);
+        const result = await pool.request()
+            .input('userId', sql.Int, userId)
+            .query('SELECT profilePicture FROM Users WHERE userId = @userId');
+
+        if (!result.recordset[0] || !result.recordset[0].profilePicture) {
+            res.status(404).json({ message: 'Profile picture not found' });
+            return;
+        }
+
+        res.set('Content-Type', 'image/jpeg'); // Adjust content type based on your image format
+        res.send(result.recordset[0].profilePicture);
+    } catch (error) {
+        console.error('Error fetching profile picture:', error);
+        res.status(500).json({ message: 'Error fetching profile picture' });
+    }
+});
+
+// app.post('/api/uploadProfilePicture', authenticateToken, upload.single('profilePicture'), async (req, res) => {
+//     const userId = req.user.userId;
+//     const profilePicture = req.file.buffer;
+
+//     try {
+//         const pool = await sql.connect(dbConfig);
+//         const result = await pool.request()
+//             .input('userId', sql.Int, userId)
+//             .input('profilePicture', sql.VarBinary(sql.MAX), profilePicture)
+//             .query('UPDATE Users SET profilePicture = @profilePicture WHERE userId = @userId');
+
+//         res.json({ profilePictureUrl: '/api/profilePicture/' + userId }); // Assuming you have an endpoint to fetch profile pictures
+//     } catch (error) {
+//         console.error('Error uploading profile picture:', error);
+//         res.status(500).json({ message: 'Failed to upload profile picture' });
+//     }
+// });
+app.post('/api/uploadProfilePicture', authenticateToken, upload.single('profilePicture'), async (req, res) => {
+    const userId = req.user.userId;
+    const profilePicture = req.file.buffer;
+
+    try {
+        const pool = await sql.connect(dbConfig);
+        await pool.request()
+            .input('userId', sql.Int, userId)
+            .input('profilePicture', sql.VarBinary(sql.MAX), profilePicture)
+            .query('UPDATE Users SET profilePicture = @profilePicture WHERE userId = @userId');
+
+        res.json({ profilePictureUrl: `/api/profilePicture/${userId}` });
+    } catch (error) {
+        console.error('Error uploading profile picture:', error);
+        res.status(500).json({ message: 'Failed to upload profile picture' });
+    }
+});
+
+// Endpoint to fetch profile picture
+
 
 app.listen(PORT, async () => {
     try {
