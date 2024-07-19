@@ -9,8 +9,14 @@ body{
   transition: all 0.2s ease-in;
 }
 
-.bd-placeholder-img{
-  filter: brightness(60%) saturate(60%);
+.bd-placeholder-img {
+  display: block; /* Ensures that the image is displayed as a block element */
+  width: 100%; /* Makes the image take up the full width of the container */
+  height: 100%; /* Makes the image take up the full height of the container */
+  object-fit: cover; /* Ensures the image covers the container while maintaining its aspect ratio */
+  filter: brightness(60%) saturate(60%); /* Applies brightness and saturation filters */
+  background-position: center center; /* Centers the image within its container */
+  background-repeat: no-repeat; /* Prevents the image from repeating */
 }
 
 .btn {
@@ -232,4 +238,118 @@ footer{
   .featurette-heading {
     margin-top: 7rem;
   }
+}
+
+
+/* Styling of CATEGORIES DIV STARTS HERE */
+.articles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(450px, 600px));
+  grid-template-rows: repeat(2, minmax(300px, 1fr));
+  grid-auto-flow: dense;
+  justify-content: center; /* Center horizontally */
+  align-content: center; /* Center vertically */
+  gap: 25px;
+  padding: 0;
+  margin: 5rem 0;
+}
+
+.articles > * {
+  background-color: rgb(214, 214, 214);
+  border-radius: 10px;
+  overflow: hidden; /* Ensures the pseudo-element stays within the borders */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
+  position: relative;
+}
+
+.articles > *:hover {
+  transform: scale(1.03); /* Slightly enlarge the element */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Add a shadow for depth */
+}
+
+.art1, .art2, .art3 {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  position: relative;
+  background-repeat: no-repeat; /* Prevent the image from repeating */
+  background-position: center; /* Center the background image */
+  background-size: cover; /* Ensure the image covers the entire element */
+  cursor: pointer;
+}
+
+.art1::before, .art2::before, .art3::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3); /* Dark overlay */
+  z-index: 1; /* Ensure the overlay is above the background image */
+  transition: background 0.3s ease; /* Smooth transition for hover effects */
+}
+
+.art1:hover::before, .art2:hover::before, .art3:hover::before {
+  background: rgba(0, 0, 0, 0.5); /* Darker overlay on hover */
+}
+
+.art1 > *, .art2 > *, .art3 > * {
+  position: relative;
+  z-index: 2; /* Ensure the content is above the overlay */
+}
+
+.art1 {
+  grid-row: 1 / span 2;
+  grid-column: 1;
+  background-image: url("https://image.cnbcfm.com/api/v1/image/105786668-1552323473747ap_19070273430019.jpg?v=1571322209&w=740&h=416&ffmt=webp&vtcrop=y");
+}
+
+.art2 {
+  background-image: url("https://businessfacilities.com/wp-content/uploads/2024/07/SpaceX_Flickr-52807686404_cc1c10512e_k-696x464.jpg");
+}
+
+.art3 {
+  background-image: url("https://onecms-res.cloudinary.com/image/upload/s--g9ocK9mO--/c_fill,g_auto,h_468,w_830/fl_relative,g_south_east,l_mediacorp:cna:watermark:2024-04:reuters_1,w_0.1/f_auto,q_auto/v1/one-cms/core/2024-07-19t122816z_1_lynxmpek6i0hm_rtroptp_3_usa-wsjtechlive.jpg?itok=ePr45iLh");
+}
+
+.art_header {
+  align-self: end;
+  padding: 40px;
+}
+
+.art1 .art_header p {
+  font-size: 2rem; /* Adjusted font size */
+  font-weight: 600;
+  margin-bottom: 15px; /* Reduced margin between sentences */
+  line-height: 1.2; /* Adjusted line height for better spacing */
+  color: white;
+}
+
+.art2 .art_header p, .art3 .art_header p{
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 20px; /* Reduced margin between sentences */
+  line-height: 1.2; /* Adjusted line height for better spacing */
+  color: white;
+}
+
+.art_header a {
+  font-size: 20px;
+  font-weight: 500;
+  text-decoration: underline;
+  width: fit-content;
+  color: white;
+}
+
+/* Media Query for Category Section */
+@media screen and (max-width: 1100px){
+  .articles{
+      grid-template-columns: repeat(auto-fit, minmax(350px, 450px));
+      grid-template-rows: repeat(4, minmax(250px, 1fr));  
+  }
+}
+
+#eventsCarousel{
+  margin: 0 auto; /* Center horizontally */
+  max-width: 94.5%; /* Ensure it doesn’t exceed the parent width */
 }
