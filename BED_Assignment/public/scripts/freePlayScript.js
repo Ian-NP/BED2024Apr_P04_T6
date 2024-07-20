@@ -611,7 +611,24 @@ function updateProfitAndUpkeep() {
     }
 }
 
+function collectResidentialCluster(startRow, startCol, cluster) {
+    const queue = [{ row: startRow, col: startCol }];
+    const visited = new Set([`${startRow},${startCol}`]);
 
+    while (queue.length > 0) {
+        const { row, col } = queue.shift();
+        cluster.add({ row, col });
+
+        const surroundings = checkSurroundings(row, col);
+        for (let i = 0; i < surroundings.length; i++) {
+            const s = surroundings[i];
+            if (s.type === 'residential' && !visited.has(`${s.row},${s.col}`)) {
+                queue.push(s);
+                visited.add(`${s.row},${s.col}`);
+            }
+        }
+    }
+}
 function endGame() {
     alert('Game Over! Returning to the main menu.');
     window.location.href = '../html/game.html';
