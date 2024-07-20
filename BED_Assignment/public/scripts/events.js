@@ -1,19 +1,17 @@
 console.log('Events script loaded.');
 
+var buttons = document.querySelectorAll("#Tag-Buttons button");
+for (var i = 0; i < buttons.length; i++) {
+    buttons[i].addEventListener('click', function() {
+        this.classList.toggle('clicked');
+        filterEvents();
+    });
+}
 
-    var buttons = document.querySelectorAll("#Tag-Buttons button");
-    for (var i = 0; i < buttons.length; i++) {
-        buttons[i].addEventListener('click', function() {
-            this.classList.toggle('clicked');
-            filterEvents();
-        });
-    }
+const searchInput = document.getElementById("Search-Input");
+searchInput.addEventListener('input', filterEvents);
 
-    const searchInput = document.getElementById("Search-Input");
-    searchInput.addEventListener('input', filterEvents);
-
-    fetchEvents();
-
+fetchEvents();
 
 let allEvents = [];
 
@@ -21,8 +19,8 @@ async function fetchEvents() {
     try {
         const response = await fetch('/api/events');
         const events = await response.json();
-        allEvents = events;
-        renderEvents(events);
+        allEvents = events.filter(event => new Date(event.eventTime) > new Date());
+        renderEvents(allEvents);
     } catch (error) {
         console.error('Error fetching events:', error);
     }
@@ -45,7 +43,6 @@ function createEventCard(event) {
     eventDiv.dataset.eventCategory = event.eventCategory; 
 
     const eventTime = new Date(event.eventTime);
-    console.log(eventTime);
     const timeLeft = calculateTimeLeft(eventTime);
     const formattedDate = formatDate(eventTime);
 
@@ -78,10 +75,7 @@ function createEventCard(event) {
     return eventDiv;
 }
 
-
-
 function calculateTimeLeft(eventTime) {
-   
     const now = new Date();
     const eventTimeInSG = new Date(eventTime);
 
@@ -97,7 +91,6 @@ function calculateTimeLeft(eventTime) {
 
     return `${days}d ${hours}h ${minutes}m left`;
 }
-
 
 function formatDate(eventTime) {
     const day = eventTime.getDate();
@@ -118,7 +111,10 @@ function filterEvents() {
 
         const matchesTags = selectedTags.length === 0 || selectedTags.includes(event.eventCategory);
 
-        return matchesSearch && matchesTags;
+        const eventTime = new Date(event.eventTime);
+        const hasNotStarted = eventTime > new Date();
+
+        return matchesSearch && matchesTags && hasNotStarted;
     });
 
     renderEvents(filteredEvents);

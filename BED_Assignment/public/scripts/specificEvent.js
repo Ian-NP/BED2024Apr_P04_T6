@@ -19,12 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 3600000);
 });
 
-function isTokenExpired(token) {
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    const expiry = payload.exp;
-    const now = Math.floor(Date.now() / 1000);
-    return now >= expiry;
-}
+
 
 function redirectToLogin() {
     window.location.href = '/login';
@@ -125,7 +120,7 @@ const signUpButton = document.getElementById('Signup');
 signUpButton.addEventListener('click', async function(event) {
     const token = localStorage.getItem('token');
 
-    if (!token || isTokenExpired(token)) {
+    if (!token) {
         redirectToLogin();
         return;
     }

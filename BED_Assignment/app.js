@@ -27,7 +27,8 @@ import { validateAddNewConversation, validateEditConversationTitle, validateAddC
 import eventPaymentController from "./controllers/eventPaymentController";
 import articleController from "./controllers/articleController"; 
 import refreshToken from "./controllers/refreshToken";
-
+import gameController from "./controllers/gameController";
+import highscoreController from "./controllers/highscoreController";
 const app = express();
 const jwt = require('jsonwebtoken');
 const PORT = process.env.PORT || 3001;
@@ -66,8 +67,7 @@ app.post('/createadmin', adminController.createAdminUser);
 
 
 //Routes for events
-
-// app.post('/create-event', specialAuthenticateToken, EventController.createEvent);
+app.post('/create-event', specialAuthenticateToken, EventController.createEvent);
 
 // Serve protected.html for /events route, i used this for the js to authenticate before serving
 app.get('/events', (req, res) => {
@@ -87,7 +87,10 @@ app.get("/api/events", EventController.getAllEvents);
 app.get("/api/events/:eventId", EventController.getEventById);
 app.post('/api/events', specialAuthenticateToken, EventController.createEvent);
 app.patch('/api/:eventId/leave', specialAuthenticateToken, EventController.updateEventAttendance);
-
+app.delete("/api/events/:eventId/kick/:userId", authenticateToken, (req, res, next) => {
+    console.log('Kick request received:', req.params);
+    EventController.updateEventAttendance(req, res, next);
+  });
 app.delete("/api/events/:eventId", specialAuthenticateToken, EventController.deleteEvent);
 
 //paypal stuff
@@ -99,6 +102,17 @@ app.post('/api/events/:eventId/capture', eventPaymentController.capturePayment);
 app.delete('/refreshToken', (req, res) => { refreshToken.removeToken(req, res) });
 app.get("/refreshToken", async(req, res) => {  refreshToken.refreshToken(req, res)});    
 app.post("/refreshToken", async(req, res) => {refreshToken.addToken(req, res)});
+
+
+// Game routes
+app.get('/game', async(req, res) => { res.sendFile(path.join(__dirname + "/public/html/game.html")) });
+
+app.post('/save-game', authenticateToken, gameController.saveGame);
+app.get('/get-games', authenticateToken, gameController.getGames);
+
+// Highscore routes
+app.get('/get-high-scores', authenticateToken, highscoreController.getHighScores);
+app.post('/create-high-score', authenticateToken, highscoreController.createHighScore);
 //Ends here
 
 app.get("/signup", async(req, res) => {

@@ -33,20 +33,63 @@ async function fetchEventsDetails(token) {
         }
 
         const events = await response.json();
+        
+        // Sort events by date
+        events.sort((a, b) => new Date(a.eventTime) - new Date(b.eventTime));
+
+        const now = new Date();
+        const newEvents = [];
+        const pastEvents = [];
+
         events.forEach(event => {
-            populateEventDetails(event);
-            checkIfEventStarted(event);
+            const eventDate = new Date(event.eventTime);
+            if (eventDate >= now) {
+                newEvents.push(event);
+            } else {
+                pastEvents.push(event);
+            }
         });
+
+        const mainContainer = document.querySelector('main');
+        mainContainer.innerHTML = ''; // Clear existing content
+
+        // Display New Events
+        if (newEvents.length > 0) {
+            const newEventsHeader = document.createElement('h2');
+            newEventsHeader.textContent = 'Current Events';
+            newEventsHeader.className = 'events-header';
+            mainContainer.appendChild(newEventsHeader);
+
+            newEvents.forEach(event => populateEventDetails(event));
+        }
+
+        // Add a divider
+        const divider = document.createElement('hr');
+        divider.className = 'events-divider';
+        mainContainer.appendChild(divider);
+
+        // Display Past Events
+        if (pastEvents.length > 0) {
+            const pastEventsHeader = document.createElement('h2');
+            pastEventsHeader.textContent = 'Past Events';
+            pastEventsHeader.className = 'events-header';
+            mainContainer.appendChild(pastEventsHeader);
+
+            pastEvents.forEach(event => populateEventDetails(event));
+        }
     } catch (error) {
         console.error('Error fetching event details:', error);
         redirectToLogin();
     }
 }
-
 function populateEventDetails(event) {
     const container = document.createElement('div');
     container.className = 'eventContainer';
+    const buttonText = event.isCompanyEvent ? 'Delete Event' : 'Leave';
+    const buttonAction = event.isCompanyEvent ? `deleteEvent('${event.eventId}')` : `leaveEvent('${event.eventId}')`;
+    const isEventStarted = new Date(event.eventTime) <= new Date();
 
+   
     container.innerHTML = `
         <div class="top">
             <div class="image">
@@ -72,19 +115,79 @@ function populateEventDetails(event) {
                         day: 'numeric',
                         timeZone: 'Asia/Singapore'
                     })}</p>
-                    <p class="timeLeft">${calculateTimeLeft(new Date(event.eventTime))}</p>
+                    <p class="timeLeft">${isEventStarted ? 'Event has started' : calculateTimeLeft(new Date(event.eventTime))}</p>
                 </div>
             </div>
-            <button class="Signup" onclick="${event.isCompanyEvent ? `deleteEvent('${event.eventId}')` : `leaveEvent('${event.eventId}')`}">${event.isCompanyEvent ? 'Delete Event' : 'Leave'}</button>
+            <button class="Signup ${isEventStarted ? 'disabled' : ''}" 
+                    onclick="${buttonAction}" 
+                    ${isEventStarted ? 'disabled' : ''}>
+                ${isEventStarted ? 'Event has started' : buttonText}
+            </button>
         </div>
+    
+        
     `;
+
+
+    if (event.isCompanyEvent && event.attendees) {
+        const attendeesSection = document.createElement('div');
+        attendeesSection.className = 'attendees-section';
+        attendeesSection.innerHTML = `
+            <h2>Attendees</h2>
+            <div class="attendees-list">
+                ${event.attendees.map(attendee => `
+                    <div class="attendee-item">
+                        <span>${attendee.name} (${attendee.email})</span>
+                        <button class="kick-button" onclick="kickAttendee('${event.eventId}', '${attendee.userId}')" ${isEventOver(event.eventTime) ? 'disabled' : ''}>
+                            Kick
+                        </button>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+        container.appendChild(attendeesSection);
+    };
 
     const imgElement = container.querySelector('.gmm');
     imgElement.src = event.eventImage ? `data:image/png;base64,${event.eventImage}` : '../images/image-removebg.png';
 
     document.querySelector('main').appendChild(container);
+    
+
+    
 }
 
+function kickAttendee(eventId, userId) {
+    const token = localStorage.getItem('token');
+    if (!token || isTokenExpired(token)) {
+        redirectToLogin();
+        return;
+    }
+
+    fetch(`/api/events/${eventId}/kick/${userId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            console.log('Response:', response);
+            throw new Error('Failed to kick attendee');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Attendee kicked successfully:', data);
+        // Refresh the page or update the attendees list
+        window.location.reload();
+    })
+    .catch(error => console.error('Error kicking attendee:', error));
+}
+function isEventOver(eventTime) {
+    return new Date(eventTime) < new Date();
+}
 function leaveEvent(eventId) {
     const token = localStorage.getItem('token');
     if (!token || isTokenExpired(token)) {
