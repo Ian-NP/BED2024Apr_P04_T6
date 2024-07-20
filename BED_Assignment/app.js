@@ -26,7 +26,7 @@ import specialAuthenticateToken from "./middleware/specialAuth";
 import { validateAddNewConversation, validateEditConversationTitle, validateAddChatHistory } from "./middleware/validateBot"
 import eventPaymentController from "./controllers/eventPaymentController";
 import articleController from "./controllers/articleController"; 
-
+import refreshToken from "./controllers/refreshToken";
 
 const app = express();
 const jwt = require('jsonwebtoken');
@@ -94,6 +94,11 @@ app.delete("/api/events/:eventId", specialAuthenticateToken, EventController.del
 app.post('/api/events/:eventId/authorize', specialAuthenticateToken, eventPaymentController.authorizePayment);
 app.post('/api/events/:eventId/capture', eventPaymentController.capturePayment);
 
+
+// refreshToken Routes
+app.delete('/refreshToken', (req, res) => { refreshToken.removeToken(req, res) });
+app.get("/refreshToken", async(req, res) => {  refreshToken.refreshToken(req, res)});    
+app.post("/refreshToken", async(req, res) => {refreshToken.addToken(req, res)});
 //Ends here
 
 app.get("/signup", async(req, res) => {

@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const sql = require('mssql');
 const jwt = require('jsonwebtoken');
 const dbConfig = require('../dbConfig');
+const RefreshTokenModel = require('../models/refreshToken');
 
 const getAllUsers = async (req, res) => {
   try {
@@ -171,10 +172,6 @@ const createUser = async (req, res) => {
     }
   };
 
-  const generateToken = (userId, userType, userName, userEmail) => {
-    const payload = { userId, userType, userName, userEmail };
-    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
-};
 
 const deleteUserById = async (req, res) => {
   const userId = parseInt(req.params.userId);
@@ -236,41 +233,55 @@ const deleteUserById = async (req, res) => {
 //         sql.close(); // Ensure to close the SQL connection
 //     }
 // };
+// Updated loginUser function
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
   
   try {
-      const user = await User.getUserByEmail(email);
-
-      if (!user) {
-          return res.status(401).json({ success: false, message: 'Email not found' });
-      }
-
-      let isMatch = false;
-
-      if (user.password.startsWith('$2b$')) {
-          // Password is hashed, compare with bcrypt
-          isMatch = await bcrypt.compare(password, user.password);
-      } else {
-          // Password is plain text, compare directly (after hashing for security)
-          isMatch = (password === user.password); // Example: Direct comparison for illustration, not recommended in production
-      }
-
-      if (!isMatch) {
-          return res.status(401).json({ success: false, message: 'Incorrect password' });
-      }
-
-      // Generate token upon successful login
-      const token = generateToken(user.userId, user.userType);
-
-      // Authenticated successfully
-      return res.status(200).json({ success: true, message: 'Login successful', token });
+    const user = await User.getUserByEmail(email);
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'Email not found' });
+    }
+    
+    let isMatch = false;
+    if (user.password.startsWith('$2b$')) {
+      isMatch = await bcrypt.compare(password, user.password);
+    } else {
+      isMatch = (password === user.password); // Not recommended for production
+    }
+    
+    if (!isMatch) {
+      return res.status(401).json({ success: false, message: 'Incorrect password' });
+    }
+    
+    // Generate tokens upon successful login
+    const accessToken = generateAccessToken(user.userId, user.userType, user.name, user.email);
+    const refreshToken = generateRefreshToken(user.userId);
+    
+    // Save refresh token to database
+    await RefreshTokenModel.addToken(user.userId, refreshToken);
+    
+    // Authenticated successfully
+    return res.status(200).json({ 
+      success: true, 
+      message: 'Login successful', 
+      accessToken,
+      refreshToken
+    });
   } catch (error) {
-      console.error('Error logging in user:', error);
-      return res.status(500).json({ success: false, message: 'Internal server error' });
+    console.error('Error logging in user:', error);
+    return res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
 
+const generateAccessToken = (userId, userType, userName, userEmail) => {
+  const payload = { userId, userType, userName, userEmail };
+  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+};
+
+const generateRefreshToken = (userId) => {
+  return jwt.sign({ userId }, process.env.refresh_token_secret_JWT_SECRET, { expiresIn: '7d' });
+};
 
 
 //   const login = async (req, res) => {

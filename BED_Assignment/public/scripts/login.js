@@ -21,8 +21,10 @@ document.getElementById('login-form').addEventListener('submit', async function(
             console.log('Login response:', result); //To log response; to ease debugging
             if (result.success) {
                 alert('Login Successful!');
-                localStorage.setItem('token', result.token); // Store token securely
-                window.location.href = '/'; // Redirect user to the home page
+                localStorage.setItem('token', result.accessToken); // Store access token
+                localStorage.setItem('refreshToken', result.refreshToken); // Store refresh token
+                console.log('Access token:', result.accessToken); // Debug log
+                window.location.href = '/';
             } else {
                 alert(result.message); // Display error message from server
             }

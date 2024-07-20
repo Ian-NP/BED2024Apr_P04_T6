@@ -1,0 +1,14 @@
+.music-control {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: transparent;
+    border: none;
+    font-size: 34px;
+    cursor: pointer;
+    z-index: 1000; 
+}
+
+.music-control:focus {
+    outline: none; 
+}
