@@ -18,10 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentPage = 0;
     const gamesPerPage = 4;
 
-    // Initial state setup
-    if (localStorage.getItem('token')) {
-        setLoggedInState();
-    }
+    
 
     returnToMenuBtn.textContent = 'Return to Menu';
     returnToMenuBtn.className = 'button';
@@ -213,30 +210,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function handleLoginLogout() {
-        if (localStorage.getItem('token')) {
-            handleLogout();
-        } else {
-            window.location.href = '../html/login.html';
-        }
+        
+    
+        window.location.href = '../html/login.html';
+        
     }
     function exitGame() {
         window.location.href = '/';
     }
     
 
-    function handleLogout() {
-        localStorage.removeItem('token');
-        alert('Logged out successfully');
-        setLoggedOutState();
-    }
+   
 
-    function setLoggedInState() {
-        loginButton.textContent = 'Logout';
-    }
-
-    function setLoggedOutState() {
-        loginButton.textContent = 'Login';
-    }
+   
 
     function checkAuth() {
         return !!localStorage.getItem('token');
@@ -322,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    loginButton.addEventListener('click', handleLoginLogout);
+  
     exitGameButton.addEventListener('click', () => exitGame());
     newArcadeGameBtn.addEventListener('click', () => handleAuthenticatedAction('arcade'));
     newFreePlayGameBtn.addEventListener('click', () => handleAuthenticatedAction('freeplay'));
