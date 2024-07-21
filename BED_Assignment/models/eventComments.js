@@ -209,8 +209,17 @@ class EventComments{
 
     static async createEventComment(newCommentData){
         let connection;
+        let parentComment;
 
         try{
+            if (newCommentData.parentCommentId) {
+                parentComment = await this.getEventCommentById(newCommentData.parentCommentId);
+                // Check if the parent comment's articleId matches the new comment's articleId
+                if (parentComment && parseInt(parentComment.eventId) !== parseInt(newCommentData.eventId)) {
+                    throw new Error("The eventId of the parent comment does not match the eventId of the new comment.");
+                }
+            }
+
             // Establish a connection to the database
             connection = await sql.connect(dbConfig);
 
@@ -220,7 +229,7 @@ class EventComments{
                 VALUES (@content, @score, @timeStamp, @userId, @eventId, @parentCommentId);
                 SELECT SCOPE_IDENTITY() AS newCommentId;
             `;
-    
+
             // Create a request object and input the parameters
             const request = connection.request();
             request.input("content", sql.NVarChar(sql.MAX), newCommentData.content);
@@ -229,16 +238,16 @@ class EventComments{
             request.input("userId", sql.Int, newCommentData.userId);
             request.input("eventId", sql.Int, newCommentData.eventId);
             request.input("parentCommentId", sql.Int, newCommentData.parentCommentId); 
-    
+
             // Execute the query
             const result = await request.query(sqlQuery);
-    
+
             // Extract the newly generated ID from the result
             const newCommentId = result.recordset[0].newCommentId;
-    
+
             // Fetch the newly created book by its ID
             const createdComment = await this.getEventCommentById(newCommentId);
-    
+
             return createdComment;
         } catch (error) {
             console.error('Error creating comment:', error);

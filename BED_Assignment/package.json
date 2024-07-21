@@ -4,7 +4,8 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon --experimental-json-modules --exec babel-node app.js",
-    "debug": "set DEBUG=express:* & nodemon --experimental-json-modules --exec babel-node app.js"
+    "debug": "set DEBUG=express:* & nodemon --experimental-json-modules --exec babel-node app.js",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",

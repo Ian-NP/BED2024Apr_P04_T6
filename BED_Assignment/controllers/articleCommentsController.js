@@ -36,18 +36,23 @@ const getArticleCommentById = async(req, res) =>{
     }
 }
 
-const createArticleComment = async(req, res) =>{
+const createArticleComment = async (req, res) => {
     const newCommentData = req.body;
 
-    try{
+    try {
         const createdArticleComment = await ArticleComments.createArticleComment(newCommentData);
         res.status(201).json(createdArticleComment);
-    } catch(err){
+    } catch (err) {
         console.error('Error creating comment', err);
-        res.status(500).send("Error creating comment");
+
+        // Check if the error message indicates an articleId mismatch
+        if (err.message === "The articleId of the parent comment does not match the articleId of the new comment.") {
+            res.status(400).send("ArticleId mismatch with parent comment");
+        } else {
+            res.status(500).send("Error creating comment");
+        }
     }
 }
-
 
 const updateArticleCommentContent = async(req, res) =>{
     const commentId =  req.body.commentId;
@@ -62,7 +67,11 @@ const updateArticleCommentContent = async(req, res) =>{
         res.status(200).json(updatedArticleComment);
     } catch(err){
         console.error(err);
-        res.status(500).send("Error updating comment");
+        if (err.message === "At least one of newContent or newScore must be provided."){
+            res.status(400).send("At least one of newContent or newScore must be provided.");
+        } else{
+            res.status(500).send("Error updating comment");
+        }
     }
 };
 

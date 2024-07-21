@@ -209,8 +209,17 @@ class ArticleComments{
 
     static async createArticleComment(newCommentData){
         let connection;
+        let parentComment;
 
         try{
+            if (newCommentData.parentCommentId) {
+                parentComment = await this.getArticleCommentById(newCommentData.parentCommentId);
+                // Check if the parent comment's articleId matches the new comment's articleId
+                if (parentComment && parseInt(parentComment.articleId) !== parseInt(newCommentData.articleId)) {
+                    throw new Error("The articleId of the parent comment does not match the articleId of the new comment.");
+                }
+            }
+
             // Establish a connection to the database
             connection = await sql.connect(dbConfig);
 

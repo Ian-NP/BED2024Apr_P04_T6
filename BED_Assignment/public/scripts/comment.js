@@ -1,4 +1,3 @@
-// Sample User object in the session storage
 class User {
     constructor(userId, username, profilePic) {
         this.userId = userId;
@@ -14,7 +13,7 @@ class Page{
     }
 }
 
-const token = localStorage.getItem('token');
+// const token = localStorage.getItem('token');
 let currentUser;
 
 async function getUserDetails(userId) {
@@ -93,11 +92,11 @@ function getCommentPage(){
 
     let page;
     if (currentUrl.includes("article")){
-        const articleId = params.get('articleId');
+        const articleId = params.get('articleId').replace(/#/g, '');
         console.log(articleId);
         page = new Page("article", articleId);
     } else{
-        const eventId = params.get('eventId');
+        const eventId = params.get('eventId').replace(/#/g, '');
         page = new Page("event", eventId);
         console.log(eventId);
     }
@@ -532,6 +531,9 @@ commentSectionContainer.addEventListener('click', async(event) => {
             // Create profile pic div
             const profilePicDiv = document.createElement('div');
             profilePicDiv.classList.add('profile-pic');
+            if (currentUser){
+                profilePicDiv.style.backgroundImage=`url('${currentUser.profilePic}')`;
+            }
             textareaInputDiv.appendChild(profilePicDiv);
 
             // Create textarea for comment input
