@@ -147,7 +147,7 @@ const updateEventAttendance = async (req, res) => {
     if (!req.user) {
         return res.status(200);
     }
-
+    if (req.user.userType == 'U') {
     const userId = req.user.userId;
 
     
@@ -161,8 +161,20 @@ const updateEventAttendance = async (req, res) => {
         console.error('Error updating event attendance:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
-
+} else {
+    const userId = parseInt(req.params.userId);
+    try {
+        const result = await eventAttendanceModel.removeUserFromEvent(eventId, userId);
+        if (!result) {
+            return res.status(404).json({ error: 'Event not found' });
+        }
+        res.status(200).json({ message: 'Event attendance updated successfully' });
+    } catch (error) {
+        console.error('Error updating event attendance:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    };
 }
+};
 
 const deleteEvent = async (req, res) => {
     const eventId = parseInt(req.params.eventId, 10);

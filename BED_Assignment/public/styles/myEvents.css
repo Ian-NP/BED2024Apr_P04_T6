@@ -194,7 +194,109 @@ hr {
 }
 
 
+.attendees-section {
+    margin-top: 30px;
+    border-top: 4px dashed #000;
+    padding-top: 20px;
+}
 
+.attendees-section h2 {
+    font-family: Gilroy, Verdana, sans-serif;
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.attendees-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.attendee-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f0f0f0;
+    border: 2px solid #000;
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-family: DM Sans, Verdana, sans-serif;
+    font-size: 16px;
+}
+
+.kick-button {
+    background-color: #e84855;
+    color: #fff;
+    border: 2px solid #000;
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-family: Gilroy, Verdana, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.kick-button:hover:not(:disabled) {
+    background-color: #d63a47;
+    transform: translateY(-2px);
+}
+
+.kick-button:disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+    border-color: #999;
+}
+
+.events-header {
+    font-family: Gilroy, Verdana, sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: #333;
+    padding: 20px 0;
+    margin: 60px 0 20px;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.events-divider {
+    border: 0;
+    height: 0px;
+    background-color: #000;
+    margin: 40px 0;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .events-header {
+        font-size: 28px;
+        margin: 30px 0 15px;
+        padding: 15px 0;
+    }
+
+    .events-divider {
+        margin: 30px 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .attendee-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .kick-button {
+        align-self: flex-end;
+    }
+}
 
 @media (max-width: 1200px) {
     .bottom {

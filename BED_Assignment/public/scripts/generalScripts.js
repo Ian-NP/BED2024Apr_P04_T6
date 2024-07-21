@@ -1,7 +1,7 @@
 
+const token = localStorage.getItem('token');
 
-document.addEventListener('DOMContentLoaded', () => {
-    const token = localStorage.getItem('token');
+    
     if (token) {
         if (!isTokenExpired(token)) {
             const userType = getUserTypeFromToken(token);
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     
    
-});
+
 
 
 
@@ -114,10 +114,11 @@ async function refreshAccessTokenIfNeeded() {
     const accessToken = localStorage.getItem('token');
     const refreshToken = localStorage.getItem('refreshToken');
 
+   
     if (!refreshToken) {
         console.error('No refresh token available');
        
-        window.location.href = '/login';
+        
         return null;
     }
 

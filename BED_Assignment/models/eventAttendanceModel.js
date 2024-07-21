@@ -72,7 +72,7 @@ class EventAttendanceModel {
 
     static async removeUserFromEvent(eventId, userId) {
         let connection;
-
+        console.log(eventId, userId);
         try {
             connection = await sql.connect(dbConfig);
 
