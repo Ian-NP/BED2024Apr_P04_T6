@@ -47,25 +47,24 @@ const fetchChatHistory = async (req, res) => {
 };
 
 const postUserInput = async (req, res) => {
-    const query = req.body.query;
-    const conversationId = req.params.conversationId;
+  const query = req.body.query;
+  const conversationId = req.params.conversationId;
 
-    try {
-        const geminiChat = await startChatForUser(conversationId);
-        const result = await geminiChat.sendMessage(query);
-        const response = await result.response;
-        const text = await response.text();
-        console.log("AI Response:", text);
+  try {
+      const geminiChat = await startChatForUser(conversationId);
+      const result = await geminiChat.sendMessage(query);
+      const response = await result.response;
+      const text = await response.text();
 
-        // Logic for adding it to the chatBotHistory
-        const addUserPromptToChatHistory = await ChatBotHistory.addChatHistory("user", query, conversationId);
-        const addBotResponseToChatHistory = await ChatBotHistory.addChatHistory("model", text, conversationId);
+      // Ensure these lines are executed correctly
+      await ChatBotHistory.addChatHistory("user", query, conversationId);
+      await ChatBotHistory.addChatHistory("model", text, conversationId);
 
-        return res.status(200).json({ message: text }); // Sending JSON response with AI text
-    } catch (error) {
-        console.error("Error querying AI:", error);
-        return res.status(500).json({ error: "Internal Server Error" }); // Example error response
-    }
+      return res.status(200).json({ message: text });
+  } catch (error) {
+      console.error("Error querying AI:", error);
+      return res.status(500).json({ error: "Internal Server Error" });
+  }
 };
 
 const fetchChatConversationsByUserId = async (req, res) =>{
@@ -80,18 +79,24 @@ const fetchChatConversationsByUserId = async (req, res) =>{
   }
 }
 
-const addNewConversation = async (req, res) =>{
+const addNewConversation = async (req, res) => {
   const userId = req.params.userId;
   const conversationTitle = req.body.conversationTitle;
 
-  try{
-    const newChatConversation = await ChatConversation.addNewConversation(conversationTitle, userId);
-    res.status(201).json(newChatConversation);
-  } catch(err){
-      console.error('Error creating conversation', err);
-      res.status(500).send("Error creating conversation");
+  try {
+      const newChatConversation = await ChatConversation.addNewConversation(conversationTitle, userId);
+      res.status(201).json(newChatConversation);
+  } catch (err) {
+      console.error('Error creating conversation:', err);
+
+      // Check if the error is related to a foreign key constraint violation
+      if (err.message.includes("User ID does not exist")) {
+          res.status(404).send("User ID does not exist. Cannot create conversation.");
+      } else {
+          res.status(500).send("Error creating conversation");
+      }
   }
-}
+};
 
 const editConversationTitle = async (req, res) => {
   const newTitle = req.body.conversationTitle
@@ -123,6 +128,7 @@ const deleteChatConversation = async (req, res) => {
       res.status(500).json({ message: 'Error deleting conversation', error: error.message });
   }
 };
+
 module.exports = {
   fetchChatHistory,
   postUserInput,

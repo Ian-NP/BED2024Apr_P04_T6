@@ -80,9 +80,9 @@ class ChatConversation{
         }
     }
 
-    static async addNewConversation(conversationTitle, userId){
+    static async addNewConversation(conversationTitle, userId) {
         let connection;
-        
+    
         try {
             connection = await sql.connect(dbConfig);
             const insertQuery = `
@@ -97,14 +97,21 @@ class ChatConversation{
             const result = await request.query(insertQuery);
     
             if (result.recordset.length > 0) {
-                // Return the newly added conversation details
-                return result.recordset[0];
+                // Create an instance of ChatConversation
+                const { conversationId, conversationTitle, timeStamp, userId } = result.recordset[0];
+                return new ChatConversation(conversationId, conversationTitle, timeStamp, userId);
             } else {
                 throw new Error("Error creating chat conversation: No record returned");
             }
         } catch (error) {
-            console.error('Error creating chat conversation:', error);
-            throw new Error("Error creating chat conversation");
+            // Check if the error is related to a foreign key constraint violation
+            if (error.message.includes("The INSERT statement conflicted with the FOREIGN KEY constraint")) {
+                console.error('Foreign key constraint error:', error);
+                throw new Error("User ID does not exist. Cannot create conversation.");
+            } else {
+                console.error('Error creating chat conversation:', error);
+                throw new Error("Error creating chat conversation");
+            }
         } finally {
             // Ensure the connection is closed even if an error occurs
             if (connection) {
@@ -115,7 +122,7 @@ class ChatConversation{
                 }
             }
         }
-    }
+    }    
 
     static async editConversationTitle(conversationTitle, conversationId){
         let connection;
