@@ -63,7 +63,7 @@ const createAdminUser = async (req, res) => {
     const adminId = parseInt(req.params.adminId);
   
     try {
-      const success = await Admin.deleteAdminUser(adminId);
+      const success = await Admin.deleteAdmin(adminId);
       if (!success) {
         return res.status(404).send("Admin not found");
       }
