@@ -12,88 +12,89 @@ class ChatBotHistory {
 
     // Combined function to fetch and format chat history for GeminiChat
     static async fetchAndFormatChatHistoryForGemini(conversationId) {
-      let connection;
+        let connection;
 
-      try {
-          const connection = await sql.connect(dbConfig);
-          const sqlQuery = `
-              SELECT role, text
-              FROM ChatBotHistory
-              WHERE conversationId = @conversationId
-              ORDER BY timeStamp ASC;
-          `;
+        try {
+            // Open the connection
+            connection = await sql.connect(dbConfig);
+            
+            const sqlQuery = `
+                SELECT role, text, chatHistoryId, timeStamp, conversationId
+                FROM ChatBotHistory
+                WHERE conversationId = @conversationId
+                ORDER BY timeStamp ASC;
+            `;
 
-          const request = connection.request();
-          request.input("conversationId", sql.Int, conversationId);
-          const result = await request.query(sqlQuery);
+            const request = connection.request();
+            request.input("conversationId", sql.Int, conversationId);
+            const result = await request.query(sqlQuery);
 
-          // Format the result into the desired structure for GeminiChat
-          const formattedHistory = result.recordset.map(row => ({
-              role: row.role,
-              parts: [{ text: row.text }]
-          }));
+            // Format the result into the desired structure for GeminiChat
+            const formattedHistory = result.recordset.map(row => ({
+                role: row.role,
+                parts: [{ text: row.text }]
+            }));
 
-          // Optionally, you can also fetch the full chat history as objects if needed
-          const chatHistory = result.recordset.map(record =>
-              new ChatBotHistory(
-                  record.chatHistoryId,
-                  record.role,
-                  record.text.replace(/\n/g, '<br>'),
-                  record.timeStamp,
-                  record.conversationId
-              )
-          );
+            // Optionally, you can also fetch the full chat history as objects if needed
+            const chatHistory = result.recordset.map(record =>
+                new ChatBotHistory(
+                    record.chatHistoryId,
+                    record.role,
+                    record.text.replace(/\n/g, '<br>'),
+                    record.timeStamp,
+                    record.conversationId
+                )
+            );
 
-          return { formattedHistory, chatHistory };
-      } catch (error) {
-          console.error('Error fetching and formatting chat history:', error);
-          throw new Error("Error fetching and formatting chat history");
-      } finally {
-          // Ensure the connection is closed even if an error occurs
-          if (connection) {
-              try {
-                  await connection.close();
-              } catch (closeError) {
-                  console.error('Error closing the connection:', closeError);
-              }
-          }
-      }
+            return { formattedHistory, chatHistory };
+        } catch (error) {
+            console.error('Error fetching and formatting chat history:', error);
+            throw new Error("Error fetching and formatting chat history");
+        } finally {
+            // Ensure the connection is closed even if an error occurs
+            if (connection) {
+                try {
+                    await connection.close();
+                } catch (closeError) {
+                    console.error('Error closing the connection:', closeError);
+                }
+            }
+        }
     }
+
 
     // Add history to the database
     static async addChatHistory(role, text, conversationId) {
-      let connection;
+        let connection;
 
-      try {
-          const connection = await sql.connect(dbConfig);
-          const sqlQuery = `
-              INSERT INTO ChatBotHistory (role, text, timeStamp, conversationId)
-              VALUES (@role, @text, GETDATE(), @conversationId);
-          `;
+        try {
+            connection = await sql.connect(dbConfig); // Changed from `const` to `let`
+            const sqlQuery = `
+                INSERT INTO ChatBotHistory (role, text, timeStamp, conversationId)
+                VALUES (@role, @text, GETDATE(), @conversationId);
+            `;
 
-          const request = connection.request();
-          request.input("role", sql.NVarChar(5), role); // Assuming role is limited to 'user' or 'model'
-          request.input("text", sql.NVarChar(sql.MAX), text); // Adjust as per your actual text size
-          request.input("conversationId", sql.Int, conversationId);
-          const result = await request.query(sqlQuery);
+            const request = connection.request();
+            request.input("role", sql.NVarChar(5), role);
+            request.input("text", sql.NVarChar(sql.MAX), text);
+            request.input("conversationId", sql.Int, conversationId);
+            const result = await request.query(sqlQuery);
 
-          console.log(`Inserted chat history for conversationId ${conversationId}`);
+            console.log(`Inserted chat history for conversationId ${conversationId}`);
 
-          // Optionally, return something if needed
-          return true; // Example: Return true to indicate successful insertion
-      } catch (error) {
-          console.error('Error adding chat history:', error);
-          throw new Error("Error adding chat history");
-      } finally {
-          // Ensure the connection is closed even if an error occurs
-          if (connection) {
-              try {
-                  await connection.close();
-              } catch (closeError) {
-                  console.error('Error closing the connection:', closeError);
-              }
-          }
-      }
+            return true;
+        } catch (error) {
+            console.error('Error adding chat history:', error);
+            throw new Error("Error adding chat history");
+        } finally {
+            if (connection) {
+                try {
+                    await connection.close();
+                } catch (closeError) {
+                    console.error('Error closing the connection:', closeError);
+                }
+            }
+        }
     }
 }
 

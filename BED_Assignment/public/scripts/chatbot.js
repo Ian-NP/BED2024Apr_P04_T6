@@ -323,7 +323,7 @@ async function populateChatConversation(userId) {
                     conversationElement.setAttribute('aria-current', 'true');
                     conversationElement.className = 'list-group-item list-group-item-action active py-3 lh-sm';
                     isFirst = false;
-                    firstConversationId =  conversation.conversationId;
+                    firstConversationId = conversation.conversationId;
                 } else{
                     conversationElement.className = 'list-group-item list-group-item-action py-3 lh-sm';
                 }
