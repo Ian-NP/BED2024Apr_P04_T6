@@ -13,11 +13,11 @@ class ArticleComments{
         this.level = level;
     }
 
-    static async getAllCommentsFromArticleIdByLatest(articleId){
+    static async getAllCommentsFromArticleIdByLatest(articleId) {
         let connection;
         
-        try{
-            const connection = await sql.connect(dbConfig);
+        try {
+            connection = await sql.connect(dbConfig);
             const sqlQuery = `                
                 WITH CommentTree AS (
                     SELECT
@@ -31,9 +31,9 @@ class ArticleComments{
                         0 AS level 
                     FROM ArticleComments
                     WHERE parentCommentId IS NULL AND articleId = @articleId
-
+    
                     UNION ALL
-
+    
                     SELECT
                         ac.commentId,
                         ac.content,
@@ -51,7 +51,7 @@ class ArticleComments{
                 OPTION (MAXRECURSION 0);
             `;
             // MIGHT NEED TO CHANGE SQL QUERY
-
+    
             const request = connection.request();
             request.input("articleId", sql.Int, articleId);
             const result = await request.query(sqlQuery);
@@ -84,12 +84,12 @@ class ArticleComments{
             }
         }
     }
-
-    static async getAllCommentsFromArticleIdByRelevance(articleId){
+    
+    static async getAllCommentsFromArticleIdByRelevance(articleId) {
         let connection;
         
-        try{
-            const connection = await sql.connect(dbConfig);
+        try {
+            connection = await sql.connect(dbConfig);
             const sqlQuery = `                
                 WITH CommentTree AS (
                     SELECT
@@ -103,9 +103,9 @@ class ArticleComments{
                         0 AS level 
                     FROM ArticleComments
                     WHERE parentCommentId IS NULL AND articleId = @articleId
-
+    
                     UNION ALL
-
+    
                     SELECT
                         ac.commentId,
                         ac.content,
@@ -123,7 +123,7 @@ class ArticleComments{
                 OPTION (MAXRECURSION 0);
             `;
             // MIGHT NEED TO CHANGE SQL QUERY
-
+    
             const request = connection.request();
             request.input("articleId", sql.Int, articleId);
             const result = await request.query(sqlQuery);
@@ -155,7 +155,7 @@ class ArticleComments{
                 }
             }
         }
-    }
+    }    
 
     static async getArticleCommentById(id){
         let connection;

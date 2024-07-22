@@ -13,11 +13,11 @@ class EventComments{
         this.level = level;
     }
 
-    static async getAllCommentsFromEventIdByLatest(eventId){
+    static async getAllCommentsFromEventIdByLatest(eventId) {
         let connection;
         
-        try{
-            const connection = await sql.connect(dbConfig);
+        try {
+            connection = await sql.connect(dbConfig); // Define connection here
             const sqlQuery = `
                 WITH CommentTree AS (
                     SELECT
@@ -31,9 +31,9 @@ class EventComments{
                         0 AS level
                     FROM EventComments
                     WHERE parentCommentId IS NULL AND eventId = @eventId
-
+    
                     UNION ALL
-
+    
                     SELECT
                         ac.commentId,
                         ac.content,
@@ -50,7 +50,6 @@ class EventComments{
                 ORDER BY level, timeStamp DESC
                 OPTION (MAXRECURSION 0);
             `;
-            // MIGHT NEED TO CHANGE SQL QUERY
     
             const request = connection.request();
             request.input("eventId", sql.Int, eventId);
@@ -83,13 +82,13 @@ class EventComments{
                 }
             }
         }
-    }
+    }    
 
-    static async getAllCommentsFromEventIdByRelevance(eventId){
+    static async getAllCommentsFromEventIdByRelevance(eventId) {
         let connection;
         
-        try{
-            const connection = await sql.connect(dbConfig);
+        try {
+            connection = await sql.connect(dbConfig); // Use the same connection variable here
             const sqlQuery = `
                 WITH CommentTree AS (
                     SELECT
@@ -103,9 +102,9 @@ class EventComments{
                         0 AS level
                     FROM EventComments
                     WHERE parentCommentId IS NULL AND eventId = @eventId
-
+    
                     UNION ALL
-
+    
                     SELECT
                         ac.commentId,
                         ac.content,
@@ -122,7 +121,6 @@ class EventComments{
                 ORDER BY level, score DESC
                 OPTION (MAXRECURSION 0);
             `;
-            // MIGHT NEED TO CHANGE SQL QUERY
     
             const request = connection.request();
             request.input("eventId", sql.Int, eventId);
@@ -207,29 +205,29 @@ class EventComments{
         }
     }
 
-    static async createEventComment(newCommentData){
+    static async createEventComment(newCommentData) {
         let connection;
         let parentComment;
-
-        try{
+    
+        try {
             if (newCommentData.parentCommentId) {
                 parentComment = await this.getEventCommentById(newCommentData.parentCommentId);
-                // Check if the parent comment's articleId matches the new comment's articleId
+                // Check if the parent comment's eventId matches the new comment's eventId
                 if (parentComment && parseInt(parentComment.eventId) !== parseInt(newCommentData.eventId)) {
                     throw new Error("The eventId of the parent comment does not match the eventId of the new comment.");
                 }
             }
-
+    
             // Establish a connection to the database
             connection = await sql.connect(dbConfig);
-
-            // Define the SQL query for inserting a new book and getting the generated ID
+    
+            // Define the SQL query for inserting a new comment and getting the generated ID
             const sqlQuery = `
                 INSERT INTO EventComments (content, score, timeStamp, userId, eventId, parentCommentId)
                 VALUES (@content, @score, @timeStamp, @userId, @eventId, @parentCommentId);
                 SELECT SCOPE_IDENTITY() AS newCommentId;
             `;
-
+    
             // Create a request object and input the parameters
             const request = connection.request();
             request.input("content", sql.NVarChar(sql.MAX), newCommentData.content);
@@ -237,21 +235,25 @@ class EventComments{
             request.input("timeStamp", sql.DateTime2, newCommentData.timeStamp);
             request.input("userId", sql.Int, newCommentData.userId);
             request.input("eventId", sql.Int, newCommentData.eventId);
-            request.input("parentCommentId", sql.Int, newCommentData.parentCommentId); 
-
+            request.input("parentCommentId", sql.Int, newCommentData.parentCommentId);
+    
             // Execute the query
             const result = await request.query(sqlQuery);
-
+    
             // Extract the newly generated ID from the result
             const newCommentId = result.recordset[0].newCommentId;
-
-            // Fetch the newly created book by its ID
+    
+            // Fetch the newly created comment by its ID
             const createdComment = await this.getEventCommentById(newCommentId);
-
+    
             return createdComment;
         } catch (error) {
-            console.error('Error creating comment:', error);
-            throw error; // Optionally, rethrow the error or handle it as needed
+            if (error.message === "The eventId of the parent comment does not match the eventId of the new comment.") {
+                throw error; // Rethrow specific error
+            } else {
+                console.error('Error creating comment:', error);
+                throw new Error("Error creating comment"); // Ensure this is the expected message
+            }
         } finally {
             // Ensure the connection is closed even if an error occurs
             if (connection) {
