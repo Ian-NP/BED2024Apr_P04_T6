@@ -31,6 +31,68 @@ const getAdminById = async (req, res) => {
   }
 };
 
+// const getAdminProfileByAdminId = async (req, res) => {
+//   const adminId = parseInt(req.params.adminId);
+//   try {
+//       const userData = await Admin.getAdminProfile(adminId);
+
+//       if (!userData) {
+//           return res.status(404).json({ message: 'Admin not found' });
+//       }
+
+//       // Prepare the response data
+//       const response = {
+//           name: userData.name,
+//           email: userData.adminEmail,
+//           profilePictureUrl: userData.profilePicture ? `/api/profilePicture/${adminId}` : '../images/default-profile-user.jpg',
+//       };
+
+//       // if (userData.userType === 'C') {
+//       //     response.paypalEmail = userData.paypalEmail;
+//       // }
+
+//       res.json(response);
+//   } catch (error) {
+//       console.error('Error fetching admin data:', error);
+//       res.status(500).json({ message: 'Error fetching admin data' });
+//   }
+// };
+
+// const fetchProfilePicture = async (req, res) => {
+//   const adminId = req.params.adminId;
+
+//   try {
+//       const user = await Admin.getAdminProfile(adminId);
+//       if (!user || !user.profilePicture) {
+//           return res.status(404).json({ message: 'Profile picture not found' });
+//       }
+
+//       res.set('Content-Type', 'image/jpeg'); // Adjust content type based on your image format
+//       res.send(user.profilePicture);
+//   } catch (error) {
+//       console.error('Error fetching profile picture:', error);
+//       res.status(500).json({ message: 'Error fetching profile picture' });
+//   }
+// }
+
+// const uploadProfilePicture = async (req, res) => {
+//   const adminId = req.user.adminId;
+//   const profilePicture = req.file.buffer;
+
+//   try {
+//     const updateSuccessful = await Admin.updateAdminProfilePicture(adminId, profilePicture);
+
+//     if (updateSuccessful) {
+//       res.json({ profilePictureUrl: `/api/profilePicture/${adminId}` });
+//     } else {
+//       res.status(404).json({ message: 'No user found or profile picture unchanged' });
+//     }
+//   } catch (error) {
+//     console.error('Error uploading profile picture:', error);
+//     res.status(500).json({ message: 'Failed to upload profile picture' });
+//   }
+// };
+
 
 const createAdminUser = async (req, res) => {
     const newAdmin = req.body;
@@ -194,4 +256,7 @@ module.exports = {
   deleteAdminUser,
   deleteAdminById,
   loginUser,
+  // getAdminProfileByAdminId,
+  // fetchProfilePicture,
+  // uploadProfilePicture,
 };

@@ -46,6 +46,56 @@ class Admin {
         : null; // Handle admin not found
     }
 
+    static async getAdminProfile(adminId) {
+      try {
+          const pool = await sql.connect(dbConfig);
+          const result = await pool.request()
+              .input('adminId', sql.Int, adminId)
+              .query('SELECT name, adminEmail, profilePicture FROM AdminUser WHERE adminId = @adminId');
+  
+          return result.recordset[0];
+      } catch (error) {
+          throw new Error('Database query failed');
+      }
+    }
+
+    static async getAdminProfilePicture(adminId) {
+      try {
+          const pool = await sql.connect(dbConfig);
+          const result = await pool.request()
+              .input('adminId', sql.Int, adminId)
+              .query('SELECT profilePicture FROM AdminUser WHERE adminId = @adminId');
+          pool.close();
+          return result.recordset[0];
+      } catch (error) {
+          throw new Error('Database query failed');
+      }
+    }
+    
+    static async updateAdminProfilePicture(adminId, profilePicture) {
+      const pool = await sql.connect(dbConfig);
+      try {
+        const result = await pool.request()
+          .input('adminId', sql.Int, adminId)
+          .input('profilePicture', sql.VarBinary(sql.MAX), profilePicture)
+          .query('UPDATE AdminUser SET profilePicture = @profilePicture WHERE adminId = @adminId');
+    
+        // Check if rows were affected
+        if (result.rowsAffected[0] > 0) {
+          console.log(`${result.rowsAffected[0]} row(s) updated.`);
+          return true; // Update successful
+        } else {
+          console.log('No rows updated. Admin not found or profile picture unchanged.');
+          return false; // Update unsuccessful
+        }
+      } catch (error) {
+        console.error('Error updating admin profile:', error);
+        throw new Error('Database update failed');
+      } finally {
+        pool.close();
+      }
+    }
+
     static async createAdminUser(newAdminData) {
         // Hash the user's password
         const saltRounds = 10;

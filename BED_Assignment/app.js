@@ -272,9 +272,15 @@ app.delete("/api/article/:articleId", articleController.deleteArticle);
 //     res.json(userData);
 // });
 
+
 app.get('/api/profile/:userId', userController.getUserProfileByUserId);
 app.get('/api/profilePicture/:userId', userController.fetchProfilePicture);
 app.post('/api/uploadProfilePicture/:userId', authenticateToken, upload.single('profilePicture'), userController.uploadProfilePicture);
+
+
+// app.get('/api/profile/:adminId', adminController.getAdminProfileByAdminId);
+// app.get('/api/profilePicture/:adminId', adminController.fetchProfilePicture);
+// app.post('/api/uploadProfilePicture/:adminId', authenticateToken, upload.single('profilePicture'), adminController.uploadProfilePicture);
 
 app.listen(PORT, async () => {
     try {
