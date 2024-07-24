@@ -336,7 +336,7 @@ class EventModel {
 
         try {
             connection = await sql.connect(dbConfig);
-            console.log(eventId);
+            
             const sqlQuery = `DELETE FROM Events WHERE eventId = @eventId`;
             const request = connection.request();
             

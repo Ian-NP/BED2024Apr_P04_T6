@@ -8,19 +8,21 @@ const eventAttendanceModel = require('../models/eventAttendanceModel');
 
 const serveEventsContent = (req, res) => {
 
-    console.log("hello")
+    
+    
     if (!req.user) {
-        console.log("hello")
+     
         return res.sendFile(path.join(__dirname + '/../public/html/events.html')); // Serve normal events if no token
     }
 
     const userType = req.user.userType; 
 
     if (userType === 'C') {
-        console.log("hello12")
+       
         res.sendFile(path.join(__dirname + '/../public/html/createEvent.html'));
     } else {
-        console.log("hello123")
+     
+        
         res.sendFile(path.join(__dirname + '/../public/html/events.html'));
     }
 };
@@ -28,7 +30,8 @@ const serveEventsContent = (req, res) => {
 const getAllEvents = async (req, res) => {
     try {
         const events = await EventModel.getAllEvents();
-        console.log(events);
+    
+        
         return res.status(200).json(events);
     } catch (err) {
         console.error('Error getting events: ', err);
@@ -51,11 +54,11 @@ const getEventById = async (req, res) => {
 };
 const createEvent = async (req, res) => {
     try {
-        console.log('Request body:', req.body);
+
+        
 
         const eventTime = new Date(req.body.eventTime);
-        console.log('Received eventTime:', req.body.eventTime);
-        console.log('Parsed eventTime:', eventTime);
+        
 
         if (isNaN(eventTime)) {
             return res.status(400).json({ error: 'Invalid date format' });
@@ -111,18 +114,20 @@ const signUserUp = async (req, res) => {
 }
 
 const getEventsByUserId = async (req, res) => {
-    console.log(req.user);
+   
+    
     if (!req.user) {
         return res.status(200);
     }
 
     const userId = req.user.userId;
 
-    console.log(userId);
+   
+    
     if (req.user.userType == 'U'){
     try {
         const events = await EventModel.getEventsByUserId(userId);
-        console.log(events);
+   
         res.status(200).json(events);
     } catch (error) {
         console.error('Error getting events by user ID:', error);

@@ -1,4 +1,4 @@
-console.log('Events script loaded.');
+
 
 var buttons = document.querySelectorAll("#Tag-Buttons button");
 for (var i = 0; i < buttons.length; i++) {
@@ -14,18 +14,29 @@ searchInput.addEventListener('input', filterEvents);
 fetchEvents();
 
 let allEvents = [];
+let newEvents = [];
+let oldEvents = [];
 
 async function fetchEvents() {
     try {
         const response = await fetch('/api/events');
         const events = await response.json();
-        allEvents = events.filter(event => new Date(event.eventTime) > new Date());
-        renderEvents(allEvents);
+        const currentDate = new Date();
+        
+        allEvents = events;
+        newEvents = events.filter(event => new Date(event.eventTime) > currentDate);
+        oldEvents = events.filter(event => new Date(event.eventTime) <= currentDate);
+        
+        renderEvents(newEvents);
     } catch (error) {
         console.error('Error fetching events:', error);
     }
 }
 
+function updateNotificationCount() {
+    const notificationCount = document.querySelector('.notification-count');
+    notificationCount.textContent = newEvents.length;
+}
 function renderEvents(events) {
     const container = document.getElementById('Events-Container');
     container.innerHTML = '';
@@ -99,11 +110,15 @@ function formatDate(eventTime) {
     return `${day} ${month} ${year}`;
 }
 
+
 function filterEvents() {
     const searchInput = document.getElementById("Search-Input").value.toLowerCase();
     const selectedTags = Array.from(document.querySelectorAll("#Tag-Buttons button.clicked")).map(button => button.textContent);
+    const showNewEvents = document.getElementById("event-toggle").checked;
 
-    const filteredEvents = allEvents.filter(event => {
+    const eventsToFilter = showNewEvents ? newEvents : oldEvents;
+
+    const filteredEvents = eventsToFilter.filter(event => {
         const matchesSearch = searchInput === "" || 
             event.eventName.toLowerCase().includes(searchInput) || 
             event.eventOverview.toLowerCase().includes(searchInput) || 
@@ -111,11 +126,19 @@ function filterEvents() {
 
         const matchesTags = selectedTags.length === 0 || selectedTags.includes(event.eventCategory);
 
-        const eventTime = new Date(event.eventTime);
-        const hasNotStarted = eventTime > new Date();
-
-        return matchesSearch && matchesTags && hasNotStarted;
+        return matchesSearch && matchesTags;
     });
 
     renderEvents(filteredEvents);
 }
+document.getElementById("event-toggle").addEventListener("change", function() {
+    const toggleText = document.querySelector("#toggle-container span");
+    if (this.checked) {
+        toggleText.textContent = "Showing upcoming events";
+        renderEvents(newEvents);
+    } else {
+        toggleText.textContent = "Showing past events";
+        renderEvents(oldEvents);
+    }
+});
+

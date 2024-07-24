@@ -238,7 +238,7 @@
                 }
     
                 const responseData = await response.json();
-                console.log('Event created successfully:', responseData);
+                
             } catch (error) {
                 console.error('Error creating event:', error);
             }
