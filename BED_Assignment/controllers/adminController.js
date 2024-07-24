@@ -31,67 +31,67 @@ const getAdminById = async (req, res) => {
   }
 };
 
-// const getAdminProfileByAdminId = async (req, res) => {
-//   const adminId = parseInt(req.params.adminId);
-//   try {
-//       const userData = await Admin.getAdminProfile(adminId);
+const getAdminProfileByAdminId = async (req, res) => {
+  const adminId = parseInt(req.params.adminId);
+  try {
+      const userData = await Admin.getAdminProfile(adminId);
 
-//       if (!userData) {
-//           return res.status(404).json({ message: 'Admin not found' });
-//       }
+      if (!userData) {
+          return res.status(404).json({ message: 'Admin not found' });
+      }
 
-//       // Prepare the response data
-//       const response = {
-//           name: userData.name,
-//           email: userData.adminEmail,
-//           profilePictureUrl: userData.profilePicture ? `/api/profilePicture/${adminId}` : '../images/default-profile-user.jpg',
-//       };
+      // Prepare the response data
+      const response = {
+          name: userData.name,
+          email: userData.adminEmail,
+          profilePictureUrl: userData.profilePicture ? `/api/profilePicture/${adminId}` : '../images/default-profile-user.jpg',
+      };
 
-//       // if (userData.userType === 'C') {
-//       //     response.paypalEmail = userData.paypalEmail;
-//       // }
+      // if (userData.userType === 'C') {
+      //     response.paypalEmail = userData.paypalEmail;
+      // }
 
-//       res.json(response);
-//   } catch (error) {
-//       console.error('Error fetching admin data:', error);
-//       res.status(500).json({ message: 'Error fetching admin data' });
-//   }
-// };
+      res.json(response);
+  } catch (error) {
+      console.error('Error fetching admin data:', error);
+      res.status(500).json({ message: 'Error fetching admin data' });
+  }
+};
 
-// const fetchProfilePicture = async (req, res) => {
-//   const adminId = req.params.adminId;
+const fetchProfilePicture = async (req, res) => {
+  const adminId = req.params.adminId;
 
-//   try {
-//       const user = await Admin.getAdminProfile(adminId);
-//       if (!user || !user.profilePicture) {
-//           return res.status(404).json({ message: 'Profile picture not found' });
-//       }
+  try {
+      const user = await Admin.getAdminProfile(adminId);
+      if (!user || !user.profilePicture) {
+          return res.status(404).json({ message: 'Profile picture not found' });
+      }
 
-//       res.set('Content-Type', 'image/jpeg'); // Adjust content type based on your image format
-//       res.send(user.profilePicture);
-//   } catch (error) {
-//       console.error('Error fetching profile picture:', error);
-//       res.status(500).json({ message: 'Error fetching profile picture' });
-//   }
-// }
+      res.set('Content-Type', 'image/jpeg'); // Adjust content type based on your image format
+      res.send(user.profilePicture);
+  } catch (error) {
+      console.error('Error fetching profile picture:', error);
+      res.status(500).json({ message: 'Error fetching profile picture' });
+  }
+}
 
-// const uploadProfilePicture = async (req, res) => {
-//   const adminId = req.user.adminId;
-//   const profilePicture = req.file.buffer;
+const uploadProfilePicture = async (req, res) => {
+  const adminId = req.user.adminId;
+  const profilePicture = req.file.buffer;
 
-//   try {
-//     const updateSuccessful = await Admin.updateAdminProfilePicture(adminId, profilePicture);
+  try {
+    const updateSuccessful = await Admin.updateAdminProfilePicture(adminId, profilePicture);
 
-//     if (updateSuccessful) {
-//       res.json({ profilePictureUrl: `/api/profilePicture/${adminId}` });
-//     } else {
-//       res.status(404).json({ message: 'No user found or profile picture unchanged' });
-//     }
-//   } catch (error) {
-//     console.error('Error uploading profile picture:', error);
-//     res.status(500).json({ message: 'Failed to upload profile picture' });
-//   }
-// };
+    if (updateSuccessful) {
+      res.json({ profilePictureUrl: `/api/adminProfilePicture/${adminId}` });
+    } else {
+      res.status(404).json({ message: 'No user found or profile picture unchanged' });
+    }
+  } catch (error) {
+    console.error('Error uploading profile picture:', error);
+    res.status(500).json({ message: 'Failed to upload profile picture' });
+  }
+};
 
 
 const createAdminUser = async (req, res) => {
@@ -150,9 +150,14 @@ const createAdminUser = async (req, res) => {
     }
   };
 
-  const generateToken = (userId, userType) => {
-    const payload = { userId, userType };
-    return jwt.sign(payload, 'your_jwt_secret', { expiresIn: '1h' });
+//   const generateToken = (userId, userType) => {
+//     const payload = { userId, userType };
+//     return jwt.sign(payload, 'your_jwt_secret', { expiresIn: '1h' });
+// };
+
+const generateAdminToken = (adminId, adminName, adminEmail) => {
+  const payload = { adminId, adminName, adminEmail };
+  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
 };
 
 // const loginUser = async (req, res) => {
@@ -235,7 +240,7 @@ const loginUser = async (req, res) => {
       }
 
       // Generate token upon successful login
-      const token = generateToken(user.userId, user.userType);
+      const token = generateAdminToken(user.adminId, user.name, user.adminEmail);
 
       // Authenticated successfully
       return res.status(200).json({ success: true, message: 'Login successful', token });
@@ -256,7 +261,7 @@ module.exports = {
   deleteAdminUser,
   deleteAdminById,
   loginUser,
-  // getAdminProfileByAdminId,
-  // fetchProfilePicture,
-  // uploadProfilePicture,
+  getAdminProfileByAdminId,
+  fetchProfilePicture,
+  uploadProfilePicture,
 };
