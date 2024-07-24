@@ -41,12 +41,17 @@ async function fetchEventsDetails(token) {
         const newEvents = [];
         const pastEvents = [];
 
-        events.forEach(event => {
+        events.forEach(async event => {
             const eventDate = new Date(event.eventTime);
             if (eventDate >= now) {
                 newEvents.push(event);
             } else {
                 pastEvents.push(event);
+            }
+
+            // Check if the event has started and needs payment capture
+            if (event.cost && eventDate <= now && !event.captured) {
+                await captureEventPayment(event.eventId, token);
             }
         });
 
@@ -82,6 +87,29 @@ async function fetchEventsDetails(token) {
         redirectToLogin();
     }
 }
+
+async function captureEventPayment(eventId, token) {
+    try {
+        const response = await fetch(`/api/payments/capture/${eventId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to capture payment');
+        }
+
+        const data = await response.json();
+        
+    } catch (error) {
+        console.error('Error capturing payment:', error);
+    }
+}
+
 function populateEventDetails(event) {
     const container = document.createElement('div');
     container.className = 'eventContainer';
@@ -173,13 +201,14 @@ function kickAttendee(eventId, userId) {
     })
     .then(response => {
         if (!response.ok) {
-            console.log('Response:', response);
+     
+
             throw new Error('Failed to kick attendee');
         }
         return response.json();
     })
     .then(data => {
-        console.log('Attendee kicked successfully:', data);
+      
         // Refresh the page or update the attendees list
         window.location.reload();
     })

@@ -96,7 +96,7 @@ app.delete("/api/events/:eventId", specialAuthenticateToken, EventController.del
 //paypal stuff
 app.post('/api/events/:eventId/authorize', specialAuthenticateToken, eventPaymentController.authorizePayment);
 app.post('/api/events/:eventId/capture', eventPaymentController.capturePayment);
-
+app.put('/api/payments/capture/:eventId', authenticateToken, eventPaymentController.capturePayment);
 
 // refreshToken Routes
 app.delete('/refreshToken', (req, res) => { refreshToken.removeToken(req, res) });
