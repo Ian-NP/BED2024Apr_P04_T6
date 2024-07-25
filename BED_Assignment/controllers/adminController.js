@@ -58,7 +58,7 @@ const getAdminProfileByAdminId = async (req, res) => {
   }
 };
 
-const fetchProfilePicture = async (req, res) => {
+const fetchAdminProfilePicture = async (req, res) => {
   const adminId = req.params.adminId;
 
   try {
@@ -262,6 +262,6 @@ module.exports = {
   deleteAdminById,
   loginUser,
   getAdminProfileByAdminId,
-  fetchProfilePicture,
+  fetchAdminProfilePicture,
   uploadProfilePicture,
 };

@@ -103,9 +103,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const userId = decoded.userId;
         console.log(userType);
 
+        const aboutSection = document.querySelector('.about-card');
+
         if (userType === 'U' || userType === 'C') {
             loadUserProfile();
         } else {
+            aboutSection.style.display = 'none';
             loadAdminProfile();
         }
     } else {
@@ -136,7 +139,7 @@ async function fetchAboutInfo() {
     }
 }
 fetchAboutInfo();
-const saveAboutButton = document.getElementById('save-about-button');
+
 async function saveAboutInfo() {
     const token = localStorage.getItem('token');
     const userId = jwt_decode(token).userId;
@@ -155,16 +158,16 @@ async function saveAboutInfo() {
         console.log(response);
 
         if (response.ok) {
-            alert('About info saved successfully');
+            alert('Profile info saved successfully');
         } else {
-            console.error('Failed to save about info:', await response.text());
+            console.error('Failed to save profile info:', await response.text());
         }
     } catch (error) {
         console.error('Error:', error);
     }
     
 }
-saveAboutButton.addEventListener('click', saveAboutInfo());
+document.getElementById('save-about-button').addEventListener('click', saveAboutInfo);
 
       
 // Initial fetch

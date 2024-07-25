@@ -281,7 +281,7 @@ app.get('/api/getAboutInfo/:userId', authenticateToken, userController.getAboutI
 app.post('/api/saveAboutInfo/:userId', authenticateToken, userController.saveAboutInfo);
 
 app.get('/api/adminProfile/:adminId', adminController.getAdminProfileByAdminId);
-app.get('/api/adminProfilePicture/:adminId', adminController.fetchProfilePicture);
+app.get('/api/adminProfilePicture/:adminId', adminController.fetchAdminProfilePicture);
 app.post('/api/uploadAdminProfilePicture/:adminId', authenticateToken, upload.single('profilePicture'), adminController.uploadProfilePicture);
 
 app.listen(PORT, async () => {
