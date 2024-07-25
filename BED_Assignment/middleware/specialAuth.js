@@ -6,10 +6,10 @@ const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
 
-    console.log('Token received:', token); 
+    
 
     if (!token) {
-        console.log('No token provided'); 
+        
         next();
     } else {
         try {

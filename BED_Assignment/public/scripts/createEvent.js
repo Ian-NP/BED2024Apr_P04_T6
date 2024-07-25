@@ -236,9 +236,9 @@
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-    
                 const responseData = await response.json();
-                
+                alert('Event created successfully!');
+                window.location.reload();
             } catch (error) {
                 console.error('Error creating event:', error);
             }

@@ -1,9 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const signUpButton = document.getElementById('Signup');
+    signUpButton.disabled = true;
     const urlParams = new URLSearchParams(window.location.search);
     const eventId = parseInt(urlParams.get('eventId'), 10);
     if (eventId) {
         setTimeout(() => {
             fetchEventDetails(eventId);
+            signUpButton.disabled = false;
         }, 100);
     }
 

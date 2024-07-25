@@ -67,35 +67,35 @@ app.post('/createadmin', adminController.createAdminUser);
 
 
 //Routes for events
-app.post('/create-event', specialAuthenticateToken, EventController.createEvent);
+app.post('/create-event', authenticateToken, EventController.createEvent);
 
 // Serve protected.html for /events route, i used this for the js to authenticate before serving
 app.get('/events', (req, res) => {
     res.sendFile(path.join(__dirname + '/public/html/protected.html'));
 });
 // myEvents.html page
-app.get('/api/events/userEvents', specialAuthenticateToken, EventController.getEventsByUserId);
+app.get('/api/events/userEvents', authenticateToken, EventController.getEventsByUserId);
 
 app.get('/myEvents', async(req, res) => {res.sendFile(path.join(__dirname + "/public/html/myEvents.html"))});
 
 // events-content is the route for the events page, so basically after protected.html is served, the js will fetch the events-content with the token, the middleware can then authenticate it.
 app.get('/events-content', specialAuthenticateToken, EventController.serveEventsContent);
 
-app.post('/api/:eventId/signup', specialAuthenticateToken, EventController.signUserUp);
+app.post('/api/:eventId/signup', authenticateToken, EventController.signUserUp);
 
 app.get("/api/events", EventController.getAllEvents);
 app.get("/api/events/:eventId", EventController.getEventById);
-app.post('/api/events', specialAuthenticateToken, EventController.createEvent);
-app.patch('/api/:eventId/leave', specialAuthenticateToken, EventController.updateEventAttendance);
+app.post('/api/events', authenticateToken, EventController.createEvent);
+app.patch('/api/:eventId/leave', authenticateToken, EventController.updateEventAttendance);
 app.delete("/api/events/:eventId/kick/:userId", authenticateToken, (req, res, next) => {
-    console.log('Kick request received:', req.params);
+    
     EventController.updateEventAttendance(req, res, next);
   });
-app.delete("/api/events/:eventId", specialAuthenticateToken, EventController.deleteEvent);
+app.delete("/api/events/:eventId", authenticateToken, EventController.deleteEvent);
 
 //paypal stuff
-app.post('/api/events/:eventId/authorize', specialAuthenticateToken, eventPaymentController.authorizePayment);
-app.post('/api/events/:eventId/capture', eventPaymentController.capturePayment);
+app.post('/api/events/:eventId/authorize', authenticateToken, eventPaymentController.authorizePayment);
+app.post('/api/events/:eventId/capture', authenticateToken, eventPaymentController.capturePayment);
 app.put('/api/payments/capture/:eventId', authenticateToken, eventPaymentController.capturePayment);
 
 // refreshToken Routes

@@ -23,6 +23,27 @@ document.addEventListener('DOMContentLoaded', () => {
         initializeGame(); 
     }
 });
+function followRoadAndCollectResidentials(startRow, startCol, collectedResidentials) {
+    const queue = [{ row: startRow, col: startCol }];
+    const visited = new Set([`${startRow},${startCol}`]);
+
+    while (queue.length > 0) {
+        const { row, col } = queue.shift();
+
+        const surroundings = checkSurroundings(row, col);
+        for (let i = 0; i < surroundings.length; i++) {
+            const s = surroundings[i];
+            if (!visited.has(`${s.row},${s.col}`)) {
+                if (s.type === 'residential') {
+                    collectedResidentials.add(`${s.row},${s.col}`);
+                } else if (s.type === 'road') {
+                    queue.push(s);
+                }
+                visited.add(`${s.row},${s.col}`);
+            }
+        }
+    }
+}
 
 let gridSize = 5;
 let buildingsGrid = Array.from({ length: gridSize }, () => Array(gridSize).fill(null));
