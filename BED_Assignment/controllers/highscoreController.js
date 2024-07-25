@@ -1,7 +1,7 @@
 const HighscoreModel = require('../models/highScoreModel');
 
-class HighscoreController {
-    static async getHighScores(req, res) {
+
+    async function getHighScores(req, res) {
         try {
             const highScores = await HighscoreModel.getHighScores();
             res.status(200).json({ status: 'success', highScores });
@@ -11,7 +11,7 @@ class HighscoreController {
         }
     }
 
-    static async createHighScore(req, res) {
+    async function createHighScore(req, res) {
         const { gameId, playerName } = req.body;
         const userId = req.user.userId;
 
@@ -27,6 +27,9 @@ class HighscoreController {
             res.status(500).json({ status: 'error', message: 'Error creating high score' });
         }
     }
-}
 
-module.exports = HighscoreController;
+
+module.exports = {
+    getHighScores,
+    createHighScore
+};

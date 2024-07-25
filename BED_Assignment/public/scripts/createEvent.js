@@ -240,7 +240,7 @@
                 alert('Event created successfully!');
                 window.location.reload();
             } catch (error) {
-                console.error('Error creating event:', error);
+                alert('Error creating event:', error);
             }
         };
     

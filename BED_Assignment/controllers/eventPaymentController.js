@@ -5,6 +5,7 @@ const clientID = process.env.CLIENT_ID;
 const clientSecret = process.env.CLIENT_SECRET;
 const auth = Buffer.from(`${clientID}:${clientSecret}`).toString('base64');
 
+// Function to get PayPal access token
 async function getAccessToken() {
     const response = await fetch('https://api.sandbox.paypal.com/v1/oauth2/token', {
         method: 'POST',
@@ -23,6 +24,7 @@ async function getAccessToken() {
     return data.access_token;
 }
 
+// Function to authorize a payment and store authorization ID
 const authorizePayment = async (req, res) => {
     const { authorizationID } = req.body;
     const { eventId } = req.params;
@@ -37,6 +39,7 @@ const authorizePayment = async (req, res) => {
     }
 };
 
+// Function to capture an authorized payment
 const capturePayment = async (req, res) => {
     const { eventId } = req.params;
     const userId = req.user.userId;
