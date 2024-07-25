@@ -1,0 +1,347 @@
+<!-- <!doctype html>
+<html lang="en" data-bs-theme="auto">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.122.0">
+    <title>Favorite Articles</title>
+    <script type="module" src="../scripts/music.js"></script>
+    <link href="/bootstrap assets/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/styles/navbar.css" rel="stylesheet">
+    <link href="/styles/music.css" rel="stylesheet">
+    <link href="/styles/article.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        header {
+            text-align: center;
+            margin: 3rem 0 2rem;
+        }
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            background: linear-gradient(to right, #119C62, #0c6942);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+        main {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: repeat(1, 1fr);
+        }
+        @media (min-width: 768px) {
+            main {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (min-width: 1024px) {
+            main {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        .card {
+            border: 1px solid #E5E7EB;
+            border-radius: 0.375rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .card-header img {
+            width: 100%;
+            height: 9rem;
+            object-fit: cover;
+        }
+        .card-content {
+            padding: 1rem;
+        }
+        .card-title {
+            font-weight: 600;
+            font-size: 1.125rem;
+        }
+        .card-description {
+            margin: 0.5rem 0;
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+        }
+        .card-footer {
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+        }
+        .button {
+            background: none;
+            border: 1px solid #119C62;
+            color: #119C62;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            display: inline-block;
+            text-transform: none;
+            cursor: pointer;
+            border-radius: 0.375rem;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .unfavorite-button {
+            border: 2px solid #119C62;
+            background-color: #119C62;
+            color: #fff;
+        }
+        .unfavorite-button:hover {
+            background-color: #fff;
+            color: #119C62;
+            border: 2px solid #119C62;
+        }
+        .button:hover {
+            background-color: #fff;
+            color: #17c77e;
+        }
+        .read-more-button {
+            background: linear-gradient(to right, #119C62, #0c6942);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header data-bs-theme="dark">
+        <nav class="navbar navbar-expand-xl navbar-dark fixed-top bg-dark">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="#">A+4BED</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+              <ul class="navbar-nav ms-auto mb-2 mb-md-0 me-4">
+                <li class="nav-item">
+                  <a class="nav-link inactive custom-navlink" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link inactive custom-navlink" href="/myEvents">My Events</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active custom-navlink" href="/article">Articles</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link inactive custom-navlink" href="/chatbot">Chatbot</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link inactive  custom-navlink" href="#">Game</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link inactive custom-navlink" id="view-events-link" href="/events">View Events</a>
+              </li>
+                <li class="nav-item">
+                  <a class="nav-link inactive  custom-navlink" href="/credits">Credits</a>
+                </li>
+              </ul>
+              <div class="d-flex">
+                <a class="btn btn-outline-primary me-2" href="/signup" id="signUp_btn">Sign up</a>
+                <a class="btn btn-outline-primary" href="/login" id="login_btn">Login</a>
+                <a class="btn btn-outline-primary me-2" href="/profile" id="profile_btn" style="display:none;">Profile</a>
+                <a class="btn btn-outline-primary" href="#" id="logout_btn" style="display:none;">Logout</a>
+              </div>
+            </div>
+          </div>
+        </nav>
+        <nav class="navbar navbar-expand-lg mt-5 pt-3">
+            <div class="container-fluid">
+                <form class="d-flex me-auto">
+                    <input class="form-control me-2 custom-search-bar" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+                <a class="btn btn-custom me-2" href="/articleFavourites">Favourites</a>
+                <a class="btn btn-custom me-2" href="/articleCreateBlog">Create Blog</a>
+                <a class="btn btn-custom me-2" href="/articleMyBlogs">My Blogs</a>
+                <a class="btn btn-custom" href="/article">View Articles</a>                
+            </div>
+        </nav>
+      </header>
+      <body>
+        <header>
+            <h1>Favorite Articles</h1>
+        </header>
+        <main>
+            <div class="card">
+                <div class="flex justify-between p-4">
+                    <button class="button unfavorite-button">Unfavorite</button>
+                </div>
+                <div class="card-header">
+                    <img src="https://images.unsplash.com/photo-1571509984371-8accf2082e18?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXwxfHx8fHwxfHx8fHwxfHx8fHwxNzE0NzQ1OTUw&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1080" alt="The Power of Imagination thumbnail">
+                </div>
+                <div class="card-content">
+                    <div class="card-title">The Power of Imagination</div>
+                    <div class="card-description">Discover how harnessing the power of your imagination can lead to groundbreaking innovations and creative solutions.</div>
+                    <div>Author: Jon Oh</div>
+                </div>
+                <div class="card-footer">
+                    <button class="button read-more-button">Read More</button>
+                </div>
+            </div>
+    
+            <div class="card">
+                <div class="flex justify-between p-4">
+                    <button class="button unfavorite-button">Unfavorite</button>
+                </div>
+                <div class="card-header">
+                    <img src="https://images.unsplash.com/photo-1516972810923-2ad34b7c48b3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXwxfHx8fHx8fHwxfHx8fHwxNzE0NzQ1OTk7&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1080" alt="Mindfulness in the Digital Age thumbnail">
+                </div>
+                <div class="card-content">
+                    <div class="card-title">Mindfulness in the Digital Age</div>
+                    <div class="card-description">Explore practical techniques for staying mindful and focused in a world filled with digital distractions.</div>
+                    <div>Author: John Smith</div>
+                </div>
+                <div class="card-footer">
+                    <button class="button read-more-button">Read More</button>
+                </div>
+            </div>
+    
+            <div class="card">
+                <div class="flex justify-between p-4">
+                    <button class="button unfavorite-button">Unfavorite</button>
+                </div>
+                <div class="card-header">
+                    <img src="https://images.unsplash.com/photo-1508001528151-ze2e2eedc606?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXwxfHx8fHx8fHwxfHx8fHwxNzE0NzQ1OTk8&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&utm_source=unsplash_source&w=1080" alt="The Art of Effective Communication thumbnail">
+                </div>
+                <div class="card-content">
+                    <div class="card-title">The Art of Effective Communication</div>
+                    <div class="card-description">Master the skills of active listening and clear expression to become a more effective communicator in both your personal and professional life.</div>
+                    <div>Author: Emily Johnson</div>
+                </div>
+                <div class="card-footer">
+                    <button class="button read-more-button">Read More</button>
+                </div>
+            </div>
+    
+            <div class="card">
+                <div class="flex justify-between p-4">
+                    <button class="button unfavorite-button">Unfavorite</button>
+                </div>
+                <div class="card-header">
+                    <img src="https://images.unsplash.com/photo-1463101261283-68f80559ad2b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXwxfHx8fHwxfHx8fHwxfHx8fHwxNzE0NzQ1OTk9&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&utm_source=unsplash_source&w=1080" alt="The Science of Happiness thumbnail">
+                </div>
+                <div class="card-content">
+                    <div class="card-title">The Science of Happiness</div>
+                    <div class="card-description">Learn about the latest scientific research and proven strategies for cultivating a deeper sense of joy and fulfillment in your life.</div>
+                    <div>Author: David Chen</div>
+                </div>
+                <div class="card-footer">
+                    <button class="button read-more-button">Read More</button>
+                </div>
+            </div>
+    
+            <div class="card">
+                <div class="flex justify-between p-4">
+                    <button class="button unfavorite-button">Unfavorite</button>
+                </div>
+                <div class="card-header">
+                    <img src="https://storage.unsplash.com/users/secure%20scJZ2h4eS0elFT0X0gQ/20210925/6ZjZiE4EbFg.jpg?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXwxfHx8fHwxfHx8fHwxfHx8fHwxNzE0NzQ1OTk9&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&utm_source=unsplash_source&w=1080" alt="The Habits of Highly Successful People thumbnail">
+                </div>
+                <div class="card-content">
+                    <div class="card-title">The Habits of Highly Successful People</div>
+                    <div class="card-description">Discover the daily habits and routines that the world's most successful individuals swear by.</div>
+                    <div>Author: Michael Lee</div>
+                </div>
+                <div class="card-footer">
+                    <button class="button read-more-button">Read More</button>
+                </div>
+            </div>
+    
+            <div class="card">
+                <div class="flex justify-between p-4">
+                    <button class="button unfavorite-button">Unfavorite</button>
+                </div>
+                <div class="card-header">
+                    <img src="https://images.unsplash.com/photo-1507146426996-ef05306b821b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXwxfHx8fHwxfHx8fHwxfHx8fHwxNzE0NzQ1OTé0Nzg0&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&utm_source=unsplash_source&w=1080" alt="Navigating Uncertainty thumbnail">
+                </div>
+                <div class="card-content">
+                    <div class="card-title">Navigating Uncertainty</div>
+                    <div class="card-description">Gain practical advice and insights for navigating through uncertain times with resilience and grace.</div>
+                    <div>Author: Sarah Thompson</div>
+                </div>
+                <div class="card-footer">
+                    <button class="button read-more-button">Read More</button>
+                </div>
+            </div>
+        </main>
+    </body>
+    
+    
+    <script src="/bootstrap assets/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/scripts/article.js"></script>
+    <script src="../scripts/generalScripts.js"></script>
+</body>
+</html> -->
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.122.0">
+    <title>Favorite Articles</title>
+    <script type="module" src="../scripts/music.js"></script>
+    <link href="/bootstrap assets/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/styles/navbar.css" rel="stylesheet">
+    <link href="/styles/music.css" rel="stylesheet">
+    <link href="/styles/article.css" rel="stylesheet">
+</head>
+<body>
+    <header data-bs-theme="dark">
+        <nav class="navbar navbar-expand-xl navbar-dark fixed-top bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">A+4BED</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav ms-auto mb-2 mb-md-0 me-4">
+                        <li class="nav-item"><a class="nav-link inactive custom-navlink" href="/">Home</a></li>
+                        <li class="nav-item"><a class="nav-link inactive custom-navlink" href="/myEvents">My Events</a></li>
+                        <li class="nav-item"><a class="nav-link active custom-navlink" href="/article">Articles</a></li>
+                        <li class="nav-item"><a class="nav-link inactive custom-navlink" href="/chatbot">Chatbot</a></li>
+                        <li class="nav-item"><a class="nav-link inactive custom-navlink" href="#">Game</a></li>
+                        <li class="nav-item"><a class="nav-link inactive custom-navlink" id="view-events-link" href="/events">View Events</a></li>
+                        <li class="nav-item"><a class="nav-link inactive custom-navlink" href="/credits">Credits</a></li>
+                    </ul>
+                    <div class="d-flex">
+                        <a class="btn btn-outline-primary me-2" href="/signup" id="signUp_btn">Sign up</a>
+                        <a class="btn btn-outline-primary" href="/login" id="login_btn">Login</a>
+                        <a class="btn btn-outline-primary me-2" href="/profile" id="profile_btn" style="display:none;">Profile</a>
+                        <a class="btn btn-outline-primary" href="#" id="logout_btn" style="display:none;">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <nav class="navbar navbar-expand-lg mt-5 pt-3">
+            <div class="container-fluid">
+                <form class="d-flex me-auto" action="/articleSearch" method="get">
+                    <input class="form-control me-2 custom-search-bar" type="search" placeholder="Search" aria-label="Search" name="title">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+                <a class="btn btn-custom me-2" href="/articleFavourites">Favourites</a>
+                <a class="btn btn-custom me-2" href="/articleCreateBlog">Create Blog</a>
+                <a class="btn btn-custom me-2" href="/articleMyBlogs">My Blogs</a>
+                <a class="btn btn-custom" href="/article">View Articles</a>
+            </div>
+        </nav>
+    </header>
+    <main class="container mt-5 pt-5">
+        <h1 class="mb-4">Favorite Articles</h1>
+        <div id="favorite-articles" class="row">
+            <!-- Favorite articles will be dynamically inserted here -->
+        </div>
+    </main>
+    <script src="/bootstrap assets/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/scripts/articleFavourites.js"></script>
+    <script src="/scripts/articleSearch.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+    <script src="../scripts/generalScripts.js"></script>
+</body>
+</html>

@@ -42,16 +42,25 @@ const getAllArticles = async (req, res) => {
 };
 
 const getArticleByTitle = async (req, res) => {
-    const title = req.params.title;
     try {
-        const article = await ArticleModel.getArticleByTitle(title);
-        if (!article) {
-            return res.status(404).send("Article not found");
+        const title = req.query.title;
+        console.log('Title:', title); // Debugging output
+
+        if (!title) {
+            return res.status(400).json({ error: 'Title query parameter is required' });
         }
-        return res.status(200).json(article);
-    } catch (err) {
-        console.error(`Error getting article by title: ${title}`, err);
-        res.status(500).send("Error retrieving article");
+
+        const articles = await ArticleModel.getArticleByTitle(title); // Correct usage
+        console.log('Articles:', articles); // Debugging output
+
+        if (!articles.length) {
+            return res.status(404).json({ message: 'No articles found' });
+        }
+
+        res.json(articles);
+    } catch (error) {
+        console.error('Error fetching articles by title:', error); // Detailed error
+        res.status(500).json({ error: 'Server Error' });
     }
 };
 
@@ -93,21 +102,22 @@ const updateArticle = async (req, res) => {
 };
 
 const deleteArticle = async (req, res) => {
-    const articleId = parseInt(req.params.articleId);
+    const articleId = req.params.articleId;
     try {
-        const success = await ArticleModel.deleteArticle(articleId);
-        if (!success) {
-            return res.status(404).send("Article not found");
+        const result = await ArticleModel.deleteArticle(articleId);
+        if (result) {
+            res.status(200).json({ message: 'Article deleted successfully' });
+        } else {
+            res.status(404).json({ message: 'Article not found' });
         }
-        return res.status(200).send("Article deleted successfully");
-    } catch (err) {
-        console.error(`Error deleting article with ID: ${articleId}`, err);
-        res.status(500).send("Error deleting article");
+    } catch (error) {
+        console.error('Error in deleteArticle controller:', error);
+        res.status(500).json({ message: 'Server error' });
     }
 };
 
 const getFavouriteArticles = async (req, res) => {
-    const userId = req.user.id; // Assuming you have user ID in the request
+    const userId = req.params.userId; // Assuming you have user ID in the request
     try {
         const favourites = await ArticleModel.getFavouriteArticles(userId);
         return res.status(200).json(favourites);
@@ -118,26 +128,37 @@ const getFavouriteArticles = async (req, res) => {
 };
 
 const addFavouriteArticle = async (req, res) => {
-    const userId = req.user.id; // Assuming you have user ID in the request
-    const articleId = parseInt(req.params.articleId);
+    const { userId } = req.params;
+    const { articleId } = req.body;
     try {
         await ArticleModel.addFavouriteArticle(userId, articleId);
-        return res.status(200).send("Article added to favourites");
-    } catch (err) {
-        console.error(`Error adding favourite article: ${articleId}`, err);
-        res.status(500).send("Error adding favourite article");
+        res.status(200).json({ success: true });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to add favourite' });
     }
 };
 
 const removeFavouriteArticle = async (req, res) => {
-    const userId = req.user.id; // Assuming you have user ID in the request
-    const articleId = parseInt(req.params.articleId);
+    const { userId } = req.params;
+    const { articleId } = req.body;
     try {
         await ArticleModel.removeFavouriteArticle(userId, articleId);
-        return res.status(200).send("Article removed from favourites");
-    } catch (err) {
-        console.error(`Error removing favourite article: ${articleId}`, err);
-        res.status(500).send("Error removing favourite article");
+        res.status(200).json({ success: true });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to remove favourite' });
+    }
+};
+
+const isFavouriteArticle = async (req, res) => {
+    const { userId, articleId } = req.params;
+    console.log('Controller isFavourite userId: ', userId);
+    console.log('Controller isFavourite articleId: ', articleId);
+    try {
+        const isFavourite = await ArticleModel.isFavouriteArticle(userId, articleId);
+        console.log('Controller isFavourite function: ', isFavourite);
+        res.status(200).json(isFavourite);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to check if article is favourite' });
     }
 };
 
@@ -161,6 +182,22 @@ const getArticleById = async (req, res) => {
     }
 };
 
+const getArticlesByUser = async (req, res) => {
+    const userId = req.params.userId;
+    try {
+        const article = await ArticleModel.getArticlesByUser(userId);
+
+        if (!article) {
+            return res.status(404).json({ error: "Article not found" });
+        }
+
+        res.status(200).json(article);
+    } catch (error) {
+        console.error('Error fetching article by user:', error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+
 module.exports = {
     serveArticlesContent,
     getAllArticles,
@@ -171,5 +208,7 @@ module.exports = {
     getFavouriteArticles,
     addFavouriteArticle,
     removeFavouriteArticle,
-    getArticleById
+    getArticleById,
+    getArticlesByUser,
+    isFavouriteArticle
 };

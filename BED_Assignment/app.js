@@ -244,6 +244,22 @@ app.get('/articleIndividual', async (req, res) => {
     res.sendFile(path.join(__dirname, "/public/html/articleIndividual.html"));
 });
 
+app.get('/articleFavourites', async (req, res) =>  {
+    res.sendFile(path.join(__dirname, "/public/html/articleFavourites.html"));
+});
+
+app.get('/articleMyBlogs', async (req, res) =>  {
+    res.sendFile(path.join(__dirname, "/public/html/articleMyBlogs.html"));
+});
+
+app.get('/articleEdit', async (req, res) =>  {
+    res.sendFile(path.join(__dirname, "/public/html/articleEdit.html"));
+});
+
+app.get('/articleSearch', async (req, res) =>  {
+    res.sendFile(path.join(__dirname, "/public/html/articleSearch.html"));
+});
+
 app.get('/profile', async (req, res) => {
     res.sendFile(path.join(__dirname, "/public/html/profile.html"));
 });
@@ -251,10 +267,16 @@ app.get('/profile', async (req, res) => {
 app.get("/api/article", articleController.getAllArticles);
 app.post("/create-blog", articleController.createArticle);
 app.post("/api/article", authenticateToken, articleController.createArticle);
-app.get("/api/article/:articleId", articleController.getArticleById);
-app.get("/api/article/:title", articleController.getArticleByTitle);
-app.put("/api/article/:articleId", articleController.updateArticle);
-app.delete("/api/article/:articleId", articleController.deleteArticle);
+app.get("/api/article/isFavourite/:userId/:articleId", articleController.isFavouriteArticle);
+app.get("/api/article/id/:articleId", articleController.getArticleById);
+app.get("/api/article/favourites/:userId", articleController.getFavouriteArticles);
+app.post("/api/article/addFavourite/:userId", articleController.addFavouriteArticle);
+app.post("/api/article/removeFavourite/:userId", articleController.removeFavouriteArticle);
+app.get("/api/article/user/:userId", articleController.getArticlesByUser);
+app.post("/api/article", authenticateToken, articleController.getArticlesByUser);
+app.get('/api/article/title', articleController.getArticleByTitle);
+app.put("/api/article/id/:articleId", articleController.updateArticle);
+app.delete("/api/article/id/:articleId", articleController.deleteArticle);
 
 // app.get('/api/profile', authenticateToken, (req, res) => {
 //     // Fetch user data from your database based on req.user.id

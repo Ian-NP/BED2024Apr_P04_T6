@@ -67,20 +67,19 @@
             </div>
         </nav>
       </header>
-      <div
-        id="articles-container"
-        style="display: grid; grid-template-columns: repeat(1, 1fr); gap: 16px; 
-        @media (min-width: 768px) {grid-template-columns: repeat(2, 1fr);}
-        @media (min-width: 1024px) {grid-template-columns: repeat(3, 1fr);}"
-      >
-        
-      </div>
-    
+    <main class="container mt-5 pt-5">
+        <h1 class="mb-4">Articles</h1>
+        <div id="articles" class="row">
+            <!-- Articles will be dynamically inserted here -->
+        </div>
+    </main>
     
     <script src="/bootstrap assets/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/scripts/articleMyBlogs.js"></script>
+    <script src="/scripts/article.js"></script>
     <script src="/scripts/articleSearch.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
     <script src="../scripts/generalScripts.js"></script>
+
+    
 </body>
 </html>

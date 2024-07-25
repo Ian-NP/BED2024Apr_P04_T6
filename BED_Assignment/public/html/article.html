@@ -56,13 +56,13 @@
         </nav>
         <nav class="navbar navbar-expand-lg mt-5 pt-3">
             <div class="container-fluid">
-                <form class="d-flex me-auto">
-                    <input class="form-control me-2 custom-search-bar" type="search" placeholder="Search" aria-label="Search">
+                <form class="d-flex me-auto" action="/articleSearch" method="get">
+                    <input class="form-control me-2 custom-search-bar" type="search" placeholder="Search" aria-label="Search" name="title">
                     <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
-                <a class="btn btn-custom me-2" href="/article_Favourites">Favourites</a>
+                <a class="btn btn-custom me-2" href="/articleFavourites">Favourites</a>
                 <a class="btn btn-custom me-2" href="/articleCreateBlog">Create Blog</a>
-                <a class="btn btn-custom me-2" href="/article_MyBlogs">My Blogs</a>
+                <a class="btn btn-custom me-2" href="/articleMyBlogs">My Blogs</a>
                 <a class="btn btn-custom" href="/article">View Articles</a>                
             </div>
         </nav>
@@ -77,6 +77,8 @@
     
     <script src="/bootstrap assets/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/scripts/article.js"></script>
+    <script src="/scripts/articleSearch.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
     <script src="../scripts/generalScripts.js"></script>
 </body>
 </html>
