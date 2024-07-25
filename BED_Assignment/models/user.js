@@ -200,6 +200,36 @@
       // async validatePassword(password) {
       //     return await bcrypt.compare(password, this.password);
       // }
+
+      static async getUserAboutProfile(userId) {
+        try {
+          const connection = await sql.connect(dbConfig);
+          const sqlQuery = `SELECT * FROM Users WHERE userId = @userId`;
+          const request = connection.request();
+          request.input("userId", sql.NVarChar, userId);
+          const result = await request.query(sqlQuery);
+          return result.recordset[0]; // MS SQL returns result in 'recordset'
+        } catch (error) {
+          console.error('Error fetching user profile:', error);
+          throw error;
+        }
+      }
+    
+      static async updateUserAboutProfile(userId, updates) {
+        try {
+          const connection = await sql.connect(dbConfig);
+          const { about } = updates;
+          const sqlQuery = `UPDATE Users SET about = @about WHERE userId = @userId`;
+          const request = connection.request();
+          request.input("about", sql.NVarChar, about);
+          request.input("userId", sql.NVarChar, userId);
+          const result = await request.query(sqlQuery);
+          return result.rowsAffected[0] > 0;
+        } catch (error) {
+          console.error('Error updating user profile:', error);
+          throw error;
+        }
+      }
       
     }
     

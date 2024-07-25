@@ -100,6 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (token) {
         const decoded = jwt_decode(token);
         const userType = decoded.userType;
+        const userId = decoded.userId;
         console.log(userType);
 
         if (userType === 'U' || userType === 'C') {
@@ -111,6 +112,63 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = '/login';
     }
 });
+
+
+async function fetchAboutInfo() {
+    const token = localStorage.getItem('token');
+    const userId = jwt_decode(token).userId;
+    try {
+        const response = await fetch(`/api/getAboutInfo/${userId}`, {
+            headers: {
+                'Authorization': `Bearer ${getToken()}`
+            }
+        });
+        console.log(response);
+
+        if (response.ok) {
+            const data = await response.json();
+            document.getElementById('about-textarea').value = data.about || '';
+        } else {
+            console.error('Failed to fetch about info:', await response.text());
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+fetchAboutInfo();
+const saveAboutButton = document.getElementById('save-about-button');
+async function saveAboutInfo() {
+    const token = localStorage.getItem('token');
+    const userId = jwt_decode(token).userId;
+    const aboutText = document.getElementById('about-textarea').value;
+    
+    
+    try {
+        const response = await fetch(`/api/saveAboutInfo/${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getToken()}`
+            },
+            body: JSON.stringify({ about: aboutText })
+        });
+        console.log(response);
+
+        if (response.ok) {
+            alert('About info saved successfully');
+        } else {
+            console.error('Failed to save about info:', await response.text());
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+    
+}
+saveAboutButton.addEventListener('click', saveAboutInfo());
+
+      
+// Initial fetch
+
 
 function loadUserProfile() {
     const token = localStorage.getItem('token');
@@ -146,6 +204,8 @@ function loadUserProfile() {
             window.location.href = '/login';
         }
     });
+
+    
 
     document.getElementById('upload-profile-picture').addEventListener('click', () => {
         const profilePictureInput = document.getElementById('profile-picture-input');
@@ -185,6 +245,34 @@ function loadUserProfile() {
         localStorage.removeItem('token');
         window.location.href = '/';
     });
+
+    
+
+    
+
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     console.log('DOM fully loaded and parsed');
+    //     const aboutTextarea = document.getElementById('about-textarea');
+    //     const saveAboutButton = document.getElementById('save-about-button');
+
+        
+
+    //     // if (aboutTextarea && saveAboutButton) {
+    //     //     console.log('Elements found:', aboutTextarea, saveAboutButton); // Debug statement
+    //     //   } else {
+    //     //     console.error('Elements not found'); // Debug statement
+    //     //     return; // Stop execution if elements are not found
+    //     //   }
+        
+      
+      
+    //     // Fetch and display existing "About" information
+        
+      
+   
+
+        
+    //   });
 }
 
 function loadAdminProfile() {
@@ -291,3 +379,9 @@ function loadAdminProfile() {
         window.location.href = '/';
     });
 }
+function getToken() {
+    return localStorage.getItem('token');
+}
+
+
+  

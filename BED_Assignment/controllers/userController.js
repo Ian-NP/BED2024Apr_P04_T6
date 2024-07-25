@@ -302,6 +302,43 @@ const generateRefreshToken = (userId) => {
 //     }
 // };
 
+
+const getAboutInfo = async (req, res) => {
+  const userId = req.params.userId;
+  //console.log(userId);
+  try {
+    const userData = await User.getUserAboutProfile(userId);
+    //console.log(userData);
+    if (!userData) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json({ about: userData.about });
+  } catch (error) {
+    console.error('Error fetching about info:', error);
+    res.status(500).json({ message: 'Error fetching about info' });
+  }
+};
+
+const saveAboutInfo = async (req, res) => {
+  const userId = req.params.userId;
+  console.log(userId);
+  const { about } = req.body;
+
+  try {
+    const updateSuccessful = await User.updateUserAboutProfile(userId, { about });
+    console.log(updateSuccessful);
+    if (updateSuccessful) {
+      res.json({ message: 'About info saved successfully' });
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    console.error('Error saving about info:', error);
+    res.status(500).json({ message: 'Error saving about info' });
+  }
+};
+
+
 module.exports = {
   getAllUsers,
   getUserByUserId,
@@ -313,4 +350,6 @@ module.exports = {
   getUserProfileByUserId,
   fetchProfilePicture,
   uploadProfilePicture,
+  getAboutInfo,
+  saveAboutInfo,
 };

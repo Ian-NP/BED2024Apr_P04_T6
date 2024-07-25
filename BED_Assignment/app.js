@@ -4,7 +4,7 @@ require('dotenv').config();
 import express from "express";
 import bodyParser from "body-parser";
 import sql from "mssql";
-import dbConfig from "./dbConfig"
+import dbConfig, { user } from "./dbConfig"
 import path from 'path';
 import multer from "multer";
 
@@ -277,6 +277,8 @@ app.get('/api/profile/:userId', userController.getUserProfileByUserId);
 app.get('/api/profilePicture/:userId', userController.fetchProfilePicture);
 app.post('/api/uploadProfilePicture/:userId', authenticateToken, upload.single('profilePicture'), userController.uploadProfilePicture);
 
+app.get('/api/getAboutInfo/:userId', authenticateToken, userController.getAboutInfo);
+app.post('/api/saveAboutInfo/:userId', authenticateToken, userController.saveAboutInfo);
 
 app.get('/api/adminProfile/:adminId', adminController.getAdminProfileByAdminId);
 app.get('/api/adminProfilePicture/:adminId', adminController.fetchProfilePicture);
