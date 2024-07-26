@@ -230,6 +230,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             articleCard.setAttribute('data-article-id', article.articleId);
             articleCard.style.border = "1px solid #ccc";
             articleCard.style.borderRadius = "4px";
+            articleCard.style.overflow = "hidden";
+            articleCard.style.width = "80%";
+            articleCard.style.margin = "0 auto";
 
             articleCard.innerHTML = `
                 <div style="padding: 0;">

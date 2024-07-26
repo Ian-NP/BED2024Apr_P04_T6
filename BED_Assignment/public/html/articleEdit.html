@@ -12,6 +12,13 @@
     <link href="/styles/navbar.css" rel="stylesheet">
     <link href="/styles/article.css" rel="stylesheet">
     <link href="/styles/music.css" rel="stylesheet">
+    <style>
+      #editPhotoPreview {
+          display: none;
+          max-width: 300px; /* Adjust this value as needed */
+          max-height: 300px; /* Adjust this value as needed */
+      }
+  </style>
 </head>
 <body>
     <header data-bs-theme="dark">
@@ -69,24 +76,28 @@
       </header>
       <!-- Edit Article Modal -->
 <!-- <div id="editArticleModal" style="display: none;"> -->
-<div id="editArticleModal">
+  <div id="editArticleModal" class="container mt-5 pt-5">
+    <h1 class="mb-4">Edit Article</h1>
     <form id="editArticleForm">
         <input type="hidden" id="editArticleId" name="articleId" />
-        <label for="editTitle">Title:</label>
-        <input type="text" id="editTitle" name="title" required />
-        
-        <label for="editContent">Content:</label>
-        <textarea id="editContent" name="content" required></textarea>
-        
-        <label for="editPhoto">Photo:</label>
-        <input type="file" id="editPhoto" name="photo" />
-        
-        <img id="editPhotoPreview" style="display: none;" />
-        
-        <button type="submit">Update Article</button>
-        <button type="button" onclick="closeEditModal()">Cancel</button>
+        <div class="mb-3">
+            <label for="editTitle" class="form-label">Title:</label>
+            <input type="text" class="form-control" id="editTitle" name="title" required />
+        </div>
+        <div class="mb-3">
+            <label for="editContent" class="form-label">Content:</label>
+            <textarea class="form-control" id="editContent" name="content" rows="5" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="editPhoto" class="form-label">Photo:</label>
+            <input type="file" class="form-control" id="editPhoto" name="photo" />
+            <img id="editPhotoPreview" class="mt-3" style="display: none; max-width: 100%;" />
+        </div>
+        <button type="submit" class="btn btn-primary">Update Article</button>
+        <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
     </form>
 </div>
+
 
     
     
