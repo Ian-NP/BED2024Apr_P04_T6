@@ -143,30 +143,46 @@ describe('Event Controller', () => {
         eventOverview: 'Overview',
         eventCategory: 'Category',
         eventTime: '2024-07-22T12:00:00Z',
-        creatorId: 1,
         cost: '10.99',
         eventImage: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg=='
       };
       
-      const mockCreatedEvent = { id: 1, ...mockEventData };
+      const mockUser = { userId: 1 };
+      const mockCreatedEvent = { id: 1, ...mockEventData, creatorId: mockUser.userId };
+      
       EventModel.createEvent.mockResolvedValue(mockCreatedEvent);
       
-      const req = { body: mockEventData };
-      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+      const req = { 
+        body: mockEventData,
+        user: mockUser
+      };
+      const res = { 
+        status: jest.fn().mockReturnThis(), 
+        json: jest.fn() 
+      };
       
       await createEvent(req, res);
       
+      expect(EventModel.createEvent).toHaveBeenCalledWith(expect.objectContaining({
+        ...mockEventData,
+        eventTime: expect.any(Date),
+        creatorId: mockUser.userId,
+        cost: 10.99,
+        eventImage: expect.any(Buffer),
+        eventReports: 0
+      }));
       expect(res.status).toHaveBeenCalledWith(201);
       expect(res.json).toHaveBeenCalledWith(mockCreatedEvent);
     });
-
+  
     it('should handle invalid date format', async () => {
       const req = { 
         body: { 
           eventTime: 'invalid-date',
           cost: '10.99',
           eventImage: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg=='
-        } 
+        },
+        user: { userId: 1 }
       };
       const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
       
@@ -175,14 +191,15 @@ describe('Event Controller', () => {
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith({ error: 'Invalid date format' });
     });
-
+  
     it('should handle invalid cost format', async () => {
       const req = { 
         body: { 
           eventTime: '2024-07-22T12:00:00Z',
           cost: 'invalid-cost',
           eventImage: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg=='
-        } 
+        },
+        user: { userId: 1 }
       };
       const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
       
@@ -191,7 +208,7 @@ describe('Event Controller', () => {
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith({ error: 'Invalid cost format' });
     });
-
+  
     it('should handle errors when creating an event', async () => {
       const mockEventData = {
         eventName: 'New Event',
@@ -199,14 +216,16 @@ describe('Event Controller', () => {
         eventOverview: 'Overview',
         eventCategory: 'Category',
         eventTime: '2024-07-22T12:00:00Z',
-        creatorId: 1,
         cost: '10.99',
         eventImage: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg=='
       };
       
       EventModel.createEvent.mockRejectedValue(new Error('Database error'));
       
-      const req = { body: mockEventData };
+      const req = { 
+        body: mockEventData,
+        user: { userId: 1 }
+      };
       const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
       
       await createEvent(req, res);

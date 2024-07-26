@@ -56,6 +56,40 @@ class GameModel {
         }
     }
 
+    static async saveGame2(userId, gridSize, buildingsGrid, points, coins, turnNumber, gameMode, saveDate) {
+        try {
+            await sql.connect(dbConfig);
+            const buildingsGridString = JSON.stringify(buildingsGrid);
+
+            const insertGameSaveQuery = `
+                INSERT INTO game_saves (grid_size, buildings_grid, points, coins, turn_number, gameMode, saveDate) 
+                OUTPUT INSERTED.id
+                VALUES (@gridSize, @buildingsGrid, @points, @coins, @turnNumber, @gameMode, @saveDate)
+            `;
+
+            const request = new sql.Request();
+            const result = await request
+                .input('gridSize', sql.Int, gridSize)
+                .input('buildingsGrid', sql.NVarChar(sql.MAX), buildingsGridString)
+                .input('points', sql.Int, points)
+                .input('coins', sql.Int, coins)
+                .input('turnNumber', sql.Int, turnNumber)
+                .input('gameMode', sql.NVarChar(50), gameMode)
+                .input('saveDate', sql.DateTime, saveDate)
+                .query(insertGameSaveQuery);
+
+            const gameId = result.recordset[0].id;
+
+
+            return gameId;
+        } catch (err) {
+            console.error('Error in saveGame:', err);
+            throw err;
+        } finally {
+            await sql.close();
+        }
+    }
+
     static async getGames(userId) {
         try {
             await sql.connect(dbConfig);

@@ -29,6 +29,8 @@ import articleController from "./controllers/articleController";
 import refreshToken from "./controllers/refreshToken";
 import gameController from "./controllers/gameController";
 import highscoreController from "./controllers/highscoreController";
+import validateEvent from "./middleware/validateEvent";
+import validateGame from "./middleware/validateGame";
 const app = express();
 const jwt = require('jsonwebtoken');
 const PORT = process.env.PORT || 3001;
@@ -67,7 +69,7 @@ app.post('/createadmin', adminController.createAdminUser);
 
 
 //Routes for events
-app.post('/create-event', authenticateToken, EventController.createEvent);
+app.post('/create-event', authenticateToken, validateEvent, EventController.createEvent);
 
 // Serve protected.html for /events route, i used this for the js to authenticate before serving
 app.get('/events', (req, res) => {
@@ -85,7 +87,7 @@ app.post('/api/:eventId/signup', authenticateToken, EventController.signUserUp);
 
 app.get("/api/events", EventController.getAllEvents);
 app.get("/api/events/:eventId", EventController.getEventById);
-app.post('/api/events', authenticateToken, EventController.createEvent);
+app.post('/api/events', authenticateToken, validateEvent, EventController.createEvent);
 app.patch('/api/:eventId/leave', authenticateToken, EventController.updateEventAttendance);
 app.delete("/api/events/:eventId/kick/:userId", authenticateToken, (req, res, next) => {
     
@@ -107,7 +109,8 @@ app.post("/refreshToken", async(req, res) => {refreshToken.addToken(req, res)});
 // Game routes
 app.get('/game', async(req, res) => { res.sendFile(path.join(__dirname + "/public/html/game.html")) });
 
-app.post('/save-game', authenticateToken, gameController.saveGame);
+app.post('/save-game', authenticateToken,validateGame, gameController.saveGame);
+app.post('/save-game2', authenticateToken, validateGame, gameController.saveGame2);
 app.get('/get-games', authenticateToken, gameController.getGames);
 
 // Highscore routes

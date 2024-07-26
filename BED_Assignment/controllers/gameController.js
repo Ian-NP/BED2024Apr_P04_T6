@@ -14,6 +14,21 @@ const GameModel = require('../models/gameModel');
             res.status(500).json({ status: 'error', message: 'Error saving game' });
         }
     }
+
+ // Function to save a game state for the highscore
+    async function saveGame2(req, res) {
+        const { gridSize, buildingsGrid, points, coins, turnNumber, gameMode, saveDate } = req.body;
+        const userId = req.user.userId;
+
+        try {
+            // Save the game 
+            const gameId = await GameModel.saveGame2(userId, gridSize, buildingsGrid, points, coins, turnNumber, gameMode, saveDate);
+            res.status(200).json({ status: 'success', message: 'Game saved successfully', gameId });
+        } catch (err) {
+            console.error('Error saving game:', err);
+            res.status(500).json({ status: 'error', message: 'Error saving game' });
+        }
+    }
 // Function to retrieve saved games for a user
     async function getGames(req, res) {
         const userId = req.user.userId;
@@ -29,6 +44,7 @@ const GameModel = require('../models/gameModel');
 
     module.exports = {
         saveGame,
-        getGames
+        getGames,
+        saveGame2
     };
     
