@@ -82,7 +82,7 @@ class Article {
             return articles;
         } catch (error) {
             console.error('Error getting articles by title:', error);
-            throw error;
+            throw new Error('Error getting articles by title');
         } finally {
             if (connection) {
                 await connection.close();
@@ -117,7 +117,7 @@ class Article {
             return createdArticle;
         } catch (error) {
             console.error('Error creating article:', error);
-            throw error;
+            throw new Error('Error creating article');
         } finally {
             if (connection) {
                 try {
@@ -155,7 +155,7 @@ class Article {
             }
         } catch (error) {
             console.error('SQL Error:', error);
-            throw error;
+            throw new Error('Error fetching article by ID');
         } finally {
             if (connection) {
                 try {
@@ -196,7 +196,7 @@ class Article {
             return await this.getArticleById(articleId); // Fetch and return the updated article
         } catch (error) {
             console.error('Error updating article:', error);
-            throw error; // Ensure errors are propagated to be handled by the calling function
+            throw new Error('Error updating article'); // Throw a specific error message
         } finally {
             if (connection) {
                 await connection.close(); // Ensure the connection is properly closed
@@ -244,9 +244,9 @@ class Article {
             return true;
         } catch (error) {
             console.error('Error adding favourite article:', error);
-            throw error;
+            throw new Error('Error adding favourite article');
         } finally {
-            if (connection) await connection.close();
+            // if (connection) await connection.close();
         }
     }
 
@@ -262,9 +262,9 @@ class Article {
             return true;
         } catch (error) {
             console.error('Error removing favourite article:', error);
-            throw error;
+            throw new Error('Error removing favourite article');
         } finally {
-            if (connection) await connection.close();
+            // if (connection) await connection.close();
         }
     }
 
@@ -292,9 +292,9 @@ class Article {
             });
         } catch (error) {
             console.error("Error fetching favourite articles: ", error);
-            throw error;
+            throw new Error("Error fetching favourite articles");
         } finally {
-            if (connection) await connection.close();
+            // if (connection) await connection.close();
         }
     }
     
@@ -313,9 +313,9 @@ class Article {
             return result.recordset[0].count > 0;
         } catch (error) {
             console.error('Error checking favourite article:', error);
-            throw error;
+            throw new Error('Error checking if article is favourite');
         } finally {
-            if (connection) await connection.close();
+            // if (connection) await connection.close();
         }
     }
 
