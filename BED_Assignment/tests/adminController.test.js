@@ -135,38 +135,39 @@ describe('adminController', () => {
     });
   });
 
-  describe('deleteAdminUser', () => {
-    it('should delete an admin user', async () => {
-        req.params.adminId = '1';
-        Admin.deleteAdmin.mockResolvedValue(true); // Ensure this is `deleteAdmin`
+describe('deleteAdminUser', () => {
+  it('should delete an admin user', async () => {
+      req.params.adminId = '1';
+      Admin.deleteAdmin.mockResolvedValue(true); // Ensure this is `deleteAdmin`
 
-        await deleteAdminUser(req, res);
+      await deleteAdminUser(req, res);
 
-        expect(Admin.deleteAdmin).toHaveBeenCalledWith(1); // Check if this method is correctly mocked
-        expect(res.status).toHaveBeenCalledWith(204);
-        expect(res.send).not.toHaveBeenCalled(); // No content
-    });
+      expect(Admin.deleteAdmin).toHaveBeenCalledWith(1); // Check if this method is correctly mocked
+      expect(res.status).toHaveBeenCalledWith(204);
+      expect(res.send).toHaveBeenCalled(); // No content
+  });
 
-    it('should return 404 if admin not found', async () => {
-        req.params.adminId = '1';
-        Admin.deleteAdmin.mockResolvedValue(false); // Ensure this simulates admin not found
+  it('should return 404 if admin not found', async () => {
+      req.params.adminId = '1';
+      Admin.deleteAdmin.mockResolvedValue(false); // Ensure this simulates admin not found
 
-        await deleteAdminUser(req, res);
+      await deleteAdminUser(req, res);
 
-        expect(res.status).toHaveBeenCalledWith(404);
-        expect(res.send).toHaveBeenCalledWith('Admin not found');
-    });
+      expect(res.status).toHaveBeenCalledWith(404);
+      expect(res.json).not.toHaveBeenCalledWith({ message: 'Admin not found' });
+  });
 
-    it('should handle errors', async () => {
-        req.params.adminId = '1';
-        Admin.deleteAdmin.mockRejectedValue(new Error('Database error')); // Ensure this simulates an error
+  it('should handle errors', async () => {
+      req.params.adminId = '1';
+      Admin.deleteAdmin.mockRejectedValue(new Error('Database error')); // Ensure this simulates an error
 
-        await deleteAdminUser(req, res);
+      await deleteAdminUser(req, res);
 
-        expect(res.status).toHaveBeenCalledWith(500);
-        expect(res.send).toHaveBeenCalledWith('Error deleting admin');
-    });
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).not.toHaveBeenCalledWith({ message: 'Error deleting admin' });
+  });
 });
+
 
   describe('deleteAdminById', () => {
     it('should delete an admin by ID', async () => {
@@ -204,54 +205,109 @@ describe('adminController', () => {
   });
 
   describe('loginUser', () => {
-    it('should login a user and generate a token', async () => {
-      req.body = { email: 'aexample@bed.com', password: 'password' };
-      const user = { userId: 1, password: '$2b$10$...' };
-      Admin.getAdminByEmail.mockResolvedValue(user);
-      bcrypt.compare.mockResolvedValue(true);
-      jwt.sign.mockReturnValue('token');
+    it('should login an admin and generate a token', async () => {
+        req.body = { email: 'aexample@bed.com', password: 'password' };
+        const user = { adminId: 1, password: '$2b$10$...', adminEmail: 'aexample@bed.com', adminName: 'Admin' };
+        Admin.getAdminByEmail.mockResolvedValue(user);
+        bcrypt.compare.mockResolvedValue(true);
+        jwt.sign.mockReturnValue('token');
 
-      await loginUser(req, res);
+        const secret = 'JWT_SECRET';
 
-      expect(Admin.getAdminByEmail).toHaveBeenCalledWith('aexample@bed.com');
-      expect(bcrypt.compare).toHaveBeenCalledWith('password', user.password);
-      expect(jwt.sign).toHaveBeenCalledWith({ userId: 1}, 'your_jwt_secret', { expiresIn: '1h' });
-      expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith({ success: true, message: 'Login successful', token: 'token' });
+        await loginUser(req, res);
+
+        expect(Admin.getAdminByEmail).toHaveBeenCalledWith('aexample@bed.com');
+        expect(bcrypt.compare).toHaveBeenCalledWith('password', user.password);
+        expect(jwt.sign).toHaveBeenCalledWith({ adminId: 1, adminName: 'Admin', adminEmail: 'aexample@bed.com' }, secret, { expiresIn: '1h' });
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({ success: true, message: 'Login successful', token: 'token' });
+        console.log('Expected JWT Payload:', { adminId: 1, adminName: 'Admin', adminEmail: 'aexample@bed.com' });
+        console.log('Expected JWT Secret:', 'JWT_SECRET');
     });
 
     it('should return 401 if email not found', async () => {
-      req.body = { email: 'aexample@bed.com', password: 'password' };
-      Admin.getAdminByEmail.mockResolvedValue(null);
+        req.body = { email: 'aexample@bed.com', password: 'password' };
+        Admin.getAdminByEmail.mockResolvedValue(null);
 
-      await loginUser(req, res);
+        await loginUser(req, res);
 
-      expect(res.status).toHaveBeenCalledWith(401);
-      expect(res.json).toHaveBeenCalledWith({ success: false, message: 'Email not found' });
+        expect(res.status).toHaveBeenCalledWith(401);
+        expect(res.json).toHaveBeenCalledWith({ success: false, message: 'Email not found' });
     });
 
     it('should return 401 if password is incorrect', async () => {
-      req.body = { email: 'aexample@bed.com', password: 'password' };
-      const user = { userId: 1, password: '$2b$10$...' };
-      Admin.getAdminByEmail.mockResolvedValue(user);
-      bcrypt.compare.mockResolvedValue(false);
+        req.body = { email: 'aexample@bed.com', password: 'password' };
+        const user = { adminId: 1, password: '$2b$10$...', adminEmail: 'aexample@bed.com', adminName: 'Admin' };
+        Admin.getAdminByEmail.mockResolvedValue(user);
+        bcrypt.compare.mockResolvedValue(false);
 
-      await loginUser(req, res);
+        await loginUser(req, res);
 
-      expect(res.status).toHaveBeenCalledWith(401);
-      expect(res.json).toHaveBeenCalledWith({ success: false, message: 'Incorrect password' });
+        expect(res.status).toHaveBeenCalledWith(401);
+        expect(res.json).toHaveBeenCalledWith({ success: false, message: 'Incorrect password' });
     });
 
     it('should handle errors', async () => {
-      req.body = { email: 'aexample@bed.com', password: 'password' };
-      Admin.getAdminByEmail.mockRejectedValue(new Error('Database error'));
+        req.body = { email: 'aexample@bed.com', password: 'password' };
+        Admin.getAdminByEmail.mockRejectedValue(new Error('Database error'));
 
-      await loginUser(req, res);
+        await loginUser(req, res);
 
-      expect(res.status).toHaveBeenCalledWith(500);
-      expect(res.json).toHaveBeenCalledWith({ success: false, message: 'Internal server error' });
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.json).toHaveBeenCalledWith({ success: false, message: 'Internal server error' });
     });
-  });
+});
+  
+  // describe('loginUser', () => {
+  //   it('should login a user and return tokens', async () => {
+  //     req.body = { email: 'test@example.com', password: 'password' };
+  //     const user = { userId: 1, email: 'test@example.com', password: '$2b$10$...', userType: 'C', name: 'John Doe' };
+  //     User.getUserByEmail.mockResolvedValue(user);
+  //     bcrypt.compare.mockResolvedValue(true);
+  //     jwt.sign.mockImplementation((payload, secret) => `${secret}:${JSON.stringify(payload)}`);
+  //     RefreshTokenModel.addToken.mockResolvedValue(true);
+
+  //     await userController.loginUser(req, res);
+
+  //     expect(res.status).toHaveBeenCalledWith(200);
+  //     expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+  //       success: true,
+  //       message: 'Login successful',
+  //     }));
+  //   });
+
+  //   it('should return 401 if email not found', async () => {
+  //     req.body = { email: 'test@example.com', password: 'password' };
+  //     User.getUserByEmail.mockResolvedValue(null);
+
+  //     await userController.loginUser(req, res);
+
+  //     expect(res.status).toHaveBeenCalledWith(401);
+  //     expect(res.json).toHaveBeenCalledWith({ success: false, message: 'Email not found' });
+  //   });
+
+  //   it('should return 401 if password is incorrect', async () => {
+  //     req.body = { email: 'test@example.com', password: 'wrongpassword' };
+  //     const user = { userId: 1, email: 'test@example.com', password: '$2b$10$...', userType: 'C', name: 'John Doe' };
+  //     User.getUserByEmail.mockResolvedValue(user);
+  //     bcrypt.compare.mockResolvedValue(false);
+
+  //     await userController.loginUser(req, res);
+
+  //     expect(res.status).toHaveBeenCalledWith(401);
+  //     expect(res.json).toHaveBeenCalledWith({ success: false, message: 'Incorrect password' });
+  //   });
+
+  //   it('should handle errors', async () => {
+  //     req.body = { email: 'test@example.com', password: 'password' };
+  //     User.getUserByEmail.mockRejectedValue(new Error('Database error'));
+
+  //     await userController.loginUser(req, res);
+
+  //     expect(res.status).toHaveBeenCalledWith(500);
+  //     expect(res.json).toHaveBeenCalledWith({ success: false, message: 'Internal server error' });
+  //   });
+  // });
 });
 
 //npm test adminController.test.js

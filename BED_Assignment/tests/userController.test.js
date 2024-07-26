@@ -322,4 +322,103 @@ describe('userController', () => {
     });
   });
 
+  describe('getAboutInfo', () => {
+    it('should return about info for a valid user', async () => {
+      const req = { params: { userId: '1' } };
+      const res = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis()
+      };
+
+      const mockAbout = { about: 'This is about me' };
+      User.getUserAboutProfile.mockResolvedValue(mockAbout);
+
+      await userController.getAboutInfo(req, res);
+
+      expect(User.getUserAboutProfile).toHaveBeenCalledWith('1');
+      expect(res.json).toHaveBeenCalledWith({ about: 'This is about me' });
+    });
+
+    it('should return 404 if user not found', async () => {
+      const req = { params: { userId: '1' } };
+      const res = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis()
+      };
+
+      User.getUserAboutProfile.mockResolvedValue(null);
+
+      await userController.getAboutInfo(req, res);
+
+      expect(User.getUserAboutProfile).toHaveBeenCalledWith('1');
+      expect(res.status).toHaveBeenCalledWith(404);
+      expect(res.json).toHaveBeenCalledWith({ message: 'User not found' });
+    });
+
+    it('should return 500 if there is an error', async () => {
+      const req = { params: { userId: '1' } };
+      const res = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis()
+      };
+
+      User.getUserAboutProfile.mockRejectedValue(new Error('Database error'));
+
+      await userController.getAboutInfo(req, res);
+
+      expect(User.getUserAboutProfile).toHaveBeenCalledWith('1');
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Error fetching about info' });
+    });
+  });
+
+  describe('saveAboutInfo', () => {
+    it('should save about info for a valid user', async () => {
+      const req = { params: { userId: '1' }, body: { about: 'Updated about info' } };
+      const res = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis()
+      };
+
+      User.updateUserAboutProfile.mockResolvedValue(true);
+
+      await userController.saveAboutInfo(req, res);
+
+      expect(User.updateUserAboutProfile).toHaveBeenCalledWith('1', { about: 'Updated about info' });
+      expect(res.json).toHaveBeenCalledWith({ message: 'About info saved successfully' });
+    });
+
+    it('should return 404 if user not found', async () => {
+      const req = { params: { userId: '1' }, body: { about: 'Updated about info' } };
+      const res = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis()
+      };
+
+      User.updateUserAboutProfile.mockResolvedValue(false);
+
+      await userController.saveAboutInfo(req, res);
+
+      expect(User.updateUserAboutProfile).toHaveBeenCalledWith('1', { about: 'Updated about info' });
+      expect(res.status).toHaveBeenCalledWith(404);
+      expect(res.json).toHaveBeenCalledWith({ message: 'User not found' });
+    });
+
+    it('should return 500 if there is an error', async () => {
+      const req = { params: { userId: '1' }, body: { about: 'Updated about info' } };
+      const res = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis()
+      };
+
+      User.updateUserAboutProfile.mockRejectedValue(new Error('Database error'));
+
+      await userController.saveAboutInfo(req, res);
+
+      expect(User.updateUserAboutProfile).toHaveBeenCalledWith('1', { about: 'Updated about info' });
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Error saving about info' });
+    });
+  });
+
 });

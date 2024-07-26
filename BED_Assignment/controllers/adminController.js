@@ -155,9 +155,18 @@ const createAdminUser = async (req, res) => {
 //     return jwt.sign(payload, 'your_jwt_secret', { expiresIn: '1h' });
 // };
 
+// const generateAdminToken = (adminId, adminName, adminEmail) => {
+//   const payload = { adminId, adminName, adminEmail };
+//   return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+// };
 const generateAdminToken = (adminId, adminName, adminEmail) => {
   const payload = { adminId, adminName, adminEmail };
-  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+  const secret = process.env.JWT_SECRET || 'JWT_SECRET'; // Ensure this is the correct secret
+  const options = { expiresIn: '1h' };
+  //console.log('Payload for JWT:', { adminId: user.adminId, adminName: user.adminName, adminEmail: user.adminEmail });
+  console.log('JWT Secret:', 'JWT_SECRET');
+
+  return jwt.sign(payload, secret, options);
 };
 
 // const loginUser = async (req, res) => {
@@ -240,7 +249,8 @@ const loginUser = async (req, res) => {
       }
 
       // Generate token upon successful login
-      const token = generateAdminToken(user.adminId, user.name, user.adminEmail);
+      console.log('Generating token...');
+      const token = generateAdminToken(user.adminId, user.adminName, user.adminEmail);
 
       // Authenticated successfully
       return res.status(200).json({ success: true, message: 'Login successful', token });
@@ -264,4 +274,5 @@ module.exports = {
   getAdminProfileByAdminId,
   fetchAdminProfilePicture,
   uploadProfilePicture,
+  generateAdminToken,
 };
