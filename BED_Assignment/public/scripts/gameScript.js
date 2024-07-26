@@ -36,12 +36,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         })
         .then(response => {
+            
             if (!response.ok) {
                 throw new Error('Failed to fetch saved games');
             }
             return response.json();
         })
         .then(data => {
+            console.log(data);
             saveGames = data.games.map(game => ({
                 ...game,
                 date: new Date(game.saveDate) // Parse saveDate correctly

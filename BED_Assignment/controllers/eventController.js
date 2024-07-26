@@ -50,6 +50,7 @@ const getEventById = async (req, res) => {
 const createEvent = async (req, res) => {
     try {
         const eventTime = new Date(req.body.eventTime);
+        const creatorId = req.user.userId
 
         // Check if eventTime is a valid date
         if (isNaN(eventTime)) {
@@ -62,6 +63,8 @@ const createEvent = async (req, res) => {
             return res.status(400).json({ error: 'Invalid cost format' });
         }
 
+        
+        
         // Decode the base64 string to get the binary data
         const eventImageBuffer = Buffer.from(req.body.eventImage.split(',')[1], 'base64');
 
@@ -72,7 +75,7 @@ const createEvent = async (req, res) => {
             eventCategory: req.body.eventCategory,
             eventReports: req.body.eventReports || 0,
             eventTime: eventTime,
-            creatorId: req.body.creatorId,
+            creatorId: creatorId,
             cost: cost,
             eventImage: eventImageBuffer // Use the buffer for the image data
         };

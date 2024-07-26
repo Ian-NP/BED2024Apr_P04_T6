@@ -205,8 +205,7 @@
             return;
         }
     
-        const decodedToken = jwt_decode(token);
-        const creatorId = decodedToken.userId;
+        
     
         const reader = new FileReader();
         reader.onloadend = async function() {
@@ -219,7 +218,6 @@
                 eventCategory: eventCategory,
                 eventTime: eventTime,
                 cost: eventCost,
-                creatorId: creatorId,
                 eventImage: eventImageBase64
             };
     
@@ -233,14 +231,22 @@
                     body: JSON.stringify(eventData)
                 });
     
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
                 const responseData = await response.json();
-                alert('Event created successfully!');
-                window.location.reload();
+    
+                if (!response.ok) {
+                    if (response.status === 400 && responseData.errors) {
+                        // Display validation errors
+                        const errorMessages = responseData.errors.join('\n');
+                        alert(`Validation errors:\n${errorMessages}`);
+                    } else {
+                        throw new Error('Network response was not ok');
+                    }
+                } else {
+                    alert('Event created successfully!');
+                    window.location.reload();
+                }
             } catch (error) {
-                alert('Error creating event:', error);
+                alert(`Error creating event: ${error.message}`);
             }
         };
     

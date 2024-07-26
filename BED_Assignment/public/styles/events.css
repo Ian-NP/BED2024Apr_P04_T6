@@ -44,7 +44,7 @@ h1 {
     height: 150px;
 }
 
-/* ... (previous CSS rules) ... */
+
 
 #controls-container {
     position: fixed;
@@ -346,6 +346,7 @@ input:checked + .slider:before {
     font-size: 13px;
     line-height: 16px;
     overflow: hidden;
+    word-break: break-all;
 }
 
 .Event-Date{

@@ -897,7 +897,7 @@ async function gameOver() {
         alert('Error checking high scores');
     }
     setTimeout(function () {
-        window.location.href = '/';
+        window.location.href = '/game';
       }, 3000);
 }
 
@@ -919,7 +919,7 @@ async function saveHighScoreToServer(savedGameId, name) {
         });
 
         const data = await response.json();
-        redirectToHomePage();
+        window.location.href = '/game';
         if (data.status !== 'success') {
             alert('Error saving high score: ' + data.message);
         }
