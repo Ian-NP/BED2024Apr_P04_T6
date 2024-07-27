@@ -269,14 +269,14 @@ app.get('/profile', async (req, res) => {
 
 app.get("/api/article", articleController.getAllArticles);
 app.post("/create-blog", articleController.createArticle);
-app.post("/api/article", authenticateToken, articleController.createArticle);
+app.post("/api/article", articleController.createArticle);
 app.get("/api/article/isFavourite/:userId/:articleId", articleController.isFavouriteArticle);
 app.get("/api/article/id/:articleId", articleController.getArticleById);
 app.get("/api/article/favourites/:userId", articleController.getFavouriteArticles);
 app.post("/api/article/addFavourite/:userId", articleController.addFavouriteArticle);
 app.post("/api/article/removeFavourite/:userId", articleController.removeFavouriteArticle);
 app.get("/api/article/user/:userId", articleController.getArticlesByUser);
-app.post("/api/article", authenticateToken, articleController.getArticlesByUser);
+app.post("/api/article", articleController.getArticlesByUser);
 app.get('/api/article/title', articleController.getArticleByTitle);
 app.put("/api/article/id/:articleId", articleController.updateArticle);
 app.delete("/api/article/id/:articleId", articleController.deleteArticle);
