@@ -31,10 +31,16 @@ import gameController from "./controllers/gameController";
 import highscoreController from "./controllers/highscoreController";
 import validateEvent from "./middleware/validateEvent";
 import validateGame from "./middleware/validateGame";
+
+import swaggerUi from "swagger-ui-express";
+const swaggerDocument = require("./swagger-output.json"); // Import generated spec
+
 const app = express();
 const jwt = require('jsonwebtoken');
 const PORT = process.env.PORT || 3001;
 const staticMiddleware = express.static("./public"); // Path to the public folder
+
+
 
 //const multer = require('multer');
 const fs = require('fs');
@@ -308,7 +314,7 @@ app.post('/api/saveAboutInfo/:userId', authenticateToken, userController.saveAbo
 app.get('/api/adminProfile/:adminId', adminController.getAdminProfileByAdminId);
 app.get('/api/adminProfilePicture/:adminId', adminController.fetchAdminProfilePicture);
 app.post('/api/uploadAdminProfilePicture/:adminId', authenticateToken, upload.single('profilePicture'), adminController.uploadProfilePicture);
-
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.listen(PORT, async () => {
     try {
         // Await to connect to the database
