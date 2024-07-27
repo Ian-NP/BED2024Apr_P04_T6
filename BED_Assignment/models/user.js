@@ -133,8 +133,8 @@
           return { success: true, message: 'User signed up successfully', userId: result.recordset[0].userId };
         } catch (error) {
           console.error('Error signing up user:', error);
-          return { success: false, message: 'Error signing up user' };
-        }
+          throw new Error('Error signing up user'); // Throw an error
+      }
       }
 
       static async updateUser(userId, newUserData) {
@@ -148,13 +148,17 @@
             request.input("email", newUserData.email || null); // Handle optional fields
             request.input("name", newUserData.name || null);
         
-            await request.query(sqlQuery);
+            const result = await request.query(sqlQuery);
         
             connection.close();
+            
         
             // Fetch and return the updated user data
-            const updatedUserData = await this.getUserByUserId(userId);
-            return updatedUserData;
+            if (result.rowsAffected[0] > 0) {
+              return true; // Update successful
+          } else {
+              return false; // No rows affected
+          }
         } catch (error) {
             console.error("Error updating user:", error);
             throw error; // Propagate the error up to the caller
