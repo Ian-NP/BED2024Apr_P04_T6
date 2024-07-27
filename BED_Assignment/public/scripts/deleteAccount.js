@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+//fetches user data first to display it
 async function fetchUserData(userId, userType) {
     try {
         const endpoint = userType === 'admin' ? `/admin/${userId}` : `/users/${userId}`;
@@ -29,6 +30,7 @@ async function fetchUserData(userId, userType) {
     }
 }
 
+//to delete a user account
 async function deleteUserAccount(userId, userType) {
     try {
         const endpoint = userType === 'admin' ? `/admin/${userId}` : `/users/${userId}`;

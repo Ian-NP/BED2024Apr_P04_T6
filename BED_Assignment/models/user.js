@@ -14,7 +14,7 @@
       static async getAllUsers() {
         const connection = await sql.connect(dbConfig);
     
-        const sqlQuery = `SELECT * FROM [Users]`; // Replace with your actual table name
+        const sqlQuery = `SELECT * FROM [Users]`; 
     
         const request = connection.request();
         const result = await request.query(sqlQuery);
@@ -102,7 +102,7 @@
         try {
           console.log('Received new user data:', newUserData);
     
-          // Hash the user's password
+          // Hash user's password
           const saltRounds = 10;
           const hashedPassword = await bcrypt.hash(newUserData.password, saltRounds);
           
@@ -120,7 +120,7 @@
     
           const request = connection.request();
           request.input('Email', sql.VarChar, newUserData.email);
-          request.input('Name', sql.VarChar, newUserData.firstName); // Adjusted to use firstName
+          request.input('Name', sql.VarChar, newUserData.firstName); 
           request.input('Password', sql.VarChar, hashedPassword);
           request.input('UserType', sql.Char, newUserData.userType);
           request.input('PaypalEmail', sql.VarChar, newUserData.userType === 'C' ? newUserData.paypalEmail : null);
@@ -200,10 +200,6 @@
           const row = result.recordset[0];
           return new User(row.userId, row.email, row.name, row.password, row.userType);
       }
-
-      // async validatePassword(password) {
-      //     return await bcrypt.compare(password, this.password);
-      // }
 
       static async getUserAboutProfile(userId) {
         try {

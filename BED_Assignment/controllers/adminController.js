@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const dbConfig = require('../dbConfig');
 
+//Function to get all admin users
 const getAllAdminUsers = async (req, res) => {
   try {
     const admins = await Admin.getAllAdminUsers();
@@ -14,6 +15,7 @@ const getAllAdminUsers = async (req, res) => {
   }
 };
 
+//Function to get admin accounts using their adminId
 const getAdminById = async (req, res) => {
   const adminId = parseInt(req.params.adminId);
   console.log(`Fetching admin with adminId: ${adminId}`);
@@ -31,6 +33,7 @@ const getAdminById = async (req, res) => {
   }
 };
 
+//Function to get admin profile by using their adminId
 const getAdminProfileByAdminId = async (req, res) => {
   const adminId = parseInt(req.params.adminId);
   try {
@@ -47,9 +50,6 @@ const getAdminProfileByAdminId = async (req, res) => {
           profilePictureUrl: userData.profilePicture ? `/api/profilePicture/${adminId}` : '../images/default-profile-user.jpg',
       };
 
-      // if (userData.userType === 'C') {
-      //     response.paypalEmail = userData.paypalEmail;
-      // }
 
       res.json(response);
   } catch (error) {
@@ -58,6 +58,7 @@ const getAdminProfileByAdminId = async (req, res) => {
   }
 };
 
+//Function to fetch admin profile picture
 const fetchAdminProfilePicture = async (req, res) => {
   const adminId = req.params.adminId;
 
@@ -75,6 +76,7 @@ const fetchAdminProfilePicture = async (req, res) => {
   }
 }
 
+//Function to upload profile picture for admins
 const uploadProfilePicture = async (req, res) => {
   const adminId = req.user.adminId;
   const profilePicture = req.file.buffer;
@@ -93,7 +95,7 @@ const uploadProfilePicture = async (req, res) => {
   }
 };
 
-
+//Function to create admin account
 const createAdminUser = async (req, res) => {
     const newAdmin = req.body;
     try {
@@ -105,6 +107,7 @@ const createAdminUser = async (req, res) => {
     }
   };
 
+  //Function to update an admin account
   const updateAdminUser = async (req, res) => {
     const adminId = parseInt(req.params.adminId);
     const newAdminData = req.body;
@@ -121,6 +124,7 @@ const createAdminUser = async (req, res) => {
     }
   };
   
+  //Function to delete admin user
   const deleteAdminUser = async (req, res) => {
     const adminId = parseInt(req.params.adminId);
   
@@ -136,6 +140,7 @@ const createAdminUser = async (req, res) => {
     }
   };
 
+  //Function to delete admin account by adminId
   const deleteAdminById = async (req, res) => {
     const adminId = parseInt(req.params.adminId);
     try {
@@ -150,18 +155,10 @@ const createAdminUser = async (req, res) => {
     }
   };
 
-//   const generateToken = (userId, userType) => {
-//     const payload = { userId, userType };
-//     return jwt.sign(payload, 'your_jwt_secret', { expiresIn: '1h' });
-// };
-
-// const generateAdminToken = (adminId, adminName, adminEmail) => {
-//   const payload = { adminId, adminName, adminEmail };
-//   return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
-// };
+  //Function to generate admin token once they are logged in
 const generateAdminToken = (adminId, adminName, adminEmail) => {
   const payload = { adminId, adminName, adminEmail };
-  const secret = process.env.JWT_SECRET || 'JWT_SECRET'; // Ensure this is the correct secret
+  const secret = process.env.JWT_SECRET || 'JWT_SECRET'; 
   const options = { expiresIn: '1h' };
   //console.log('Payload for JWT:', { adminId: user.adminId, adminName: user.adminName, adminEmail: user.adminEmail });
   console.log('JWT Secret:', 'JWT_SECRET');
@@ -169,57 +166,7 @@ const generateAdminToken = (adminId, adminName, adminEmail) => {
   return jwt.sign(payload, secret, options);
 };
 
-// const loginUser = async (req, res) => {
-//     const { email, password } = req.body;
-//     console.log('Received login request:', { email, password }); // Debug log
-
-//     try {
-//         const connection = await sql.connect(dbConfig);
-//         const sqlQuery = `
-//             SELECT * FROM AdminUser
-//             WHERE adminEmail = @Email
-//         `;
-//         const request = connection.request();
-//         request.input('Email', sql.VarChar, email);
-//         const result = await request.query(sqlQuery);
-
-//         console.log('SQL query executed'); // Debug log
-//         console.log('Query result:', result); // Debug log
-
-//         if (result.recordset.length === 0) {
-//             console.log('Email not found'); // Debug log
-//             return res.status(401).json({ success: false, message: 'Email not found' });
-//         }
-
-//         const user = result.recordset[0];
-//         console.log('User found:', user); // Debug log
-
-//         // Log retrieved hashed password
-//         console.log('Retrieved hashed password:', user.password);
-
-//         // Directly compare passwords
-//         const isMatch = await bcrypt.compare(password, user.password);
-//         console.log('Password comparison result:', isMatch); // Debug log
-
-//         if (!isMatch) {
-//             console.log('Incorrect password'); // Debug log
-//             return res.status(401).json({ success: false, message: 'Incorrect password' });
-//         }
-
-//         // Generate token upon successful login
-//         const token = generateToken(user.userId, user.userType);
-
-//         // Authenticated successfully
-//         console.log('Login successful'); // Debug log
-//         return res.status(200).json({ success: true, message: 'Login successful', token });
-//     } catch (error) {
-//         console.error('Error logging in user:', error);
-//         return res.status(500).json({ success: false, message: 'Internal server error' });
-//     } finally {
-//         sql.close(); // Ensure to close the SQL connection
-//     }
-// };
-
+//Function to login admin user
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
@@ -238,11 +185,11 @@ const loginUser = async (req, res) => {
           // Password is hashed, compare with bcrypt
           isMatch = await bcrypt.compare(password, user.password);
       } else {
-          // Legacy plain text password handling (not recommended for production)
+          // Legacy plain text password handling
           isMatch = (password === user.password);
       }
 
-      console.log('Password comparison result:', isMatch); // Check the result of password comparison
+      console.log('Password comparison result:', isMatch); // Checking the result of password comparison
 
       if (!isMatch) {
           return res.status(401).json({ success: false, message: 'Incorrect password' });

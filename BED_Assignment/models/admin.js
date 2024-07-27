@@ -13,7 +13,7 @@ class Admin {
     static async getAllAdminUsers() {
       const connection = await sql.connect(dbConfig);
   
-      const sqlQuery = `SELECT * FROM AdminUser`; // Replace with your actual table name
+      const sqlQuery = `SELECT * FROM AdminUser`; 
   
       const request = connection.request();
       const result = await request.query(sqlQuery);
@@ -97,7 +97,7 @@ class Admin {
     }
 
     static async createAdminUser(newAdminData) {
-        // Hash the user's password
+        // Hashing the user's password
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(newAdminData.password, saltRounds);
         const connection = await sql.connect(dbConfig);
@@ -113,7 +113,7 @@ class Admin {
     
         connection.close();
     
-        // Retrieve the newly created admin user using its ID
+        // Retrieving the newly created admin user using its ID
         return this.getAdminById(result.recordset[0].adminId);
       }
 
@@ -133,7 +133,7 @@ class Admin {
         
             connection.close();
         
-            // Fetch and return the updated admin user data
+            // Fetching and returning the updated admin user data
             const updatedAdminData = await this.getAdminById(adminId);
             return updatedAdminData;
         } catch (error) {
@@ -174,7 +174,7 @@ class Admin {
         request.input("Email", sql.NVarChar, email);
         console.log('Executing SQL query with email:', email);
         const result = await request.query(sqlQuery);
-        console.log('SQL query result:', result); // Log the result for inspection
+        console.log('SQL query result:', result); // Logging the result for inspection
         connection.close();
         if (result.recordset.length === 0) return null;
         const row = result.recordset[0];

@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const dbConfig = require('../dbConfig');
 const RefreshTokenModel = require('../models/refreshToken');
 
+//Function to get all user accounts
 const getAllUsers = async (req, res) => {
   try {
     const users = await User.getAllUsers();
@@ -15,6 +16,7 @@ const getAllUsers = async (req, res) => {
   }
 };
 
+//Function to get user account by userId
 const getUserByUserId = async (req, res) => {
   const userId = parseInt(req.params.userId);
   console.log(`Fetching user with userId: ${userId}`);
@@ -32,26 +34,7 @@ const getUserByUserId = async (req, res) => {
   }
 };
 
-// const getUserProfileByUserId = async (req, res) => {
-//   const userId = req.user.userId;
-//     try {
-//         const pool = await sql.connect(dbConfig);
-//         const result = await pool.request()
-//             .input('userId', sql.Int, userId)
-//             .query('SELECT name, email FROM Users WHERE userId = @userId');
-        
-//         const userData = result.recordset[0];
-
-//         if (!userData) {
-//             return res.status(404).json({ message: 'User not found' });
-//         }
-
-//         res.json(userData);
-//     } catch (error) {
-//         console.error('Error fetching user data:', error);
-//         res.status(500).json({ message: 'Error fetching user data' });
-//     }
-// };
+//Function to get user profile by userId
 const getUserProfileByUserId = async (req, res) => {
   const userId = parseInt(req.params.userId);
   try {
@@ -79,6 +62,7 @@ const getUserProfileByUserId = async (req, res) => {
   }
 };
 
+//Function to fetch user profile picture
 const fetchProfilePicture = async (req, res) => {
   const userId = req.params.userId;
 
@@ -96,6 +80,7 @@ const fetchProfilePicture = async (req, res) => {
   }
 }
 
+//Function to upload user profile picture
 const uploadProfilePicture = async (req, res) => {
   const userId = req.user.userId;
   const profilePicture = req.file.buffer;
@@ -115,22 +100,8 @@ const uploadProfilePicture = async (req, res) => {
 };
 
 
-
+//Function to create a new user account
 const createUser = async (req, res) => {
-  // try {
-  //     const { email, name, password, userType } = req.body;
-      
-  //     // Create a new user object
-  //     const newUser = new User(email, name, password, userType);
-
-  //     // Call the createUser method of the User model
-  //     const createdUser = await User.createUser(newUser);
-
-  //     res.status(201).json({ message: 'User created successfully', user: createdUser });
-  // } catch (error) {
-  //     console.error('Error creating user:', error);
-  //     res.status(500).json({ message: 'Error creating user' });
-  // }
   const newUser = req.body;
     try {
       const createdUser = await User.createUser(newUser);
@@ -141,6 +112,7 @@ const createUser = async (req, res) => {
     }
 };
 
+//Function to update a user account
   const updateUser = async (req, res) => {
     const userId = parseInt(req.params.userId);
     const newUserData = req.body;
@@ -157,6 +129,7 @@ const createUser = async (req, res) => {
     }
   };
   
+  //Function to delete a user account
   const deleteUser = async (req, res) => {
     const userId = parseInt(req.params.userId);
   
@@ -172,11 +145,11 @@ const createUser = async (req, res) => {
     }
   };
 
-
+//Function to delete user account by userId
 const deleteUserById = async (req, res) => {
   const userId = parseInt(req.params.userId);
   try {
-    const result = await User.deleteUserById(userId); // Ensure this method exists
+    const result = await User.deleteUserById(userId); 
     if (result.affectedRows === 0) {
       return res.status(404).send("User not found");
     }
@@ -187,53 +160,7 @@ const deleteUserById = async (req, res) => {
   }
 };
 
-// const loginUser = async (req, res) => {
-//     const { email, password } = req.body;
-//     console.log('Received login request:', { email, password }); // Debug log
-
-//     try {
-//         const connection = await sql.connect(dbConfig);
-//         const sqlQuery = `
-//             SELECT * FROM Users
-//             WHERE email = @Email
-//         `;
-//         const request = connection.request();
-//         request.input('Email', sql.VarChar, email);
-//         const result = await request.query(sqlQuery);
-
-//         console.log('Query result:', result); // Debug log
-
-//         if (result.recordset.length === 0) {
-//             console.log('Email not found'); // Debug log
-//             return res.status(401).json({ success: false, message: 'Email not found' });
-//         }
-
-//         const user = result.recordset[0];
-//         console.log('User found:', user); // Debug log
-
-//         // Directly compare passwords
-//         // Compare passwords using bcrypt
-//         const isMatch = await bcrypt.compare(password, user.password);
-//         if (!isMatch) {
-//             console.log('Incorrect password'); // Debug log
-//             return res.status(401).json({ success: false, message: 'Incorrect password' });
-//         }
-
-//         // Generate token upon successful login
-       
-//         const token = generateToken(user.userId, user.userType, user.name);
-
-//         // Authenticated successfully
-//         console.log('Login successful'); // Debug log
-//         return res.status(200).json({ success: true, message: 'Login successful', token });
-//     } catch (error) {
-//         console.error('Error logging in user:', error);
-//         return res.status(500).json({ success: false, message: 'Internal server error' });
-//     } finally {
-//         sql.close(); // Ensure to close the SQL connection
-//     }
-// };
-// Updated loginUser function
+// Function to login a user account
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
   
@@ -247,7 +174,7 @@ const loginUser = async (req, res) => {
     if (user.password.startsWith('$2b$')) {
       isMatch = await bcrypt.compare(password, user.password);
     } else {
-      isMatch = (password === user.password); // Not recommended for production
+      isMatch = (password === user.password); 
     }
     
     if (!isMatch) {
@@ -283,26 +210,7 @@ const generateRefreshToken = (userId) => {
   return jwt.sign({ userId }, process.env.refresh_token_secret_JWT_SECRET, { expiresIn: '7d' });
 };
 
-
-//   const login = async (req, res) => {
-//     const { email, password } = req.body;
-
-//     try {
-//         const user = await User.getUserByEmail(email);
-//         if (!user) return res.status(400).json({ message: "Invalid email or password" });
-
-//         const isMatch = await user.validatePassword(password);
-//         if (!isMatch) return res.status(400).json({ message: "Invalid email or password" });
-
-//         const token = jwt.sign({ id: user.userId, userType: user.userType }, 'your_jwt_secret', { expiresIn: '1h' });
-//         res.json({ token, userType: user.userType });
-//     } catch (err) {
-//         console.error(err);
-//         res.status(500).send("Server error");
-//     }
-// };
-
-
+//Function to get user about info
 const getAboutInfo = async (req, res) => {
   const userId = req.params.userId;
   //console.log(userId);
@@ -319,6 +227,7 @@ const getAboutInfo = async (req, res) => {
   }
 };
 
+//Function to save about info
 const saveAboutInfo = async (req, res) => {
   const userId = req.params.userId;
   console.log(userId);
