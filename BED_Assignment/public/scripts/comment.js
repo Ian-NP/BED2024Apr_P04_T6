@@ -351,22 +351,24 @@ async function postComment(content, score, timeStamp, userId, parentCommentId) {
             score: score, // Assuming a new comment starts with a score of 0
             timeStamp: timeStamp,
             userId: userId,
-            articleId: articleId,
+            articleId: parseInt(articleId),
             parentCommentId: parentCommentId
         };
     } else{
         const eventId = page.pageId;
+        console.log(eventId);
         newCommentData = {
             content: content,
             score: score, // Assuming a new comment starts with a score of 0
             timeStamp: timeStamp,
             userId: userId,
-            eventId: eventId,
+            eventId: parseInt(eventId),
             parentCommentId: parentCommentId
         };
     }
     try {
         // Send the POST request to the backend
+        console.log(JSON.stringify(newCommentData));
         const response = await fetch(`/api/${page.page}/${page.pageId}/comments`, {
             method: 'POST',
             headers: {

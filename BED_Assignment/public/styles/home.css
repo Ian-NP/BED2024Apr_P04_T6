@@ -284,13 +284,13 @@ footer{
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.3); /* Dark overlay */
+  background: rgba(0, 0, 0, 0.4); /* Dark overlay */
   z-index: 1; /* Ensure the overlay is above the background image */
   transition: background 0.3s ease; /* Smooth transition for hover effects */
 }
 
 .art1:hover::before, .art2:hover::before, .art3:hover::before {
-  background: rgba(0, 0, 0, 0.5); /* Darker overlay on hover */
+  background: rgba(0, 0, 0, 0.7); /* Darker overlay on hover */
 }
 
 .art1 > *, .art2 > *, .art3 > * {
@@ -301,15 +301,15 @@ footer{
 .art1 {
   grid-row: 1 / span 2;
   grid-column: 1;
-  background-image: url("https://image.cnbcfm.com/api/v1/image/105786668-1552323473747ap_19070273430019.jpg?v=1571322209&w=740&h=416&ffmt=webp&vtcrop=y");
+  background-image: url("../images/article3.png");
 }
 
 .art2 {
-  background-image: url("https://businessfacilities.com/wp-content/uploads/2024/07/SpaceX_Flickr-52807686404_cc1c10512e_k-696x464.jpg");
+  background-image: url("../images/article2.png");
 }
 
 .art3 {
-  background-image: url("https://onecms-res.cloudinary.com/image/upload/s--g9ocK9mO--/c_fill,g_auto,h_468,w_830/fl_relative,g_south_east,l_mediacorp:cna:watermark:2024-04:reuters_1,w_0.1/f_auto,q_auto/v1/one-cms/core/2024-07-19t122816z_1_lynxmpek6i0hm_rtroptp_3_usa-wsjtechlive.jpg?itok=ePr45iLh");
+  background-image: url("../images/article1.png");
 }
 
 .art_header {

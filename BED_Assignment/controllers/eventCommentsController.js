@@ -38,6 +38,7 @@ const getEventCommentById = async(req, res) =>{
 
 const createEventComment = async (req, res) => {
     const newCommentData = req.body;
+    console.log(newCommentData);
 
     try {
         const createdEventComment = await EventComments.createEventComment(newCommentData);

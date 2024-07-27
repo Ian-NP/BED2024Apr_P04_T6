@@ -184,7 +184,7 @@ class EventComments{
                      result.recordset[0].score,
                      result.recordset[0].timeStamp,
                      result.recordset[0].userId,
-                     result.recordset[0].EventId,
+                     result.recordset[0].eventId,
                      result.recordset[0].parentCommentId
                  )
                  : null;
@@ -210,9 +210,12 @@ class EventComments{
         let parentComment;
     
         try {
+            console.log(newCommentData.eventId);
             if (newCommentData.parentCommentId) {
                 parentComment = await this.getEventCommentById(newCommentData.parentCommentId);
                 // Check if the parent comment's eventId matches the new comment's eventId
+                console.log(parentComment.eventId);
+                console.log(newCommentData.eventId);
                 if (parentComment && parseInt(parentComment.eventId) !== parseInt(newCommentData.eventId)) {
                     throw new Error("The eventId of the parent comment does not match the eventId of the new comment.");
                 }
