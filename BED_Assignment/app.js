@@ -284,6 +284,11 @@ app.post('/api/uploadAdminProfilePicture/:adminId', authenticateToken, upload.si
 // Swagger API Documentation
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+// Routes for html page
+app.use((req, res) => {
+    res.status(404).sendFile(path.join(__dirname, 'public', 'html', 'pageNotFound.html'));
+});
+
 app.listen(PORT, async () => {
     try {
         // Await to connect to the database
