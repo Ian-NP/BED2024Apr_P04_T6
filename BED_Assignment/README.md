@@ -37,7 +37,32 @@ Introducing A+4BED, your...
 | Edit and Delete created blogs                                             | Dallas   |
 
 ## Importing the SQL Database with .bacpac file
-![screenshot](public/images/Step-1.png)
+
+### Step 1: Open SQL Server Management Studio
+1. Open SQL Server Management Studio and connect to your server.
+2. Right-click on `Databases` and select `Import Data-tier Application`.
+
+![Step 1](public/images/Step-2.png)
+
+### Step 2: Import the .bacpac File
+3. In the wizard, select `Next`
+
+![Step 2](public/images/Step-3.png)
+
+### Step 3: Import the .bacpac File
+4. Browse to the .bacpac file location where you saved.
+
+![Step 3](public/images/Step-4.png)
+
+### Step 4: Import the .bacpac File
+5. Make sure the database name is bed_assignment
+
+![Step 4](public/images/Step-5.png)
+
+### Step 5: Import the .bacpac File
+6. Click 'Finish' button on the bottom right
+
+![Step 5](public/images/Step-6.png)
 
 ## Starting the Project
 To start the project, you must use the following commands after going to the directory "BED_Assignment":
