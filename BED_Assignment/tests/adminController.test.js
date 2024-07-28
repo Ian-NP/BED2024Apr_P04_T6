@@ -219,7 +219,7 @@ describe('deleteAdminUser', () => {
       Admin.getAdminByEmail.mockResolvedValue(user);
       bcrypt.compare.mockResolvedValue(true);
       
-      const expectedSecret = 'Access_Token_Secret'; 
+      const expectedSecret = 'eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcyMTgyNTk0NSwiaWF0IjoxNzIxODI1OTQ1fQ.6bWc3XPN9pL0aNlRlzQO6sV7zYSmS2miabnPc8FT3jU'; 
       jwt.sign.mockReturnValue('token');
 
       // Call the function
