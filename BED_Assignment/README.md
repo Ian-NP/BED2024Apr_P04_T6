@@ -12,24 +12,24 @@ Application’s Theme: **Industrial Relevance** <br>
 Introducing A+4BED, your...
 
 
-## Function-In-Charged
+## Function-In-Charge
 
-| Functions-In-Charge        | Name           |
-|:------------- |:-------------|:----- |
-| Ian | Comment Section for Articles & Events |
-| Ian | ChatBot Conversation Regarding Industrial Relevance  |
-| Daniel  | Login for Users and Admins  |
-| Daniel  | Login for Users and Admins  |
-| Daniel  | Sign up for Users  |
-| Daniel  | Profile section for Users and Admins  |
-| Daniel  | About section for Users |
-| Daniel  | Creation, deletion and updating of user and admin accounts that can only be done by admins  |
-| Daniel  | Viewing of all accounts registered to the website  |
-| Daniel  | Searching of account  |
-| Yun Ze  | Viewing all articles  |
-| Yun Ze  | Favouriting articles and viewing favourites  |
-| Yun Ze  | Creating blogs and viewing created blogs  |
-| Yun Ze  | Edit and Delete created blogs  |
+| Functions-In-Charge                                                       | Name     |
+|:--------------------------------------------------------------------------|:---------|
+| Comment Section for Articles & Events                                     | Ian      |
+| ChatBot Conversation Regarding Industrial Relevance                       | Ian      |
+| Login for Users and Admins                                                | Daniel   |
+| Login for Users and Admins                                                | Daniel   |
+| Sign up for Users                                                         | Daniel   |
+| Profile section for Users and Admins                                      | Daniel   |
+| About section for Users                                                   | Daniel   |
+| Creation, deletion and updating of user and admin accounts that can only be done by admins | Daniel |
+| Viewing of all accounts registered to the website                         | Daniel   |
+| Searching of account                                                      | Daniel   |
+| Viewing all articles                                                      | Yun Ze   |
+| Favouriting articles and viewing favourites                               | Yun Ze   |
+| Creating blogs and viewing created blogs                                  | Yun Ze   |
+| Edit and Delete created blogs                                             | Yun Ze   |
 
 ## Importing the SQL Database with .bacpac file
 ![alt text](https://github.com/Ian-NP/BED2024Apr_P04_T6/tree/main/BED_Assignment/public/images/Step-1.png?raw=true)
