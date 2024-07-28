@@ -206,24 +206,46 @@ describe('deleteAdminUser', () => {
 
   describe('loginUser', () => {
     it('should login an admin and generate a token', async () => {
-        req.body = { email: 'aexample@bed.com', password: 'password' };
-        const user = { adminId: 1, password: '$2b$10$...', adminEmail: 'aexample@bed.com', adminName: 'Admin' };
-        Admin.getAdminByEmail.mockResolvedValue(user);
-        bcrypt.compare.mockResolvedValue(true);
-        jwt.sign.mockReturnValue('token');
+      req.body = { email: 'aexample@bed.com', password: 'password' };
 
-        const secret = 'JWT_SECRET';
+      const user = {
+          adminId: 1,
+          password: '$2b$10$...',
+          adminEmail: 'aexample@bed.com',
+          adminName: 'Admin'
+      };
 
-        await loginUser(req, res);
+      // Mocking the necessary methods
+      Admin.getAdminByEmail.mockResolvedValue(user);
+      bcrypt.compare.mockResolvedValue(true);
+      
+      const expectedSecret = 'Access_Token_Secret'; 
+      jwt.sign.mockReturnValue('token');
 
-        expect(Admin.getAdminByEmail).toHaveBeenCalledWith('aexample@bed.com');
-        expect(bcrypt.compare).toHaveBeenCalledWith('password', user.password);
-        expect(jwt.sign).toHaveBeenCalledWith({ adminId: 1, adminName: 'Admin', adminEmail: 'aexample@bed.com' }, secret, { expiresIn: '1h' });
-        expect(res.status).toHaveBeenCalledWith(200);
-        expect(res.json).toHaveBeenCalledWith({ success: true, message: 'Login successful', token: 'token' });
-        console.log('Expected JWT Payload:', { adminId: 1, adminName: 'Admin', adminEmail: 'aexample@bed.com' });
-        console.log('Expected JWT Secret:', 'JWT_SECRET');
-    });
+      // Call the function
+      await loginUser(req, res);
+
+      // Verify Admin method calls
+      expect(Admin.getAdminByEmail).toHaveBeenCalledWith('aexample@bed.com');
+      expect(bcrypt.compare).toHaveBeenCalledWith('password', user.password);
+
+      // Debugging output
+      console.log('Expected JWT Payload:', { adminId: 1, adminName: 'Admin', adminEmail: 'aexample@bed.com' });
+      console.log('Expected JWT Secret:', expectedSecret);
+      console.log('Actual JWT Payload:', jwt.sign.mock.calls[0][0]);
+      console.log('Actual JWT Secret:', jwt.sign.mock.calls[0][1]);
+
+      // Verify JWT sign method call
+      expect(jwt.sign).toHaveBeenCalledWith(
+          { adminId: 1, adminName: 'Admin', adminEmail: 'aexample@bed.com' },
+          expectedSecret,
+          { expiresIn: '1h' }
+      );
+
+      // Verify response
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({ success: true, message: 'Login successful', token: 'token' });
+  });
 
     it('should return 401 if email not found', async () => {
         req.body = { email: 'aexample@bed.com', password: 'password' };
@@ -258,56 +280,6 @@ describe('deleteAdminUser', () => {
     });
 });
   
-  // describe('loginUser', () => {
-  //   it('should login a user and return tokens', async () => {
-  //     req.body = { email: 'test@example.com', password: 'password' };
-  //     const user = { userId: 1, email: 'test@example.com', password: '$2b$10$...', userType: 'C', name: 'John Doe' };
-  //     User.getUserByEmail.mockResolvedValue(user);
-  //     bcrypt.compare.mockResolvedValue(true);
-  //     jwt.sign.mockImplementation((payload, secret) => `${secret}:${JSON.stringify(payload)}`);
-  //     RefreshTokenModel.addToken.mockResolvedValue(true);
 
-  //     await userController.loginUser(req, res);
-
-  //     expect(res.status).toHaveBeenCalledWith(200);
-  //     expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
-  //       success: true,
-  //       message: 'Login successful',
-  //     }));
-  //   });
-
-  //   it('should return 401 if email not found', async () => {
-  //     req.body = { email: 'test@example.com', password: 'password' };
-  //     User.getUserByEmail.mockResolvedValue(null);
-
-  //     await userController.loginUser(req, res);
-
-  //     expect(res.status).toHaveBeenCalledWith(401);
-  //     expect(res.json).toHaveBeenCalledWith({ success: false, message: 'Email not found' });
-  //   });
-
-  //   it('should return 401 if password is incorrect', async () => {
-  //     req.body = { email: 'test@example.com', password: 'wrongpassword' };
-  //     const user = { userId: 1, email: 'test@example.com', password: '$2b$10$...', userType: 'C', name: 'John Doe' };
-  //     User.getUserByEmail.mockResolvedValue(user);
-  //     bcrypt.compare.mockResolvedValue(false);
-
-  //     await userController.loginUser(req, res);
-
-  //     expect(res.status).toHaveBeenCalledWith(401);
-  //     expect(res.json).toHaveBeenCalledWith({ success: false, message: 'Incorrect password' });
-  //   });
-
-  //   it('should handle errors', async () => {
-  //     req.body = { email: 'test@example.com', password: 'password' };
-  //     User.getUserByEmail.mockRejectedValue(new Error('Database error'));
-
-  //     await userController.loginUser(req, res);
-
-  //     expect(res.status).toHaveBeenCalledWith(500);
-  //     expect(res.json).toHaveBeenCalledWith({ success: false, message: 'Internal server error' });
-  //   });
-  // });
 });
 
-//npm test adminController.test.js
