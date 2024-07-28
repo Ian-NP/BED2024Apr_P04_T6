@@ -32,7 +32,7 @@ Introducing A+4BED, your...
 | Yun Ze  | Edit and Delete created blogs  |
 
 ## Importing the SQL Database with .bacpac file
-![screenshot](./public/images/Step-1.png.png)
+![alt text](https://github.com/Ian-NP/BED2024Apr_P04_T6/tree/main/BED_Assignment/public/images/Step-1.png?raw=true)
 
 ## Starting the Project
 To start the project, you must use the following commands after going to the directory "BED_Assignment":
