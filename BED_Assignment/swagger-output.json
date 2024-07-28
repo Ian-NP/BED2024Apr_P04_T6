@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "A+4BED API",
-    "description": "This the API Docmentation of A+4BED",
+    "title": "My API",
+    "description": "Description of your API",
     "version": "1.0.0"
   },
   "host": "localhost:3001",
@@ -12,537 +12,210 @@
   ],
   "paths": {
     "/signup": {
-      "post": {
-        "summary": "Create a new user account",
-        "description": "Endpoint to register a new user with their email, name, password, and optionally, PayPal email for company users.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "email": {
-                    "type": "string",
-                    "example": "user@example.com"
-                  },
-                  "name": {
-                    "type": "string",
-                    "example": "John Doe"
-                  },
-                  "password": {
-                    "type": "string",
-                    "example": "password123"
-                  },
-                  "userType": {
-                    "type": "string",
-                    "enum": ["U", "C"],
-                    "example": "U"
-                  },
-                  "paypalEmail": {
-                    "type": "string",
-                    "example": "paypal@example.com"
-                  }
-                }
-              }
-            }
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
           }
-        },
+        }
+      },
+      "post": {
+        "description": "",
         "responses": {
           "201": {
-            "description": "User created successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "example": true
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "User signed up successfully"
-                    },
-                    "userId": {
-                      "type": "integer",
-                      "example": 1
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Created"
           },
           "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string",
-                      "example": "Error creating user"
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Internal Server Error"
           }
         }
       }
     },
     "/login": {
-      "post": {
-        "summary": "Log in a user",
-        "description": "Authenticate a user with their email and password to obtain an access token and refresh token.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "email": {
-                    "type": "string",
-                    "example": "user@example.com"
-                  },
-                  "password": {
-                    "type": "string",
-                    "example": "password123"
-                  }
-                }
-              }
-            }
-          }
-        },
+      "get": {
+        "description": "",
         "responses": {
           "200": {
-            "description": "Login successful",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "example": true
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Login successful"
-                    },
-                    "accessToken": {
-                      "type": "string",
-                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                    },
-                    "refreshToken": {
-                      "type": "string",
-                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "example": false
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Email not found or incorrect password"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string",
-                      "example": "Error logging in user"
-                    }
-                  }
-                }
-              }
-            }
+            "description": "OK"
           }
         }
       }
     },
     "/userlogin": {
       "get": {
-      "summary": "User login check",
-      "description": "This endpoint checks the status of the user login session. It typically returns a status code indicating whether the user is currently logged in or not.",
-      "responses": {
-        "200": {
-          "description": "Login session status checked successfully",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "loggedIn": {
-                    "type": "boolean",
-                    "example": true
-                  },
-                  "userId": {
-                    "type": "integer",
-                    "example": 123
-                  }
-                }
-              }
-            }
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
-      }
-    },
-    "post": {
-      "summary": "User login",
-      "description": "Authenticate a user with their email and password to obtain an access token.",
-      "requestBody": {
-        "required": true,
-        "content": {
-          "application/json": {
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
             "schema": {
               "type": "object",
               "properties": {
                 "email": {
-                  "type": "string",
-                  "example": "user@example.com"
+                  "example": "any"
                 },
                 "password": {
-                  "type": "string",
-                  "example": "password123"
-                }
-              },
-              "required": ["email", "password"]
-            }
-          }
-        }
-      },
-      "responses": {
-        "200": {
-          "description": "Login successful",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "success": {
-                    "type": "boolean",
-                    "example": true
-                  },
-                  "message": {
-                    "type": "string",
-                    "example": "Login successful"
-                  },
-                  "accessToken": {
-                    "type": "string",
-                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                  }
+                  "example": "any"
                 }
               }
             }
           }
-        },
-        "401": {
-          "description": "Unauthorized - Invalid email or password",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "success": {
-                    "type": "boolean",
-                    "example": false
-                  },
-                  "message": {
-                    "type": "string",
-                    "example": "Invalid email or password"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "500": {
-          "description": "Internal Server Error",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "error": {
-                    "type": "string",
-                    "example": "Error logging in user"
-                  }
-                }
-              }
-            }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
-    }
-  },
+    },
     "/companylogin": {
       "get": {
-      "summary": "Company login check",
-      "description": "This endpoint checks the status of the company login session. It typically returns a status code indicating whether the company is currently logged in or not.",
-      "responses": {
-        "200": {
-          "description": "Login session status checked successfully",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "loggedIn": {
-                    "type": "boolean",
-                    "example": true
-                  },
-                  "companyId": {
-                    "type": "integer",
-                    "example": 456
-                  }
-                }
-              }
-            }
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
-      }
-    },
-    "post": {
-      "summary": "Company login",
-      "description": "Authenticate a company with their email and password to obtain an access token.",
-      "requestBody": {
-        "required": true,
-        "content": {
-          "application/json": {
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
             "schema": {
               "type": "object",
               "properties": {
                 "email": {
-                  "type": "string",
-                  "example": "company@example.com"
+                  "example": "any"
                 },
                 "password": {
-                  "type": "string",
-                  "example": "password123"
+                  "example": "any"
                 }
-              },
-              "required": ["email", "password"]
+              }
             }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/adminlogin": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       },
-      "responses": {
-        "200": {
-          "description": "Login successful",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "success": {
-                    "type": "boolean",
-                    "example": true
-                  },
-                  "message": {
-                    "type": "string",
-                    "example": "Login successful"
-                  },
-                  "accessToken": {
-                    "type": "string",
-                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                  }
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
                 }
               }
             }
           }
-        },
-        "401": {
-          "description": "Unauthorized - Invalid email or password",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "success": {
-                    "type": "boolean",
-                    "example": false
-                  },
-                  "message": {
-                    "type": "string",
-                    "example": "Invalid email or password"
-                  }
-                }
-              }
-            }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
-        },
-        "500": {
-          "description": "Internal Server Error",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "error": {
-                    "type": "string",
-                    "example": "Error logging in company"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-    "/adminlogin": {
-      "get": {
-      "summary": "Retrieve Admin Login Status",
-      "description": "This endpoint retrieves the current login status of the admin. It checks if the admin is currently logged in.",
-      "responses": {
-        "200": {
-          "description": "OK"
         }
       }
     },
-    "post": {
-      "summary": "Admin Login",
-      "description": "This endpoint allows an admin to log in by providing email and password. It returns a token upon successful login.",
-      "parameters": [
-        {
-          "name": "body",
-          "in": "body",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "email": {
-                "type": "string",
-                "example": "any@example.com",
-                "description": "The email of the admin."
-              },
-              "password": {
-                "type": "string",
-                "example": "yourpassword",
-                "description": "The password of the admin."
-              }
-            }
-          }
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "OK"
-        },
-        "401": {
-          "description": "Unauthorized - Incorrect email or password."
-        },
-        "500": {
-          "description": "Internal Server Error"
-        }
-      }
-    }
-  },
     "/adminhomepage": {
       "get": {
-      "summary": "Retrieve Admin Homepage",
-      "description": "This endpoint retrieves the admin homepage content. It provides the main view for the admin after logging in.",
-      "responses": {
-        "200": {
-          "description": "OK"
-        }
-      }
-    }
-  },
-    "/createadmin": {
-      "get": {
-      "summary": "Retrieve Create Admin Page",
-      "description": "This endpoint retrieves the page for creating a new admin. It provides the form for entering admin details.",
-      "responses": {
-        "200": {
-          "description": "OK"
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
         }
       }
     },
-    "post": {
-      "summary": "Create New Admin",
-      "description": "This endpoint allows the creation of a new admin by providing the required admin details. Returns a confirmation of creation upon success.",
-      "parameters": [
-        {
-          "name": "body",
-          "in": "body",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string",
-                "example": "Admin Name",
-                "description": "The name of the new admin."
-              },
-              "password": {
-                "type": "string",
-                "example": "yourpassword",
-                "description": "The password for the new admin."
-              },
-              "adminEmail": {
-                "type": "string",
-                "example": "admin@example.com",
-                "description": "The email address of the new admin."
-              }
-            }
+    "/createadmin": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
-      ],
-      "responses": {
-        "201": {
-          "description": "Created - New admin successfully created."
-        },
-        "500": {
-          "description": "Internal Server Error"
+      },
+      "post": {
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
         }
       }
-    }
-  },
+    },
     "/viewaccounts": {
       "get": {
-      "summary": "View All Admin Accounts",
-      "description": "Endpoint to view all admin accounts. This is used to retrieve a list of all admin users in the system.",
-      "responses": {
-        "200": {
-          "description": "OK - Successfully retrieved list of admin accounts."
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
         }
       }
-    }
-  },
+    },
     "/updateaccount": {
       "get": {
-      "summary": "Retrieve Admin Account Details for Update",
-      "description": "Endpoint to retrieve information for updating an admin account. This might be used to fetch current details of an admin for editing purposes.",
-      "responses": {
-        "200": {
-          "description": "OK - Successfully retrieved admin account details for updating."
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
         }
       }
-    }
-  },
+    },
     "/manageevents": {
       "get": {
         "description": "",
@@ -711,812 +384,564 @@
     },
     "/profile": {
       "get": {
-      "summary": "Get user profile",
-      "description": "Retrieve the profile information of the currently logged-in user. This includes user details such as name, email, and profile picture.",
-      "responses": {
-        "200": {
-          "description": "Profile retrieved successfully",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "userId": {
-                    "type": "integer",
-                    "example": 123
-                  },
-                  "name": {
-                    "type": "string",
-                    "example": "John Doe"
-                  },
-                  "email": {
-                    "type": "string",
-                    "example": "john.doe@example.com"
-                  },
-                  "profilePicture": {
-                    "type": "string",
-                    "format": "uri",
-                    "example": "https://example.com/images/profile123.jpg"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "401": {
-          "description": "Unauthorized - User not logged in",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "success": {
-                    "type": "boolean",
-                    "example": false
-                  },
-                  "message": {
-                    "type": "string",
-                    "example": "User not authenticated"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "500": {
-          "description": "Internal Server Error",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "error": {
-                    "type": "string",
-                    "example": "Error retrieving profile information"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-    "/users": {
-      "get": {
-      "summary": "List all users",
-      "description": "Retrieve a list of all users. This can be used by admin roles to get a complete list of registered users.",
-      "responses": {
-        "200": {
-          "description": "Users retrieved successfully",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "userId": {
-                      "type": "integer",
-                      "example": 123
-                    },
-                    "name": {
-                      "type": "string",
-                      "example": "John Doe"
-                    },
-                    "email": {
-                      "type": "string",
-                      "example": "john.doe@example.com"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "500": {
-          "description": "Internal Server Error",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "error": {
-                    "type": "string",
-                    "example": "Error retrieving users list"
-                  }
-                }
-              }
-            }
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
     },
-    "post": {
-      "summary": "Create a new user",
-      "description": "Register a new user with the provided details. This endpoint typically requires an admin or specific role privileges.",
-      "requestBody": {
-        "required": true,
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string",
-                  "example": "Jane Doe"
-                },
-                "email": {
-                  "type": "string",
-                  "example": "jane.doe@example.com"
-                },
-                "password": {
-                  "type": "string",
-                  "example": "password123"
-                }
-              },
-              "required": ["name", "email", "password"]
-            }
+    "/users": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
-      "responses": {
-        "201": {
-          "description": "User created successfully",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "success": {
-                    "type": "boolean",
-                    "example": true
-                  },
-                  "message": {
-                    "type": "string",
-                    "example": "User created successfully"
-                  },
-                  "userId": {
-                    "type": "integer",
-                    "example": 124
-                  }
-                }
-              }
-            }
-          }
-        },
-        "400": {
-          "description": "Bad Request - Invalid user data",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "success": {
-                    "type": "boolean",
-                    "example": false
-                  },
-                  "message": {
-                    "type": "string",
-                    "example": "Invalid user data provided"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "500": {
-          "description": "Internal Server Error",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "error": {
-                    "type": "string",
-                    "example": "Error creating user"
-                  }
-                }
-              }
-            }
+      "post": {
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
-    }
-  },
+    },
     "/users/{userId}": {
       "get": {
-        "summary": "Get user account by ID",
-        "description": "Retrieve detailed information about a user account by their user ID.",
+        "description": "",
         "parameters": [
           {
             "name": "userId",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "example": 1
-            }
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
-            "description": "User account details retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "userId": {
-                      "type": "integer",
-                      "example": 1
-                    },
-                    "email": {
-                      "type": "string",
-                      "example": "user@example.com"
-                    },
-                    "name": {
-                      "type": "string",
-                      "example": "John Doe"
-                    },
-                    "userType": {
-                      "type": "string",
-                      "example": "U"
-                    }
-                  }
-                }
-              }
-            }
+            "description": "OK"
           },
           "404": {
-            "description": "User not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "User not found"
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Not Found"
           },
           "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string",
-                      "example": "Error retrieving user"
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Internal Server Error"
           }
         }
       },
       "put": {
-        "summary": "Update user account by ID",
-        "description": "Update user account details based on the provided user ID.",
+        "description": "",
         "parameters": [
           {
             "name": "userId",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "example": 1
-            }
+            "type": "string"
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+      "/create-event": {
+        "post": {
+          "description": "Create a new event with the provided details.",
+          "parameters": [
+            {
+              "name": "authorization",
+              "in": "header",
+              "required": true,
+              "type": "string",
+              "description": "JWT token for authorization"
+            },
+            {
+              "name": "body",
+              "in": "body",
+              "required": true,
+              "description": "Event details",
               "schema": {
                 "type": "object",
                 "properties": {
-                  "email": {
+                  "eventTime": {
                     "type": "string",
-                    "example": "user@example.com"
+                    "example": "2023-12-31T23:59:59Z",
+                    "description": "The date and time of the event in ISO 8601 format"
                   },
-                  "name": {
+                  "cost": {
+                    "type": "number",
+                    "example": 0,
+                    "description": "The cost to attend the event"
+                  },
+                  "eventImage": {
                     "type": "string",
-                    "example": "John Doe"
+                    "example": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2w...",
+                    "description": "Base64 encoded image string"
+                  },
+                  "eventName": {
+                    "type": "string",
+                    "example": "New Year Party",
+                    "description": "Name of the event"
+                  },
+                  "eventDesc": {
+                    "type": "string",
+                    "example": "A fun event to celebrate the New Year.",
+                    "description": "Description of the event"
+                  },
+                  "eventOverview": {
+                    "type": "string",
+                    "example": "Overview of the event.",
+                    "description": "Overview of what the event will entail"
+                  },
+                  "eventCategory": {
+                    "type": "string",
+                    "enum": [
+                      "Hackathons",
+                      "Conferences",
+                      "Talks",
+                      "Workshops",
+                      "Seminars",
+                      "Bootcamps",
+                      "Networking Events",
+                      "Webinars"
+                    ],
+                    "example": "Conferences",
+                    "description": "Category of the event"
+                  },
+                  "eventReports": {
+                    "type": "number",
+                    "example": 1,
+                    "description": "Number of reports related to the event"
                   }
-                }
+                },
+                "required": ["eventTime", "eventName"]
               }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Event successfully created"
+            },
+            "400": {
+              "description": "Invalid request parameters"
+            },
+            "401": {
+              "description": "Unauthorized access"
+            },
+            "403": {
+              "description": "Access forbidden"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/events": {
+        "get": {
+          "description": "Retrieve a list of all events.",
+          "responses": {
+            "200": {
+              "description": "List of events retrieved successfully"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/events/userEvents": {
+        "get": {
+          "description": "Retrieve events associated with the authenticated user.",
+          "parameters": [
+            {
+              "name": "authorization",
+              "in": "header",
+              "required": true,
+              "type": "string",
+              "description": "JWT token for authorization"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "List of user events retrieved successfully"
+            },
+            "401": {
+              "description": "Unauthorized access"
+            },
+            "403": {
+              "description": "Access forbidden"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/myEvents": {
+        "get": {
+          "description": "Retrieve a list of events created by the authenticated user.",
+          "responses": {
+            "200": {
+              "description": "List of user-created events retrieved successfully"
+            }
+          }
+        }
+      },
+      "/events-content": {
+        "get": {
+          "description": "Retrieve content related to all events.",
+          "parameters": [
+            {
+              "name": "authorization",
+              "in": "header",
+              "required": true,
+              "type": "string",
+              "description": "JWT token for authorization"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "List of event content retrieved successfully"
+            }
+          }
+        }
+      },
+      "/api/{eventId}/signup": {
+        "post": {
+          "description": "Sign up for an event with the provided event ID.",
+          "parameters": [
+            {
+              "name": "eventId",
+              "in": "path",
+              "required": true,
+              "type": "string",
+              "description": "ID of the event to sign up for"
+            },
+            {
+              "name": "authorization",
+              "in": "header",
+              "required": true,
+              "type": "string",
+              "description": "JWT token for authorization"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successfully signed up for the event"
+            },
+            "401": {
+              "description": "Unauthorized access"
+            },
+            "403": {
+              "description": "Access forbidden"
+            },
+            "404": {
+              "description": "Event not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/api/events": {
+        "get": {
+          "description": "Retrieve a list of all events.",
+          "responses": {
+            "200": {
+              "description": "List of events retrieved successfully"
+            },
+            "500": {
+              "description": "Internal server error"
             }
           }
         },
-        "responses": {
-          "200": {
-            "description": "User account updated successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "userId": {
-                      "type": "integer",
-                      "example": 1
-                    },
-                    "email": {
-                      "type": "string",
-                      "example": "user@example.com"
-                    },
-                    "name": {
-                      "type": "string",
-                      "example": "John Doe"
-                    }
+        "post": {
+          "description": "Create a new event with the provided details.",
+          "parameters": [
+            {
+              "name": "authorization",
+              "in": "header",
+              "required": true,
+              "type": "string",
+              "description": "JWT token for authorization"
+            },
+            {
+              "name": "body",
+              "in": "body",
+              "required": true,
+              "description": "Event details",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "eventTime": {
+                    "type": "string",
+                    "example": "2023-12-31T23:59:59Z",
+                    "description": "The date and time of the event in ISO 8601 format"
+                  },
+                  "cost": {
+                    "type": "number",
+                    "example": 0,
+                    "description": "The cost to attend the event"
+                  },
+                  "eventImage": {
+                    "type": "string",
+                    "example": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2w...",
+                    "description": "Base64 encoded image string"
+                  },
+                  "eventName": {
+                    "type": "string",
+                    "example": "New Year Party",
+                    "description": "Name of the event"
+                  },
+                  "eventDesc": {
+                    "type": "string",
+                    "example": "A fun event to celebrate the New Year.",
+                    "description": "Description of the event"
+                  },
+                  "eventOverview": {
+                    "type": "string",
+                    "example": "Overview of the event.",
+                    "description": "Overview of what the event will entail"
+                  },
+                  "eventCategory": {
+                    "type": "string",
+                    "enum": [
+                      "Hackathons",
+                      "Conferences",
+                      "Talks",
+                      "Workshops",
+                      "Seminars",
+                      "Bootcamps",
+                      "Networking Events",
+                      "Webinars"
+                    ],
+                    "example": "Conferences",
+                    "description": "Category of the event"
+                  },
+                  "eventReports": {
+                    "type": "number",
+                    "example": 1,
+                    "description": "Number of reports related to the event"
                   }
-                }
+                },
+                "required": ["eventTime", "eventName"]
               }
             }
-          },
-          "404": {
-            "description": "User not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "User not found"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string",
-                      "example": "Error updating user"
-                    }
-                  }
-                }
-              }
+          ],
+          "responses": {
+            "201": {
+              "description": "Event successfully created"
+            },
+            "400": {
+              "description": "Invalid request parameters"
+            },
+            "401": {
+              "description": "Unauthorized access"
+            },
+            "403": {
+              "description": "Access forbidden"
+            },
+            "500": {
+              "description": "Internal server error"
             }
           }
         }
       },
-      "delete": {
-        "summary": "Delete user account by ID",
-        "description": "Delete a user account based on the provided user ID.",
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "example": 1
+      "/api/events/{eventId}": {
+        "get": {
+          "description": "Retrieve details of a specific event by its ID.",
+          "parameters": [
+            {
+              "name": "eventId",
+              "in": "path",
+              "required": true,
+              "type": "string",
+              "description": "ID of the event to retrieve"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Event details retrieved successfully"
+            },
+            "404": {
+              "description": "Event not found"
+            },
+            "500": {
+              "description": "Internal server error"
             }
           }
-        ],
-        "responses": {
-          "204": {
-            "description": "User account deleted successfully"
-          },
-          "404": {
-            "description": "User not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "User not found"
-                    }
-                  }
-                }
-              }
+        },
+        "delete": {
+          "description": "Delete an event by its ID.",
+          "parameters": [
+            {
+              "name": "eventId",
+              "in": "path",
+              "required": true,
+              "type": "string",
+              "description": "ID of the event to delete"
+            },
+            {
+              "name": "authorization",
+              "in": "header",
+              "required": true,
+              "type": "string",
+              "description": "JWT token for authorization"
             }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string",
-                      "example": "Error deleting user"
-                    }
-                  }
-                }
-              }
+          ],
+          "responses": {
+            "200": {
+              "description": "Event successfully deleted"
+            },
+            "401": {
+              "description": "Unauthorized access"
+            },
+            "403": {
+              "description": "Access forbidden"
+            },
+            "404": {
+              "description": "Event not found"
+            },
+            "500": {
+              "description": "Internal server error"
             }
-          }
-        }
-      }
-    },
-    "/create-event": {
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eventTime": {
-                  "example": "any"
-                },
-                "cost": {
-                  "example": "any"
-                },
-                "eventImage": {
-                  "example": "any"
-                },
-                "eventName": {
-                  "example": "any"
-                },
-                "eventDesc": {
-                  "example": "any"
-                },
-                "eventOverview": {
-                  "example": "any"
-                },
-                "eventCategory": {
-                  "example": "any"
-                },
-                "eventReports": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Created"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/events": {
-      "get": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/events/userEvents": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/myEvents": {
-      "get": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/events-content": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/{eventId}/signup": {
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "eventId",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/api/events": {
-      "get": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
           }
         }
       },
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eventTime": {
-                  "example": "any"
-                },
-                "cost": {
-                  "example": "any"
-                },
-                "eventImage": {
-                  "example": "any"
-                },
-                "eventName": {
-                  "example": "any"
-                },
-                "eventDesc": {
-                  "example": "any"
-                },
-                "eventOverview": {
-                  "example": "any"
-                },
-                "eventCategory": {
-                  "example": "any"
-                },
-                "eventReports": {
-                  "example": "any"
-                }
-              }
+      "/api/{eventId}/leave": {
+        "patch": {
+          "description": "Leave an event with the provided event ID.",
+          "parameters": [
+            {
+              "name": "eventId",
+              "in": "path",
+              "required": true,
+              "type": "string",
+              "description": "ID of the event to leave"
+            },
+            {
+              "name": "authorization",
+              "in": "header",
+              "required": true,
+              "type": "string",
+              "description": "JWT token for authorization"
             }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Created"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/api/events/{eventId}": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "eventId",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "500": {
-            "description": "Internal Server Error"
+          ],
+          "responses": {
+            "200": {
+              "description": "Successfully left the event"
+            },
+            "401": {
+              "description": "Unauthorized access"
+            },
+            "403": {
+              "description": "Access forbidden"
+            },
+            "404": {
+              "description": "Event not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
           }
         }
       },
-      "delete": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "eventId",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/api/{eventId}/leave": {
-      "patch": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "eventId",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "500": {
-            "description": "Internal Server Error"
+      "/api/events/{eventId}/kick/{userId}": {
+        "delete": {
+          "description": "Remove a user from an event by event ID and user ID.",
+          "parameters": [
+            {
+              "name": "eventId",
+              "in": "path",
+              "required": true,
+              "type": "string",
+              "description": "ID of the event"
+            },
+            {
+              "name": "userId",
+              "in": "path",
+              "required": true,
+              "type": "string",
+              "description": "ID of the user to remove"
+            },
+            {
+              "name": "authorization",
+              "in": "header",
+              "required": true,
+              "type": "string",
+              "description": "JWT token for authorization"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User successfully removed from the event"
+            },
+            "401": {
+              "description": "Unauthorized access"
+            },
+            "403": {
+              "description": "Access forbidden"
+            },
+            "404": {
+              "description": "Event or user not found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
           }
         }
-      }
-    },
-    "/api/events/{eventId}/kick/{userId}": {
-      "delete": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "eventId",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
+      },    
     "/api/events/{eventId}/authorize": {
       "post": {
-        "description": "",
+        "description": "Authorize a payment and store authorization ID",
         "parameters": [
           {
             "name": "eventId",
@@ -1527,16 +952,19 @@
           {
             "name": "authorization",
             "in": "header",
+            "required": true,
             "type": "string"
           },
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "authorizationID": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "AUTH-1234567890"
                 }
               }
             }
@@ -1544,13 +972,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
+            "description": "Authorization ID stored successfully"
           },
           "500": {
             "description": "Internal Server Error"
@@ -1560,7 +982,7 @@
     },
     "/api/events/{eventId}/capture": {
       "post": {
-        "description": "",
+        "description": "Capture an authorized payment",
         "parameters": [
           {
             "name": "eventId",
@@ -1571,12 +993,13 @@
           {
             "name": "authorization",
             "in": "header",
+            "required": true,
             "type": "string"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Payment captured successfully"
           },
           "400": {
             "description": "Bad Request"
@@ -1588,7 +1011,7 @@
             "description": "Forbidden"
           },
           "404": {
-            "description": "Not Found"
+            "description": "Payment not found"
           },
           "500": {
             "description": "Internal Server Error"
@@ -1598,7 +1021,7 @@
     },
     "/api/payments/capture/{eventId}": {
       "put": {
-        "description": "",
+        "description": "Capture payment for an event",
         "parameters": [
           {
             "name": "eventId",
@@ -1609,12 +1032,13 @@
           {
             "name": "authorization",
             "in": "header",
+            "required": true,
             "type": "string"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Payment captured successfully"
           },
           "400": {
             "description": "Bad Request"
@@ -1626,7 +1050,7 @@
             "description": "Forbidden"
           },
           "404": {
-            "description": "Not Found"
+            "description": "Payment not found"
           },
           "500": {
             "description": "Internal Server Error"
@@ -1636,16 +1060,18 @@
     },
     "/refreshToken": {
       "delete": {
-        "description": "",
+        "description": "Remove a refresh token",
         "parameters": [
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "token": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "REFRESH-TOKEN-1234567890"
                 }
               }
             }
@@ -1653,13 +1079,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Token successfully removed"
           },
           "400": {
             "description": "Bad Request"
           },
           "404": {
-            "description": "Not Found"
+            "description": "Token not found"
           },
           "500": {
             "description": "Internal Server Error"
@@ -1667,10 +1093,10 @@
         }
       },
       "get": {
-        "description": "",
+        "description": "Get a new access token using a refresh token",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "New access token generated"
           },
           "400": {
             "description": "Bad Request"
@@ -1684,17 +1110,42 @@
         }
       },
       "post": {
-        "description": "",
+        "description": "Refresh an access token using a refresh token",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "token": {
+                  "type": "string",
+                  "example": "REFRESH-TOKEN-1234567890"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
-          "default": {
-            "description": ""
+          "200": {
+            "description": "New access token generated"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
     },
     "/game": {
       "get": {
-        "description": "",
+        "description": "Retrieve the current game state",
         "responses": {
           "200": {
             "description": "OK"
@@ -1704,39 +1155,56 @@
     },
     "/save-game": {
       "post": {
-        "description": "",
+        "description": "Save a game state",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
+            "required": true,
             "type": "string"
           },
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "gridSize": {
-                  "example": "any"
+                  "type": "integer",
+                  "example": 10
                 },
                 "buildingsGrid": {
-                  "example": "any"
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "example": "commercial"
+                    }
+                  },
+                  "example": [["commercial", "residential"], [null, null]]
                 },
                 "points": {
-                  "example": "any"
+                  "type": "integer",
+                  "example": 1000
                 },
                 "coins": {
-                  "example": "any"
+                  "type": "integer",
+                  "example": 500
                 },
                 "turnNumber": {
-                  "example": "any"
+                  "type": "integer",
+                  "example": 15
                 },
                 "gameMode": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "survival"
                 },
                 "saveDate": {
-                  "example": "any"
+                  "type": "string",
+                  "format": "date-time",
+                  "example": "2024-07-28T14:30:00Z"
                 }
               }
             }
@@ -1744,7 +1212,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Game saved successfully"
           },
           "400": {
             "description": "Bad Request"
@@ -1763,39 +1231,56 @@
     },
     "/save-game2": {
       "post": {
-        "description": "",
+        "description": "Save a game state for high scores",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
+            "required": true,
             "type": "string"
           },
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "gridSize": {
-                  "example": "any"
+                  "type": "integer",
+                  "example": 10
                 },
                 "buildingsGrid": {
-                  "example": "any"
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "example": "commercial"
+                    }
+                  },
+                  "example": [["commercial", "residential"], [null, null]]
                 },
                 "points": {
-                  "example": "any"
+                  "type": "integer",
+                  "example": 1000
                 },
                 "coins": {
-                  "example": "any"
+                  "type": "integer",
+                  "example": 500
                 },
                 "turnNumber": {
-                  "example": "any"
+                  "type": "integer",
+                  "example": 15
                 },
                 "gameMode": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "survival"
                 },
                 "saveDate": {
-                  "example": "any"
+                  "type": "string",
+                  "format": "date-time",
+                  "example": "2024-07-28T14:30:00Z"
                 }
               }
             }
@@ -1803,7 +1288,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Game saved successfully"
           },
           "400": {
             "description": "Bad Request"
@@ -1822,11 +1307,12 @@
     },
     "/get-games": {
       "get": {
-        "description": "",
+        "description": "Retrieve saved games for a user",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
+            "required": true,
             "type": "string"
           }
         ],
@@ -1848,11 +1334,12 @@
     },
     "/get-high-scores": {
       "get": {
-        "description": "",
+        "description": "Retrieve the high scores",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
+            "required": true,
             "type": "string"
           }
         ],
@@ -1874,24 +1361,28 @@
     },
     "/create-high-score": {
       "post": {
-        "description": "",
+        "description": "Create a high score entry",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
+            "required": true,
             "type": "string"
           },
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "gameId": {
-                  "example": "any"
+                  "type": "integer",
+                  "example": 1
                 },
                 "playerName": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "Player1"
                 }
               }
             }
@@ -1899,7 +1390,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "High score created successfully"
           },
           "400": {
             "description": "Bad Request"
@@ -2983,113 +2474,102 @@
     },
     "/admin": {
       "get": {
-      "summary": "Retrieve All Admins",
-      "description": "Endpoint to retrieve a list of all admin accounts. This provides details about all admin users in the system.",
-      "responses": {
-        "200": {
-          "description": "OK - Successfully retrieved the list of admins."
-        },
-        "500": {
-          "description": "Internal Server Error - An error occurred while processing the request."
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
         }
       }
     },
-    "post": {
-      "summary": "Create a New Admin",
-      "description": "Endpoint to create a new admin account. The request body should include the necessary details to create an admin user.",
-      "responses": {
-        "201": {
-          "description": "Created - Successfully created a new admin."
-        },
-        "400": {
-          "description": "Bad Request - The request could not be processed due to invalid input."
-        },
-        "500": {
-          "description": "Internal Server Error - An error occurred while processing the request."
-        }
-      }
-    }
-  },
     "/admin/{adminId}": {
       "get": {
-      "summary": "Retrieve Admin Details",
-      "description": "Endpoint to retrieve details of a specific admin account by admin ID. This provides information about a single admin user.",
-      "parameters": [
-        {
-          "name": "adminId",
-          "in": "path",
-          "required": true,
-          "schema": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "adminId",
+            "in": "path",
+            "required": true,
             "type": "string"
           }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
         }
-      ],
-      "responses": {
-        "200": {
-          "description": "OK - Successfully retrieved the admin details."
-        },
-        "404": {
-          "description": "Not Found - The admin with the specified ID was not found."
-        },
-        "500": {
-          "description": "Internal Server Error - An error occurred while processing the request."
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "adminId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "adminId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
         }
       }
     },
-    "put": {
-      "summary": "Update Admin Details",
-      "description": "Endpoint to update details of a specific admin account by admin ID. The request body should include the updated details for the admin.",
-      "parameters": [
-        {
-          "name": "adminId",
-          "in": "path",
-          "required": true,
-          "schema": {
-            "type": "string"
-          }
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "OK - Successfully updated the admin details."
-        },
-        "400": {
-          "description": "Bad Request - The request could not be processed due to invalid input."
-        },
-        "404": {
-          "description": "Not Found - The admin with the specified ID was not found."
-        },
-        "500": {
-          "description": "Internal Server Error - An error occurred while processing the request."
-        }
-      }
-    },
-    "delete": {
-      "summary": "Delete Admin",
-      "description": "Endpoint to delete a specific admin account by admin ID. This removes the admin from the system.",
-      "parameters": [
-        {
-          "name": "adminId",
-          "in": "path",
-          "required": true,
-          "schema": {
-            "type": "string"
-          }
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "OK - Successfully deleted the admin."
-        },
-        "404": {
-          "description": "Not Found - The admin with the specified ID was not found."
-        },
-        "500": {
-          "description": "Internal Server Error - An error occurred while processing the request."
-        }
-      }
-    }
-  },
     "/api/article": {
       "get": {
         "description": "",
@@ -3390,775 +2870,251 @@
     },
     "/api/profile/{userId}": {
       "get": {
-      "summary": "Get user profile by ID",
-      "description": "Retrieve the profile information of a specific user based on their user ID. This includes details such as name, email, and profile picture.",
-      "parameters": [
-        {
-          "name": "userId",
-          "in": "path",
-          "required": true,
-          "schema": {
-            "type": "string",
-            "example": "123"
+        "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
           }
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "Profile retrieved successfully",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "userId": {
-                    "type": "integer",
-                    "example": 123
-                  },
-                  "name": {
-                    "type": "string",
-                    "example": "John Doe"
-                  },
-                  "email": {
-                    "type": "string",
-                    "example": "john.doe@example.com"
-                  },
-                  "profilePicture": {
-                    "type": "string",
-                    "format": "uri",
-                    "example": "https://example.com/images/profile123.jpg"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "404": {
-          "description": "User not found",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "error": {
-                    "type": "string",
-                    "example": "User not found"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "500": {
-          "description": "Internal Server Error",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "error": {
-                    "type": "string",
-                    "example": "Error retrieving user profile"
-                  }
-                }
-              }
-            }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
-    }
-  },
+    },
     "/api/profilePicture/{userId}": {
       "get": {
-      "summary": "Get user profile picture by ID",
-      "description": "Retrieve the profile picture of a specific user based on their user ID.",
-      "parameters": [
-        {
-          "name": "userId",
-          "in": "path",
-          "required": true,
-          "schema": {
-            "type": "string",
-            "example": "123"
+        "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
           }
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "Profile picture retrieved successfully",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "profilePicture": {
-                    "type": "string",
-                    "format": "uri",
-                    "example": "https://example.com/images/profile123.jpg"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "404": {
-          "description": "User or profile picture not found",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "error": {
-                    "type": "string",
-                    "example": "Profile picture not found"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "500": {
-          "description": "Internal Server Error",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "error": {
-                    "type": "string",
-                    "example": "Error retrieving profile picture"
-                  }
-                }
-              }
-            }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
-    }
-  },
+    },
     "/api/uploadProfilePicture/{userId}": {
       "post": {
-      "summary": "Upload a new profile picture for the user",
-      "description": "Upload a new profile picture for a specific user based on their user ID. Requires authorization and specific permissions.",
-      "parameters": [
-        {
-          "name": "userId",
-          "in": "path",
-          "required": true,
-          "schema": {
-            "type": "string",
-            "example": "123"
+        "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
           }
-        },
-        {
-          "name": "authorization",
-          "in": "header",
-          "required": true,
-          "schema": {
-            "type": "string",
-            "example": "Bearer <token>"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
-      ],
-      "requestBody": {
-        "required": true,
-        "content": {
-          "multipart/form-data": {
+      }
+    },
+    "/api/getAboutInfo/{userId}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/saveAboutInfo/{userId}": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
             "schema": {
               "type": "object",
               "properties": {
-                "file": {
-                  "type": "string",
-                  "format": "binary"
-                }
-              },
-              "required": ["file"]
-            }
-          }
-        }
-      },
-      "responses": {
-        "200": {
-          "description": "Profile picture uploaded successfully",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "type": "string",
-                    "example": "Profile picture updated successfully"
-                  }
+                "about": {
+                  "example": "any"
                 }
               }
             }
           }
-        },
-        "401": {
-          "description": "Unauthorized - Invalid or missing authentication",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "error": {
-                    "type": "string",
-                    "example": "Unauthorized access"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "403": {
-          "description": "Forbidden - Insufficient permissions",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "error": {
-                    "type": "string",
-                    "example": "Forbidden - Insufficient permissions"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "404": {
-          "description": "User not found",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "error": {
-                    "type": "string",
-                    "example": "User not found"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "500": {
-          "description": "Internal Server Error",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "error": {
-                    "type": "string",
-                    "example": "Error uploading profile picture"
-                  }
-                }
-              }
-            }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
-    }
-  },
-    "/api/getAboutInfo/{userId}": {
-      "get": {
-      "summary": "Get user's 'About' information",
-      "description": "Retrieve the 'About' information for a specific user based on their user ID.",
-      "parameters": [
-        {
-          "name": "userId",
-          "in": "path",
-          "required": true,
-          "schema": {
-            "type": "string",
-            "example": "123"
-          }
-        },
-        {
-          "name": "authorization",
-          "in": "header",
-          "required": true,
-          "schema": {
-            "type": "string",
-            "example": "Bearer <token>"
-          }
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "About information retrieved successfully",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "about": {
-                    "type": "string",
-                    "example": "This is a brief description about the user."
-                  }
-                }
-              }
-            }
-          }
-        },
-        "401": {
-          "description": "Unauthorized - Invalid or missing authentication",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "error": {
-                    "type": "string",
-                    "example": "Unauthorized access"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "403": {
-          "description": "Forbidden - Insufficient permissions",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "error": {
-                    "type": "string",
-                    "example": "Forbidden - Insufficient permissions"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "404": {
-          "description": "User or 'About' information not found",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "error": {
-                    "type": "string",
-                    "example": "User or 'About' information not found"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "500": {
-          "description": "Internal Server Error",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "error": {
-                    "type": "string",
-                    "example": "Error retrieving 'About' information"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-    "/api/saveAboutInfo/{userId}": {
-      "post": {
-      "summary": "Save or update user's 'About' information",
-      "description": "Save or update the 'About' information for a specific user based on their user ID. Requires authorization and specific permissions.",
-      "parameters": [
-        {
-          "name": "userId",
-          "in": "path",
-          "required": true,
-          "schema": {
-            "type": "string",
-            "example": "123"
-          }
-        },
-        {
-          "name": "authorization",
-          "in": "header",
-          "required": true,
-          "schema": {
-            "type": "string",
-            "example": "Bearer <token>"
-          }
-        },
-        {
-          "name": "body",
-          "in": "body",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "about": {
-                    "type": "string",
-                    "example": "This is a brief description about the user."
-                  }
-                },
-                "required": ["about"]
-              }
-            }
-          }
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "About information updated successfully",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "type": "string",
-                    "example": "About information updated successfully"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "401": {
-          "description": "Unauthorized - Invalid or missing authentication",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "error": {
-                    "type": "string",
-                    "example": "Unauthorized access"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "403": {
-          "description": "Forbidden - Insufficient permissions",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "error": {
-                    "type": "string",
-                    "example": "Forbidden - Insufficient permissions"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "404": {
-          "description": "User not found",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "error": {
-                    "type": "string",
-                    "example": "User not found"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "500": {
-          "description": "Internal Server Error",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "error": {
-                    "type": "string",
-                    "example": "Error updating 'About' information"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
+    },
     "/api/adminProfile/{adminId}": {
       "get": {
-      "summary": "Retrieve admin profile information",
-      "description": "Fetches the profile information (name, email, and profile picture URL) of an admin using their adminId.",
-      "parameters": [
-        {
-          "name": "adminId",
-          "in": "path",
-          "required": true,
-          "schema": {
-            "type": "string",
-            "example": "1"
+        "description": "",
+        "parameters": [
+          {
+            "name": "adminId",
+            "in": "path",
+            "required": true,
+            "type": "string"
           }
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "Admin profile information retrieved successfully",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "example": "Admin Name"
-                  },
-                  "email": {
-                    "type": "string",
-                    "example": "admin@example.com"
-                  },
-                  "profilePictureUrl": {
-                    "type": "string",
-                    "example": "/api/adminProfilePicture/1"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "404": {
-          "description": "Admin not found",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "type": "string",
-                    "example": "Admin not found"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "500": {
-          "description": "Internal server error",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "type": "string",
-                    "example": "Error fetching admin data"
-                  }
-                }
-              }
-            }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
-    }
-  },
+    },
     "/api/adminProfilePicture/{adminId}": {
       "get": {
-      "summary": "Retrieve admin profile picture",
-      "description": "Fetches the profile picture of an admin using their adminId. The picture is served as an image file.",
-      "parameters": [
-        {
-          "name": "adminId",
-          "in": "path",
-          "required": true,
-          "schema": {
-            "type": "string",
-            "example": "1"
+        "description": "",
+        "parameters": [
+          {
+            "name": "adminId",
+            "in": "path",
+            "required": true,
+            "type": "string"
           }
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "Admin profile picture retrieved successfully",
-          "content": {
-            "image/jpeg": {
-              "schema": {
-                "type": "string",
-                "format": "binary"
-              }
-            }
-          }
-        },
-        "404": {
-          "description": "Profile picture not found",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "type": "string",
-                    "example": "Profile picture not found"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "500": {
-          "description": "Internal server error",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "type": "string",
-                    "example": "Error fetching profile picture"
-                  }
-                }
-              }
-            }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
-    }
-  },
+    },
     "/api/uploadAdminProfilePicture/{adminId}": {
       "post": {
-      "summary": "Upload a new profile picture for an admin",
-      "description": "Uploads a new profile picture for the admin specified by adminId. Requires authorization.",
-      "parameters": [
-        {
-          "name": "adminId",
-          "in": "path",
-          "required": true,
-          "schema": {
-            "type": "string",
-            "example": "1"
+        "description": "",
+        "parameters": [
+          {
+            "name": "adminId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
           }
-        },
-        {
-          "name": "authorization",
-          "in": "header",
-          "required": true,
-          "schema": {
-            "type": "string",
-            "example": "Bearer <token>"
-          }
-        },
-        {
-          "name": "body",
-          "in": "body",
-          "required": true,
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "profilePicture": {
-                    "type": "string",
-                    "format": "binary"
-                  }
-                },
-                "required": ["profilePicture"]
-              }
-            }
-          }
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "Profile picture uploaded successfully",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "profilePictureUrl": {
-                    "type": "string",
-                    "example": "/api/adminProfilePicture/1"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "401": {
-          "description": "Unauthorized - Invalid or missing authentication",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "type": "string",
-                    "example": "Unauthorized access"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "403": {
-          "description": "Forbidden - Insufficient permissions",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "type": "string",
-                    "example": "Forbidden - Insufficient permissions"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "404": {
-          "description": "Admin not found",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "type": "string",
-                    "example": "Admin not found"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "500": {
-          "description": "Internal server error",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "type": "string",
-                    "example": "Failed to upload profile picture"
-                  }
-                }
-              }
-            }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
     }
-  }
   }
 }
