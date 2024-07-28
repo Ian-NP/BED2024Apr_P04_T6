@@ -1,6 +1,6 @@
 //import dotenv from 'dotenv';
 //dotenv.config();
-require('dotenv').config();
+// require('dotenv').config();
 import express from "express";
 import bodyParser from "body-parser";
 import sql from "mssql";
@@ -244,7 +244,7 @@ app.get("/api/chatbot/:conversationId", authenticateToken,  chatBotController.fe
 app.post("/api/chatbot/:conversationId", authenticateToken, validateAddChatHistory, chatBotController.postUserInput);
 
 app.get("/api/chatConversation/:userId", authenticateToken, chatBotController.fetchChatConversationsByUserId);
-app.post("/api/chatConversation/:userId", validateEditConversationTitle, chatBotController.addNewConversation);
+app.post("/api/chatConversation/:userId", authenticateToken, validateEditConversationTitle, chatBotController.addNewConversation);
 app.put("/api/chatConversation/:conversationId", authenticateToken, validateEditConversationTitle, chatBotController.editConversationTitle);
 app.delete("/api/chatConversation/:conversationId", authenticateToken, chatBotController.deleteChatConversation);
 

@@ -1,5 +1,5 @@
 {
-  "swagger": "2.0",
+  "openapi": "3.0.0",
   "info": {
     "title": "My API",
     "description": "Description of your API",
@@ -1258,280 +1258,657 @@
         }
       }
     },
-    "/api/article/comment/{commentId}": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "commentId",
-            "in": "path",
-            "required": true,
+"/api/article/comment/{commentId}": {
+    "get": {
+      "summary": "Get a specific comment by ID",
+      "parameters": [
+        {
+          "name": "commentId",
+          "in": "path",
+          "required": true,
+          "schema": {
             "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
           },
-          "500": {
-            "description": "Internal Server Error"
-          }
+          "description": "The ID of the comment to retrieve"
         }
-      }
-    },
-    "/api/article/{articleId}/comments/latest": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "articleId",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/api/article/{articleId}/comments/relevance": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "articleId",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/api/article/{articleId}/comments": {
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "articleId",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "articleId": {
-                  "example": "any"
-                },
-                "eventId": {
-                  "example": "any"
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "commentId": {
+                    "type": "integer"
+                  },
+                  "content": {
+                    "type": "string"
+                  },
+                  "parentCommentId": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "timeStamp": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "score": {
+                    "type": "integer"
+                  },
+                  "userId": {
+                    "type": "integer"
+                  },
+                  "articleId": {
+                    "type": "integer"
+                  }
                 }
               }
             }
           }
+        },
+        "500": {
+          "description": "Internal Server Error"
+        }
+      }
+    }
+  },
+  "/api/article/{articleId}/comments/latest": {
+    "get": {
+      "summary": "Get the latest comments for an article",
+      "parameters": [
+        {
+          "name": "articleId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "The ID of the article for which to retrieve comments"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "commentId": {
+                      "type": "integer"
+                    },
+                    "content": {
+                      "type": "string"
+                    },
+                    "parentCommentId": {
+                      "type": "integer",
+                      "nullable": true
+                    },
+                    "timeStamp": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "score": {
+                      "type": "integer"
+                    },
+                    "userId": {
+                      "type": "integer"
+                    },
+                    "articleId": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Internal Server Error"
+        }
+      }
+    }
+  },
+  "/api/article/{articleId}/comments/relevance": {
+    "get": {
+      "summary": "Get the most relevant comments for an article",
+      "parameters": [
+        {
+          "name": "articleId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "The ID of the article for which to retrieve comments"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "commentId": {
+                      "type": "integer"
+                    },
+                    "content": {
+                      "type": "string"
+                    },
+                    "parentCommentId": {
+                      "type": "integer",
+                      "nullable": true
+                    },
+                    "timeStamp": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "score": {
+                      "type": "integer"
+                    },
+                    "userId": {
+                      "type": "integer"
+                    },
+                    "articleId": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Internal Server Error"
+        }
+      }
+    }
+  },
+    "/api/article/{articleId}/comments": {
+      "post": {
+        "summary": "Create a new comment for an article",
+        "description": "Create a new comment associated with a specific article.",
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the article for which to create a comment"
+          }
         ],
+        "requestBody": {
+          "description": "The comment data to create",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content": {
+                    "type": "string",
+                    "description": "The content of the comment",
+                    "example": "This is a sample comment."
+                  },
+                  "score": {
+                    "type": "integer",
+                    "description": "The score of the comment",
+                    "example": 5
+                  },
+                  "timeStamp": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "The timestamp of the comment",
+                    "example": "2023-07-28T12:34:56Z"
+                  },
+                  "userId": {
+                    "type": "integer",
+                    "description": "The ID of the user creating the comment",
+                    "example": 123
+                  },
+                  "articleId": {
+                    "type": "integer",
+                    "description": "The ID of the article",
+                    "example": 456
+                  },
+                  "parentCommentId": {
+                    "type": "integer",
+                    "nullable": true,
+                    "description": "The ID of the parent comment, if this is a reply",
+                    "example": null
+                  }
+                },
+                "required": ["content", "score", "timeStamp", "userId", "articleId"]
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "commentId": {
+                      "type": "integer"
+                    },
+                    "content": {
+                      "type": "string"
+                    },
+                    "parentCommentId": {
+                      "type": "integer",
+                      "nullable": true
+                    },
+                    "timeStamp": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "score": {
+                      "type": "integer"
+                    },
+                    "userId": {
+                      "type": "integer"
+                    },
+                    "articleId": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "ArticleId mismatch with parent comment"
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal Server Error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "Error creating comment"
+                }
+              }
+            }
           }
         }
       },
       "put": {
-        "description": "",
+        "summary": "Update a comment for an article",
+        "description": "Update the content and/or score of a comment associated with a specific article.",
         "parameters": [
           {
             "name": "articleId",
             "in": "path",
             "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
             "schema": {
-              "type": "object",
-              "properties": {
-                "articleId": {
-                  "example": "any"
+              "type": "integer"
+            },
+            "description": "The ID of the article for which to update a comment"
+          }
+        ],
+        "requestBody": {
+          "description": "The updated comment data",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "commentId": {
+                    "type": "integer",
+                    "description": "The ID of the comment to update",
+                    "example": 1
+                  },
+                  "content": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "The new content of the comment",
+                    "example": "This is the updated comment content."
+                  },
+                  "score": {
+                    "type": "integer",
+                    "nullable": true,
+                    "description": "The new score of the comment",
+                    "example": 4
+                  }
                 },
-                "eventId": {
-                  "example": "any"
-                },
-                "commentId": {
-                  "example": "any"
-                },
-                "content": {
-                  "example": "any"
-                },
-                "score": {
-                  "example": "any"
-                }
+                "required": ["commentId"]
               }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "commentId": {
+                      "type": "integer"
+                    },
+                    "content": {
+                      "type": "string"
+                    },
+                    "parentCommentId": {
+                      "type": "integer",
+                      "nullable": true
+                    },
+                    "timeStamp": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "score": {
+                      "type": "integer"
+                    },
+                    "userId": {
+                      "type": "integer"
+                    },
+                    "articleId": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "At least one of newContent or newScore must be provided."
+                }
+              }
+            }
           },
           "404": {
-            "description": "Not Found"
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "Comment not found"
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal Server Error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "Error updating comment"
+                }
+              }
+            }
           }
         }
       },
       "delete": {
-        "description": "",
+        "summary": "Delete a comment for an article",
+        "description": "Delete a specific comment associated with a specific article.",
         "parameters": [
           {
             "name": "articleId",
             "in": "path",
             "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
             "schema": {
-              "type": "object",
-              "properties": {
-                "commentId": {
-                  "example": "any"
-                }
+              "type": "integer"
+            },
+            "description": "The ID of the article for which to delete a comment"
+          }
+        ],
+        "requestBody": {
+          "description": "The ID of the comment to delete",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "commentId": {
+                    "type": "integer",
+                    "description": "The ID of the comment to delete",
+                    "example": 789
+                  }
+                },
+                "required": ["commentId"]
               }
             }
           }
-        ],
+        },
         "responses": {
           "204": {
             "description": "No Content"
           },
           "404": {
-            "description": "Not Found"
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "Comment not found"
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal Server Error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "Error deleting comment"
+                }
+              }
+            }
           }
         }
       }
     },
     "/api/event/comment/{commentId}": {
       "get": {
-        "description": "",
+        "summary": "Get a specific comment by ID",
+        "description": "Retrieve a specific comment by its commentId.",
         "parameters": [
           {
             "name": "commentId",
             "in": "path",
             "required": true,
-            "type": "string"
+            "description": "The unique identifier of the comment to retrieve.",
+            "schema": {
+              "type": "integer"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "The requested comment details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "commentId": { "type": "integer", "example": 1 },
+                    "content": { "type": "string", "example": "This is a comment." },
+                    "score": { "type": "integer", "example": 10 },
+                    "timeStamp": { "type": "string", "format": "date-time", "example": "2023-01-01T12:00:00Z" },
+                    "userId": { "type": "integer", "example": 1 },
+                    "eventId": { "type": "integer", "example": 1 },
+                    "parentCommentId": { "type": "integer", "example": null }
+                  }
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal Server Error."
           }
         }
       }
     },
     "/api/event/{eventId}/comments/latest": {
       "get": {
-        "description": "",
+        "summary": "Get comments for a specific event, ordered by latest timestamp",
+        "description": "Retrieve all comments for a specific event, ordered by latest timestamp.",
         "parameters": [
           {
             "name": "eventId",
             "in": "path",
             "required": true,
-            "type": "string"
+            "description": "The unique identifier of the event.",
+            "schema": {
+              "type": "integer"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "A list of comments ordered by the latest timestamp.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "commentId": { "type": "integer", "example": 1 },
+                      "content": { "type": "string", "example": "This is a comment." },
+                      "score": { "type": "integer", "example": 10 },
+                      "timeStamp": { "type": "string", "format": "date-time", "example": "2023-01-01T12:00:00Z" },
+                      "userId": { "type": "integer", "example": 1 },
+                      "eventId": { "type": "integer", "example": 1 },
+                      "parentCommentId": { "type": "integer", "example": null },
+                      "level": { "type": "integer", "example": 0 }
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal Server Error."
           }
         }
       }
     },
     "/api/event/{eventId}/comments/relevance": {
       "get": {
-        "description": "",
+        "summary": "Get comments for a specific event, ordered by relevance score",
+        "description": "Retrieve all comments for a specific event, ordered by relevance score.",
         "parameters": [
           {
             "name": "eventId",
             "in": "path",
             "required": true,
-            "type": "string"
+            "description": "The unique identifier of the event.",
+            "schema": {
+              "type": "integer"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "A list of comments ordered by relevance score.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "commentId": { "type": "integer", "example": 1 },
+                      "content": { "type": "string", "example": "This is a comment." },
+                      "score": { "type": "integer", "example": 10 },
+                      "timeStamp": { "type": "string", "format": "date-time", "example": "2023-01-01T12:00:00Z" },
+                      "userId": { "type": "integer", "example": 1 },
+                      "eventId": { "type": "integer", "example": 1 },
+                      "parentCommentId": { "type": "integer", "example": null },
+                      "level": { "type": "integer", "example": 0 }
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal Server Error."
           }
         }
       }
     },
     "/api/event/{eventId}/comments": {
       "post": {
-        "description": "",
+        "summary": "Create a new comment for the event",
+        "description": "Create a new comment for the event.",
         "parameters": [
           {
             "name": "eventId",
             "in": "path",
             "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
             "schema": {
-              "type": "object",
-              "properties": {
-                "articleId": {
-                  "example": "any"
-                },
-                "eventId": {
-                  "example": "any"
-                }
-              }
+              "type": "integer"
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "articleId": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "eventId": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "content": {
+                    "type": "string",
+                    "example": "This is a comment."
+                  },
+                  "score": {
+                    "type": "integer",
+                    "example": 5
+                  },
+                  "parentCommentId": {
+                    "type": "integer",
+                    "example": null
+                  }
+                },
+                "required": ["eventId", "content"]
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": "Created"
@@ -1545,39 +1922,51 @@
         }
       },
       "put": {
-        "description": "",
+        "summary": "Update an existing comment for the event",
+        "description": "Update an existing comment for the event.",
         "parameters": [
           {
             "name": "eventId",
             "in": "path",
             "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
             "schema": {
-              "type": "object",
-              "properties": {
-                "articleId": {
-                  "example": "any"
-                },
-                "eventId": {
-                  "example": "any"
-                },
-                "commentId": {
-                  "example": "any"
-                },
-                "content": {
-                  "example": "any"
-                },
-                "score": {
-                  "example": "any"
-                }
-              }
+              "type": "integer"
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "articleId": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "eventId": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "commentId": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "content": {
+                    "type": "string",
+                    "example": "Updated comment content."
+                  },
+                  "score": {
+                    "type": "integer",
+                    "example": 4
+                  }
+                },
+                "required": ["commentId"]
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -1594,27 +1983,35 @@
         }
       },
       "delete": {
-        "description": "",
+        "summary": "Delete an existing comment for the event",
+        "description": "Delete an existing comment for the event.",
         "parameters": [
           {
             "name": "eventId",
             "in": "path",
             "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
             "schema": {
-              "type": "object",
-              "properties": {
-                "commentId": {
-                  "example": "any"
-                }
-              }
+              "type": "integer"
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "commentId": {
+                    "type": "integer",
+                    "example": 1
+                  }
+                },
+                "required": ["commentId"]
+              }
+            }
+          }
+        },
         "responses": {
           "204": {
             "description": "No Content"
@@ -1630,23 +2027,61 @@
     },
     "/api/chatbot/{conversationId}": {
       "get": {
-        "description": "",
+        "summary": "Fetch Chat History",
+        "description": "Retrieve the full chat history for a given conversation ID. If no chat history is found, initialize with a welcome message and predefined responses.",
         "parameters": [
           {
             "name": "conversationId",
             "in": "path",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "chatHistory": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "role": {
+                            "type": "string"
+                          },
+                          "text": {
+                            "type": "string"
+                          },
+                          "chatHistoryId": {
+                            "type": "integer"
+                          },
+                          "timeStamp": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "conversationId": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
@@ -1660,35 +2095,57 @@
         }
       },
       "post": {
-        "description": "",
+        "summary": "Send User Input to Chatbot",
+        "description": "Send a user query to the chatbot and get the response. The query and response are stored in the chat history.",
         "parameters": [
           {
             "name": "conversationId",
             "in": "path",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
             "schema": {
-              "type": "object",
-              "properties": {
-                "query": {
-                  "example": "any"
-                }
-              }
+              "type": "string"
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "string",
+                    "example": "any"
+                  }
+                },
+                "required": ["query"]
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request"
@@ -1707,7 +2164,8 @@
     },
     "/api/chatConversation/{userId}": {
       "get": {
-        "description": "",
+        "summary": "Retrieve all chat conversations for a given user",
+        "description": "This endpoint retrieves all chat conversations associated with a specific user, identified by their userId. The results are ordered by the timestamp in descending order.",
         "parameters": [
           {
             "name": "userId",
@@ -1737,12 +2195,18 @@
         }
       },
       "post": {
+        "summary": "Create a new chat conversation for a user",
         "description": "",
         "parameters": [
           {
             "name": "userId",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           },
           {
@@ -1776,7 +2240,8 @@
     },
     "/api/chatConversation/{conversationId}": {
       "put": {
-        "description": "",
+        "summary": "Update the title of an existing chat conversation",
+        "description": "This endpoint updates the title of an existing chat conversation identified by its conversationId.",
         "parameters": [
           {
             "name": "conversationId",
@@ -1824,7 +2289,8 @@
         }
       },
       "delete": {
-        "description": "",
+        "summary": "Delete an existing chat conversation along with chat histories in the chat conversation",
+        "description": "This endpoint deletes an existing chat conversation identified by its conversationId",
         "parameters": [
           {
             "name": "conversationId",
