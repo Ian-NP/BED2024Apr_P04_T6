@@ -1,4 +1,4 @@
-const { authorizePayment, capturePayment } = require('./paymentController');
+const { authorizePayment, capturePayment } = require('../controllers/eventPaymentController');
 const EventPaymentsModel = require('../models/eventPaymentModel');
 const fetch = require('node-fetch');
 
