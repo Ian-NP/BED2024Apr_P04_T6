@@ -31,13 +31,13 @@ Introducing A+4BED, your...
 | Favouriting articles and viewing favourites                               | Yun Ze   |
 | Creating blogs and viewing created blogs                                  | Yun Ze   |
 | Edit and Delete created blogs                                             | Yun Ze   |
-| Edit and Delete created blogs                                             | Dallas   |
+| Viewing Events                                                            | Dallas   |
 | Edit and Delete created blogs                                             | Dallas   |
 | Edit and Delete created blogs                                             | Dallas   |
 | Edit and Delete created blogs                                             | Dallas   |
 
 ## Importing the SQL Database with .bacpac file
-![screenshot](https://github.com/Ian-NP/BED2024Apr_P04_T6/tree/main/BED_Assignment/public/images/Step-1.png)
+![screenshot](public/images/Step-1.png)
 
 ## Starting the Project
 To start the project, you must use the following commands after going to the directory "BED_Assignment":
