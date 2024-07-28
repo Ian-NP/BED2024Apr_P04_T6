@@ -313,75 +313,193 @@
       }
     },
     "/article": {
-      "get": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
+    "get": {
+      "description": "Retrieve all articles",
+      "responses": {
+        "200": {
+          "description": "A list of articles",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Article"
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Internal server error"
+        }
+      }
+    }
+  },
+  "/articleCreateBlog": {
+    "post": {
+      "description": "Serve the create article page",
+      "responses": {
+        "200": {
+          "description": "The create article page",
+          "content": {
+            "text/html": {}
           }
         }
       }
-    },
-    "/articleCreateBlog": {
-      "get": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
+    }
+  },
+  "/articleIndividual": {
+    "get": {
+      "description": "Retrieve a specific article by ID",
+      "parameters": [
+        {
+          "name": "articleId",
+          "in": "query",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "The ID of the article to retrieve"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "The requested article",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Article"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Article not found"
+        },
+        "500": {
+          "description": "Internal server error"
+        }
+      }
+    }
+  },
+  "/articleFavourites": {
+    "get": {
+      "description": "Retrieve favourite articles of a user",
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "query",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "The ID of the user"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "A list of favourite articles",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Article"
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Internal server error"
+        }
+      }
+    }
+  },
+  "/articleMyBlogs": {
+    "get": {
+      "description": "Retrieve all articles created by a specific user",
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "query",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "The ID of the user"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "A list of articles created by the user",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Article"
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Internal server error"
+        }
+      }
+    }
+  },
+  "/articleEdit": {
+    "put": {
+      "description": "Retrieve the article edit page",
+      "responses": {
+        "200": {
+          "description": "The article edit page",
+          "content": {
+            "text/html": {}
           }
         }
       }
-    },
-    "/articleIndividual": {
-      "get": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
+    }
+  },
+  "/articleSearch": {
+    "get": {
+      "description": "Search articles by title",
+      "parameters": [
+        {
+          "name": "title",
+          "in": "query",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "The title of the article to search for"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "A list of articles matching the search criteria",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Article"
+                }
+              }
+            }
           }
+        },
+        "400": {
+          "description": "Bad request. Title query parameter is required."
+        },
+        "500": {
+          "description": "Internal server error"
         }
       }
-    },
-    "/articleFavourites": {
-      "get": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/articleMyBlogs": {
-      "get": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/articleEdit": {
-      "get": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/articleSearch": {
-      "get": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
+    }
+  },
     "/profile": {
       "get": {
         "description": "",
