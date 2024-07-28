@@ -38,7 +38,7 @@ Introducing A+4BED, your one-stop solution for staying updated on industrial rel
 ## Importing the SQL Database with .bacpac file
 
 ### Step 1: Download the .bacpac File
-1. Download the file called "bed_assignment.bacpac" from your provided source and save it to a known location on your computer.
+1. Download the file called **"bed_assignment.bacpac"** from your provided source and save it to a known location on your computer.
 
 ### Step 2: Open SQL Server Management Studio
 1. Open SQL Server Management Studio and connect to your server.
