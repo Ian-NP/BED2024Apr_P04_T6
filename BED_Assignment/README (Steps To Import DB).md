@@ -13,27 +13,32 @@ Introducing A+4BED, your one-stop solution for staying updated on industrial rel
 
 ## Function-In-Charge
 
-| Functions-In-Charge                                                       | Name     |
-|:--------------------------------------------------------------------------|:---------|
-| Comment Section for Articles & Events                                     | Ian      |
-| Comment Section Filtering                                                 | Ian      |
-| ChatBot Conversation Regarding Industrial Relevance                       | Ian      |
-| Login for Users and Admins                                                | Daniel   |
-| Login for Users and Admins                                                | Daniel   |
-| Sign up for Users                                                         | Daniel   |
-| Profile section for Users and Admins                                      | Daniel   |
-| About section for Users                                                   | Daniel   |
-| Creation, deletion and updating of user and admin accounts that can only be done by admins | Daniel |
-| Viewing of all accounts registered to the website                         | Daniel   |
-| Searching of account                                                      | Daniel   |
-| Viewing all articles                                                      | Yun Ze   |
-| Favouriting articles and viewing favourites                               | Yun Ze   |
-| Creating blogs and viewing created blogs                                  | Yun Ze   |
-| Edit and Delete created blogs                                             | Yun Ze   |
-| Viewing Events                                                            | Dallas   |
-| Edit and Delete created blogs                                             | Dallas   |
-| Edit and Delete created blogs                                             | Dallas   |
-| Edit and Delete created blogs                                             | Dallas   |
+| Functions-In-Charge                                                                                     | Name   |
+|:--------------------------------------------------------------------------------------------------------|:-------|
+| Comment Section for Articles & Events for users to create comments to communicate with each other       | Ian    |
+| Comment Section Filtering by either latest, or relevancy (by comment-score)                             | Ian    |
+| Reply comments with indentations from parent Comment                                                    | Ian    |
+| Users can delete or edit their comments                                                                 | Ian    |
+| Have an insightful chat with a Chatbot regarding industrial relevance                                   | Ian    |
+| Create multiple chat conversations/instances and rename these chat conversations to keep things organized | Ian    |
+| Login for Users and Admins                                                                              | Daniel |
+| Sign up for Users                                                                                       | Daniel |
+| Profile section for Users and Admins                                                                    | Daniel |
+| About section for Users                                                                                 | Daniel |
+| Creation, deletion and updating of user and admin accounts that can only be done by admins              | Daniel |
+| Viewing of all accounts registered to the website                                                       | Daniel |
+| Searching of account                                                                                    | Daniel |
+| Viewing all articles                                                                                    | Yun Ze |
+| Favouriting articles and viewing favourites                                                             | Yun Ze |
+| Creating blogs and viewing created blogs                                                                | Yun Ze |
+| Edit and Delete created blogs                                                                           | Yun Ze |
+| Events page for company accounts to create events                                                       | Dallas |
+| Events page for non logged in or normal users to view events                                            | Dallas |
+| Specific event details page for users to see detailed info about events and allowing normal users to sign up for them. | Dallas |
+| Refresh Token to allow users to stay logged in longer while having security.                            | Dallas |
+| My Events page for normal users to see the events they have signed up for and leave any events that they have signed up for  | Dallas |
+| My events page for company users to kick normal attendees that signed up for their event or to delete an event they have created. | Dallas  |
+| Game page for normal users and company users that are logged in to play a game, save game files and view highscores. | Dallas  |
 
 ## Importing the SQL Database with .bacpac file
 
