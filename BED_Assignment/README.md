@@ -1,5 +1,4 @@
-# (BED Assignment 2024 | P04 | T6)
-# A+4BED: Industrial Relevance Website
+# (BED Assignment 2024 | P04 | T6) <br>A+4BED: Industrial Relevance Website
 
 ## Team Members:
 - Lim Weiqin Ian
@@ -9,7 +8,7 @@
 
 ## Introduction to the App
 Application’s Theme: **Industrial Relevance** <br> 
-Introducing A+4BED, your...
+Introducing A+4BED, your one-stop solution for staying updated on industrial relevance across various sectors. Our platform offers a wide array of features designed to enhance user engagement and provide comprehensive information on the latest trends, events, and discussions in the industrial sector. Whether you're a professional looking to stay informed or an enthusiast eager to learn more, A+4BED has something for everyone.
 
 
 ## Function-In-Charge
