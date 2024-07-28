@@ -1,3 +1,6 @@
+import dotenv from "dotenv"
+dotenv.config();
+
 module.exports = {
     user: process.env.DB_USER || "bed_tester", 
     password: process.env.DB_PASSWORD || "bed_tester123", 
