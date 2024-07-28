@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "My API",
-    "description": "Description of your API",
+    "title": "A+4BED API",
+    "description": "This the API Docmentation of A+4BED",
     "version": "1.0.0"
   },
   "host": "localhost:3001",
