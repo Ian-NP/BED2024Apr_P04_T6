@@ -70,18 +70,6 @@ To start the project, you must use the following commands after going to the dir
 npm install
 npm start
 
-## Create a ENV File and copy paste the following in
-JWT_SECRET=eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcyMTgyNTk0NSwiaWF0IjoxNzIxODI1OTQ1fQ.6bWc3XPN9pL0aNlRlzQO6sV7zYSmS2miabnPc8FT3jU
-refresh_token_secret_JWT_SECRET=eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcyMTgyNjMwNCwiaWF0IjoxNzIxODI2MzA0fQ.XIqe3ehqiGW1FbUxqAZmg_FFIz_khNHop2sHuDrwUT8
-CLIENT_ID=AUSL2LEGNMxJ--SJanS9eTDD9VBpELxFNOaw3os_LhAe4U9442xG2vfWIvvx5y9eyAfM-qb0Aqv0QHqF 
-CLIENT_SECRET=EI2si-Dpc3x0XjYP-76XUHOkK5XYA6cwf_i7oO0BOHptE37bfguSTx-zBYyOQjVzzLu4jD8f9cJX4a4J
-DB_USER=bed_tester
-DB_PASSWORD=bed_tester123
-DB_SERVER=localhost
-DB_NAME=bed_assignment
-GEMINI_API_KEY =AIzaSyCLmDy1L9RrGEYiDksKQEFKk_5GN9_3zxc
-
-
 ## Sign Up for a Company Email to Post an Event
 When signing up for a company email to post an event, use the following for the PayPal email:
 - **PayPal Email for Company:** `sb-janes31221073@business.example.com`
