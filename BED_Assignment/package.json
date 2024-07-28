@@ -5,7 +5,8 @@
   "scripts": {
     "start": "nodemon --experimental-json-modules --exec babel-node app.js",
     "debug": "set DEBUG=express:* & nodemon --experimental-json-modules --exec babel-node app.js",
-    "test": "jest"
+    "test": "jest",
+    "swagger-autogen": "node swagger.js"
   },
   "keywords": [],
   "author": "",
