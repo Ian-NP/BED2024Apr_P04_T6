@@ -61,22 +61,23 @@ describe('Payment Controller', () => {
         status: jest.fn().mockReturnThis()
       };
 
-      const mockAccessToken = 'mockToken123';
+      const mockAccessToken = 'mock_access_token';
       const mockAuthorizationID = 'auth123';
       const mockCaptureResponse = { id: 'capture123', status: 'COMPLETED' };
-
-      EventPaymentsModel.getAuthorizationID.mockResolvedValue(mockAuthorizationID);
-      EventPaymentsModel.capture.mockResolvedValue();
 
       fetch.mockResolvedValueOnce({
         ok: true,
         json: jest.fn().mockResolvedValue({ access_token: mockAccessToken })
       });
 
+      EventPaymentsModel.getAuthorizationID.mockResolvedValue(mockAuthorizationID);
+
       fetch.mockResolvedValueOnce({
         ok: true,
         json: jest.fn().mockResolvedValue(mockCaptureResponse)
       });
+
+      EventPaymentsModel.capture.mockResolvedValue();
 
       await capturePayment(req, res);
 
@@ -96,6 +97,11 @@ describe('Payment Controller', () => {
         status: jest.fn().mockReturnThis()
       };
 
+      fetch.mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue({ access_token: 'mock_access_token' })
+      });
+
       EventPaymentsModel.getAuthorizationID.mockResolvedValue(null);
 
       await capturePayment(req, res);
@@ -104,6 +110,54 @@ describe('Payment Controller', () => {
       expect(res.json).toHaveBeenCalledWith({ message: 'Payment not found' });
     });
 
-    // Add more tests for error scenarios...
+    it('should handle capture failure', async () => {
+      const req = {
+        params: { eventId: 'event123' },
+        user: { userId: 'user123' }
+      };
+      const res = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis()
+      };
+
+      const mockAccessToken = 'mock_access_token';
+      const mockAuthorizationID = 'auth123';
+      const mockErrorResponse = { error: 'Capture failed' };
+
+      fetch.mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue({ access_token: mockAccessToken })
+      });
+
+      EventPaymentsModel.getAuthorizationID.mockResolvedValue(mockAuthorizationID);
+
+      fetch.mockResolvedValueOnce({
+        ok: false,
+        json: jest.fn().mockResolvedValue(mockErrorResponse)
+      });
+
+      await capturePayment(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith(mockErrorResponse);
+    });
+
+    it('should handle internal server error', async () => {
+      const req = {
+        params: { eventId: 'event123' },
+        user: { userId: 'user123' }
+      };
+      const res = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis()
+      };
+
+      fetch.mockRejectedValue(new Error('Network error'));
+
+      await capturePayment(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Internal server error' });
+    });
   });
 });
