@@ -17,6 +17,7 @@ Introducing A+4BED, your...
 | Functions-In-Charge                                                       | Name     |
 |:--------------------------------------------------------------------------|:---------|
 | Comment Section for Articles & Events                                     | Ian      |
+| Comment Section Filtering                                                 | Ian      |
 | ChatBot Conversation Regarding Industrial Relevance                       | Ian      |
 | Login for Users and Admins                                                | Daniel   |
 | Login for Users and Admins                                                | Daniel   |
@@ -30,9 +31,13 @@ Introducing A+4BED, your...
 | Favouriting articles and viewing favourites                               | Yun Ze   |
 | Creating blogs and viewing created blogs                                  | Yun Ze   |
 | Edit and Delete created blogs                                             | Yun Ze   |
+| Edit and Delete created blogs                                             | Dallas   |
+| Edit and Delete created blogs                                             | Dallas   |
+| Edit and Delete created blogs                                             | Dallas   |
+| Edit and Delete created blogs                                             | Dallas   |
 
 ## Importing the SQL Database with .bacpac file
-![alt text](https://github.com/Ian-NP/BED2024Apr_P04_T6/tree/main/BED_Assignment/public/images/Step-1.png?raw=true)
+![alt text](https://github.com/Ian-NP/BED2024Apr_P04_T6/tree/main/BED_Assignment/public/images/Step-1.png)
 
 ## Starting the Project
 To start the project, you must use the following commands after going to the directory "BED_Assignment":
